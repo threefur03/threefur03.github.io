@@ -58,8 +58,8 @@
         <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-heading">One pair potential, two consumers</h2></div>
         <div class="method-intro"><p>Surrounding agents differ in size and motion. PairField learns an ordered receiver/source class-pair potential in each source body's coordinate frame. Its longitudinal axis follows that agent's heading, independently of the ego camera.</p><p>The resulting force enters the prediction graph and the current navigation cue. Predicted positions produce a separate anticipatory cue. On roads, negative route-tangent components reduce target speed; they do not authorize lane changes. A CBF-QP filters the shaped reference before tracking.</p></div>
         <figure class="diagram">
-          <a href="static/images/mechanism.svg" aria-label="Open editable PairField mechanism diagram"><img src="static/images/mechanism.png" width="2425" height="1796" loading="lazy" alt="Source-body coordinate transform, ordered class-pair potential and gradient, directed graph messages and prediction, future field aggregation and longitudinal barrier-filtered execution"></a>
-          <figcaption><a href="static/images/mechanism.svg">Editable SVG</a> · <a href="static/images/mechanism.pdf">PDF</a>. Force features and neural attention are different quantities. Future field lobes retain current source headings in this implementation.</figcaption>
+          <img src="static/images/mechanism.png" width="2425" height="1796" loading="lazy" alt="Source-body coordinate transform, ordered class-pair potential and gradient, directed graph messages and prediction, future field aggregation and longitudinal barrier-filtered execution">
+          <figcaption>Force features and neural attention are different quantities. Future field lobes retain current source headings in this implementation. Figure © Anonymous Authors; please acknowledge PairField when reusing.</figcaption>
         </figure>
       </div>
     </section>
