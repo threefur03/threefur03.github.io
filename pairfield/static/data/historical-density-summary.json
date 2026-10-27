@@ -1,0 +1,98 @@
+{
+  "scope": "Historical receiver-axis V5.1; separate from current source-body and capture-only replays",
+  "n": 72,
+  "unit": "episode",
+  "estimates": "descriptive; no confidence intervals or significance claims",
+  "rows": [
+    {
+      "arm": "orca",
+      "n": 12,
+      "contact_free_goals_by_load": [
+        3,
+        2
+      ],
+      "contact_episodes": 2,
+      "non_goals": 7,
+      "mean_route_percent": 60.98117888683006,
+      "median_body_SAT_m": 0.41248169720096794,
+      "median_proximity_actor_s": 21.628689013222193,
+      "median_smoothed_jerk_mps3": 5.0493012689901136,
+      "median_episode_p95_command_ms": 5.44617
+    },
+    {
+      "arm": "sfm",
+      "n": 12,
+      "contact_free_goals_by_load": [
+        6,
+        3
+      ],
+      "contact_episodes": 0,
+      "non_goals": 3,
+      "mean_route_percent": 81.09644860376294,
+      "median_body_SAT_m": 0.5337338563316166,
+      "median_proximity_actor_s": 2.670386729017519,
+      "median_smoothed_jerk_mps3": 8.142383199102682,
+      "median_episode_p95_command_ms": 5.1777575
+    },
+    {
+      "arm": "geometry_qp",
+      "n": 12,
+      "contact_free_goals_by_load": [
+        3,
+        2
+      ],
+      "contact_episodes": 0,
+      "non_goals": 7,
+      "mean_route_percent": 60.27276182135724,
+      "median_body_SAT_m": 0.6089609463251389,
+      "median_proximity_actor_s": 25.23780813201305,
+      "median_smoothed_jerk_mps3": 4.730727726879893,
+      "median_episode_p95_command_ms": 5.2777825
+    },
+    {
+      "arm": "class_blind",
+      "n": 12,
+      "contact_free_goals_by_load": [
+        6,
+        6
+      ],
+      "contact_episodes": 0,
+      "non_goals": 0,
+      "mean_route_percent": 96.18193040827731,
+      "median_body_SAT_m": 1.2728200331890478,
+      "median_proximity_actor_s": 1.637182662688506,
+      "median_smoothed_jerk_mps3": 7.09332421814679,
+      "median_episode_p95_command_ms": 14.18409
+    },
+    {
+      "arm": "longitudinal_interface_off",
+      "n": 12,
+      "contact_free_goals_by_load": [
+        5,
+        6
+      ],
+      "contact_episodes": 1,
+      "non_goals": 0,
+      "mean_route_percent": 96.19737010497786,
+      "median_body_SAT_m": 1.389183278679023,
+      "median_proximity_actor_s": 1.084716199385897,
+      "median_smoothed_jerk_mps3": 8.403439334444856,
+      "median_episode_p95_command_ms": 14.077179999999995
+    },
+    {
+      "arm": "pairfield",
+      "n": 12,
+      "contact_free_goals_by_load": [
+        6,
+        5
+      ],
+      "contact_episodes": 1,
+      "non_goals": 0,
+      "mean_route_percent": 96.22025318856078,
+      "median_body_SAT_m": 1.2420894590065186,
+      "median_proximity_actor_s": 1.232808174700651,
+      "median_smoothed_jerk_mps3": 7.990673461071501,
+      "median_episode_p95_command_ms": 14.093959999999996
+    }
+  ]
+}
