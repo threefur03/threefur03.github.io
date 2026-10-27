@@ -1,0 +1,30 @@
+{
+  "cases": [
+    {
+      "id": "orca",
+      "path": "static/media/historical-contact-orca.gif",
+      "frames": 151,
+      "size": [
+        1038,
+        529
+      ],
+      "fps": 2,
+      "sha256": "eb887c12910ceda7a9d37c030559e1de769be77565bfc799f5c51be242a01402",
+      "scope": "complete-run2Hz selected derivative from native5Hz captures",
+      "controller_generation": "historical receiver-axis V5.1"
+    },
+    {
+      "id": "pairfield",
+      "path": "static/media/historical-contact-pairfield.gif",
+      "frames": 76,
+      "size": [
+        1038,
+        529
+      ],
+      "fps": 2,
+      "sha256": "65d148dd1de012ab1b4f6633657d383dd519b94731d4fca55f930343ffa8dd9a",
+      "scope": "complete-run2Hz selected derivative from native5Hz captures",
+      "controller_generation": "historical receiver-axis V5.1"
+    }
+  ]
+}

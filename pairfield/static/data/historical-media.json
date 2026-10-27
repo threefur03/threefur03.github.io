@@ -1,0 +1,66 @@
+{
+  "cases": [
+    {
+      "id": "historical-orca-near",
+      "controller_generation": "historical receiver-axis V5.1",
+      "town": "Town05",
+      "evidence_scope": "capture-only matched example; not pooled with72-episode density cohort",
+      "fps": 20,
+      "frames": 779,
+      "duration_s": 38.95,
+      "physics_interpolation": false,
+      "missing_arm_tile": "gray recording-ended tile after that independent run ends; not a frozen last frame or outcome banner",
+      "mp4": "static/media/historical-orca-near.mp4",
+      "gif": "static/media/historical-orca-near-critical12s.gif",
+      "gif_scope": "12-second critical window, not complete run",
+      "gif_frames": 240,
+      "gif_size": [
+        858,
+        576
+      ],
+      "critical_gif_window_s": [
+        6.4,
+        18.4
+      ],
+      "sha256": {
+        "mp4": "91724f6e8d24377cf940a4975c16f21a46028aef71fcfb4be562d32fdefef1a8",
+        "gif": "eb2ed4679c28bd8aaf34a119da0327ccee8810985ce11989fe4b8eb8f5fef09f"
+      },
+      "bytes": {
+        "mp4": 5706982,
+        "gif": 38188684
+      }
+    },
+    {
+      "id": "historical-sfm",
+      "controller_generation": "historical receiver-axis V5.1",
+      "town": "Town10HD",
+      "evidence_scope": "capture-only matched example; not pooled with72-episode density cohort",
+      "fps": 20,
+      "frames": 1499,
+      "duration_s": 74.95,
+      "physics_interpolation": false,
+      "missing_arm_tile": "gray recording-ended tile after that independent run ends; not a frozen last frame or outcome banner",
+      "mp4": "static/media/historical-sfm.mp4",
+      "gif": "static/media/historical-sfm-critical12s.gif",
+      "gif_scope": "12-second critical window, not complete run",
+      "gif_frames": 240,
+      "gif_size": [
+        858,
+        576
+      ],
+      "critical_gif_window_s": [
+        11.0,
+        23.0
+      ],
+      "sha256": {
+        "mp4": "8efc56af33e29a22597e76c1c5b4e5ce355abb9be2e7a7c056fe56c46d6d9b71",
+        "gif": "6c01b66b1d5a0145b798679e2cfe025db7644e17ad62df7fcd3ee10612fb89b0"
+      },
+      "bytes": {
+        "mp4": 13577275,
+        "gif": 56813119
+      }
+    }
+  ]
+}

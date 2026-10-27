@@ -22,6 +22,17 @@ Videos are the primary player. CARLA GIF links contain the same ordered frames a
 physics frames are added. The APF video ends after the recorded contact event;
 its last camera frame is one simulation tick before the native callback.
 
+The current gallery has seven source-body recordings. Every current BEV uses
+the same fixed64×36m crop,16:9 panel ratio and no adaptive zoom. Display-cropped
+actors remain in the recorded controller inputs. Two separate historical
+V5.1 comparisons retain native20Hz video; their GIF downloads are explicitly
+12-second excerpts. A collapsed ORCA contact comparison is a complete-run
+2Hz sampled derivative of older5Hz camera capture, not20Hz video.
+
+Two responsive tables expose the current four-episode descriptive comparison
+and a separate72-episode historical density cohort. Their CSV downloads retain
+all episodes; no significance or universal class-conditioning claim is made.
+
 The public repository's pre-existing history and license notices need a separate
 anonymity check. This website does not rewrite them or remove required legal
 attribution. The portable example is a release preview, not a verified exact
