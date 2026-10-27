@@ -1,6 +1,8 @@
 # PairField anonymous project website
 
-Static GitHub Pages site for `https://threefur03.github.io/`.
+Static GitHub Pages project site for `https://threefur03.github.io/pairfield/`.
+The account root remains a separate project index. Project HTML and assets live
+under `pairfield/`; the root `.nojekyll` keeps both pages buildless.
 
 Publish the repository named `threefur03.github.io` under that account. In
 Settings > Pages select the `main` branch and `/ (root)`. No custom build or
@@ -13,7 +15,7 @@ author-profile links or manuscript PDF with identifying metadata. Research
 media are distinguished by controller generation and experimental scope.
 
 Preview locally with `python -m http.server 8765 --bind 127.0.0.1`, then open
-`http://127.0.0.1:8765/`. All required resources are local files.
+`http://127.0.0.1:8765/pairfield/`. All required resources are local files.
 
 Videos are the primary player. CARLA GIF links contain the same ordered frames at
 20 fps, resized for GitHub's per-file size limit. No interpolation or synthetic
