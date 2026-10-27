@@ -1,0 +1,115 @@
+{
+  "schema": "pairfield.anonymous_site.media.v1",
+  "cases": [
+    {
+      "id": "dense-pairfield",
+      "town": "Town10HD",
+      "controller_generation": "source-body",
+      "outcome": "Contact-free goal",
+      "goal_time_s": 40.6,
+      "frames": 813,
+      "fps": 20,
+      "duration_s": 40.65,
+      "scale_only": true,
+      "physics_interpolation": false,
+      "mp4": "static/media/dense-pairfield.mp4",
+      "gif": "static/media/dense-pairfield.gif",
+      "bytes": {
+        "mp4": 11213120,
+        "gif": 39046414
+      },
+      "sha256": {
+        "mp4": "ebb156e38a3726ab371d87cd29ae7615f19a5759f39d42913c79a32867209074",
+        "gif": "3a415004ffbbc1a427ec3b34e94a6a3f803e36f5723d03e787f317e8457094a5"
+      }
+    },
+    {
+      "id": "dense-apf",
+      "town": "Town10HD",
+      "controller_generation": "source-body",
+      "outcome": "Native HGV contact; no goal",
+      "goal_time_s": null,
+      "frames": 242,
+      "fps": 20,
+      "duration_s": 12.1,
+      "scale_only": true,
+      "physics_interpolation": false,
+      "mp4": "static/media/dense-apf.mp4",
+      "gif": "static/media/dense-apf.gif",
+      "bytes": {
+        "mp4": 3504635,
+        "gif": 11833268
+      },
+      "sha256": {
+        "mp4": "2a0bf1956bd841cfa46238b755a131bb3cd2d6975b6decbeb671ea05530b0610",
+        "gif": "1bd97ed91672d6752a121a0e75a927ac0e1fce0cd8590f69e87f902ec374920d"
+      }
+    },
+    {
+      "id": "crowded",
+      "town": "Town10HD",
+      "controller_generation": "source-body",
+      "outcome": "Contact-free goal",
+      "goal_time_s": 33.25,
+      "frames": 666,
+      "fps": 20,
+      "duration_s": 33.3,
+      "scale_only": true,
+      "physics_interpolation": false,
+      "mp4": "static/media/crowded.mp4",
+      "gif": "static/media/crowded.gif",
+      "bytes": {
+        "mp4": 9389245,
+        "gif": 35307837
+      },
+      "sha256": {
+        "mp4": "ad5debd051533bff27191561f1b56265a2e28ce9290cf0c20ed7db2cd51ae7f8",
+        "gif": "8db850b2ec975719b5fd15ab27638856aa48e7870864edc785e29c26cfaf2514"
+      }
+    },
+    {
+      "id": "turning",
+      "town": "Town05",
+      "controller_generation": "source-body",
+      "outcome": "Contact-free goal",
+      "goal_time_s": 23.2,
+      "frames": 465,
+      "fps": 20,
+      "duration_s": 23.25,
+      "scale_only": true,
+      "physics_interpolation": false,
+      "mp4": "static/media/turning.mp4",
+      "gif": "static/media/turning.gif",
+      "bytes": {
+        "mp4": 2032404,
+        "gif": 16412326
+      },
+      "sha256": {
+        "mp4": "597d07d1d3bbcba754fb10858a05ba1320c47b9ce42da4150cdac77bb921a4ac",
+        "gif": "5d59a3c1bb6d24359e93c619283ba06f6da561f7bf54a4d950ff97afdc573fc8"
+      }
+    },
+    {
+      "id": "mixed",
+      "town": "Town10HD",
+      "controller_generation": "source-body",
+      "outcome": "Contact-free goal",
+      "goal_time_s": 30.55,
+      "frames": 612,
+      "fps": 20,
+      "duration_s": 30.6,
+      "scale_only": true,
+      "physics_interpolation": false,
+      "mp4": "static/media/mixed.mp4",
+      "gif": "static/media/mixed.gif",
+      "bytes": {
+        "mp4": 8578562,
+        "gif": 29416017
+      },
+      "sha256": {
+        "mp4": "92b0ba47240c353c8a54d4a05b42eae00a3932303b74fa29229b68dd810c0d27",
+        "gif": "3b054a108212df4b8192267485515642897e28458d74f36504d254c5ae7992cd"
+      }
+    }
+  ]
+}

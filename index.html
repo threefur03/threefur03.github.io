@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="author" content="Anonymous Authors">
+  <meta name="description" content="PairField: class-conditioned interaction fields, graph prediction and barrier filtering for heterogeneous robot navigation. CARLA replays and comparisons.">
+  <meta name="robots" content="noindex,nofollow">
+  <meta property="og:title" content="PairField | Heterogeneous navigation">
+  <meta property="og:description" content="Inspect closed-loop CARLA interactions through camera, field and graph replays.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://threefur03.github.io/static/images/dense-pairs.jpg">
+  <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
+  <link rel="stylesheet" href="static/css/bulma.min.css">
+  <link rel="stylesheet" href="static/css/template.css">
+  <link rel="stylesheet" href="static/css/pairfield.css">
+  <script src="static/js/pairfield.js" defer></script>
+  <title>PairField | Heterogeneous navigation</title>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="topbar" aria-label="Page navigation">
+    <a class="wordmark" href="#">PairField<span class="wordmark-dot" aria-hidden="true"></span></a>
+    <div class="navlinks"><a href="#method">Method</a><a href="#carla">CARLA</a><a href="#evidence">Results</a><a href="#reproduction">Code</a></div>
+  </nav>
+  <main id="main">
+    <header class="hero project-hero">
+      <div class="hero-body container is-max-desktop">
+        <p class="eyebrow">Fields · prediction · control</p>
+        <h1 class="publication-title">PairField</h1>
+        <p class="project-subtitle">Class-conditioned fields for<br class="desktop-break"> heterogeneous navigation</p>
+        <p class="publication-authors">Anonymous Authors</p>
+        <p class="hero-summary">A shared interaction representation connects source-aligned fields to graph prediction and route-constrained control.</p>
+        <div class="publication-links">
+          <a class="button is-dark" href="#carla">Watch CARLA replays <span aria-hidden="true">↗</span></a>
+          <a class="button is-light" href="#method">Explore the mechanism</a>
+          <span class="status-badge" aria-label="Full code release coming soon">Code coming soon</span>
+        </div>
+        <p class="release-note">The <a href="https://github.com/threefur03/PairField-Nav">repository</a> contains the research code. A portable CARLA reproduction preview is being prepared; the complete release will follow.</p>
+      </div>
+    </header>
+
+    <section class="section lead-section" aria-labelledby="lead-heading">
+      <div class="wide-container">
+        <div class="section-heading"><p class="eyebrow">Closed-loop CARLA</p><h2 id="lead-heading">Interaction, seen from two views</h2><p>Each replay pairs the recorded camera with a fixed-scale map, source-body fields and logged graph edges.</p></div>
+        <figure class="lead-media">
+          <video controls muted playsinline loop preload="metadata" poster="static/images/dense-pairfield-poster.jpg" aria-label="PairField navigating a left turn across moving cars and heavy trucks">
+            <source src="static/media/dense-pairfield.mp4" type="video/mp4">
+            <a href="static/media/dense-pairfield.gif">Download the GIF replay</a>
+          </video>
+          <figcaption>Town10HD: a left turn across four moving cars and two heavy trucks. The camera and BEV show the same CARLA frame. <a href="static/media/dense-pairfield.gif">GIF</a> · <a href="static/media/dense-pairfield.mp4" download>MP4</a></figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section pale" id="method" aria-labelledby="method-heading">
+      <div class="wide-container">
+        <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-heading">One pair potential, two consumers</h2></div>
+        <div class="method-intro"><p>Surrounding agents differ in size and motion. PairField learns an ordered receiver/source class-pair potential in each source body's coordinate frame. Its longitudinal axis follows that agent's heading, independently of the ego camera.</p><p>The resulting force enters the prediction graph and the current navigation cue. Predicted positions produce a separate anticipatory cue. On roads, negative route-tangent components reduce target speed; they do not authorize lane changes. A CBF-QP filters the shaped reference before tracking.</p></div>
+        <figure class="diagram">
+          <a href="static/images/mechanism.svg" aria-label="Open editable PairField mechanism diagram"><img src="static/images/mechanism.png" width="2380" height="1796" loading="lazy" alt="Source-body coordinate transform, ordered class-pair potential and gradient, directed graph messages and prediction, future field aggregation and longitudinal barrier-filtered execution"></a>
+          <figcaption><a href="static/images/mechanism.svg">Editable SVG</a> · <a href="static/images/mechanism.pdf">PDF</a>. Force features and neural attention are different quantities. Future field lobes retain current source headings in this implementation.</figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="carla" aria-labelledby="carla-heading">
+      <div class="wide-container">
+        <div class="section-heading"><p class="eyebrow">Matched comparison</p><h2 id="carla-heading">Crossing moving cars and heavy trucks</h2><p>Same fixture, source-body predictor, sensing interface and current/future QP. APF replaces the nominal interaction field.</p></div>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-pair">Play both from the start</button><button class="button is-light" type="button" id="pause-pair">Pause both</button><span id="pair-status" role="status" aria-live="polite">20 recorded frames per simulated second</span></div>
+        <div class="comparison-grid" id="matched-videos">
+          <article class="replay-card"><div class="card-label"><h3>APF + common QP</h3><span class="outcome adverse">HGV contact recorded</span></div><video controls muted playsinline preload="none" poster="static/images/dense-apf-poster.jpg"><source src="static/media/dense-apf.mp4" type="video/mp4"></video><p>Contact near 12.1 s, at 21.7% route completion. The last recorded camera precedes the callback by one tick.</p><a class="download" href="static/media/dense-apf.gif">GIF replay</a></article>
+          <article class="replay-card"><div class="card-label"><h3>PairField</h3><span class="outcome">Contact-free goal</span></div><video controls muted playsinline preload="none" poster="static/images/dense-pairfield-poster.jpg"><source src="static/media/dense-pairfield.mp4" type="video/mp4"></video><p>Goal at 40.60 s on the assigned route. The minimum actual-body SAT margin is 0.40 m.</p><a class="download" href="static/media/dense-pairfield.gif">GIF replay</a></article>
+        </div>
+        <p class="pair-note">Both videos start at the same elapsed time. The APF recording ends after contact; it is not padded or replayed as a successful full route.</p>
+        <figure class="image-plate"><img src="static/images/dense-pairs.jpg" width="2300" height="888" loading="lazy" alt="APF and PairField camera and field panels at matched approach and HGV crossing times"><figcaption>Matched snapshots at 10.35 and 12.05 s. Snapshot times follow APF class-wise SAT minima within the geometric crossing window, with the same logical actor in the paired PairField frame.</figcaption></figure>
+
+        <div class="section-heading gallery-heading"><p class="eyebrow">More interactions</p><h2>Moving crowds and turning traffic</h2><p>Additional source-body runs show different interactions. These clips illustrate behavior; they are not additional independent benchmark samples.</p></div>
+        <div class="replay-grid">
+          <article class="replay-card"><div class="card-label"><h3>Crowded crossing</h3><span>Town10HD</span></div><video controls muted playsinline preload="none" poster="static/images/crowded-poster.jpg"><source src="static/media/crowded.mp4" type="video/mp4"></video><p>Moving pedestrians, bicycles and cars; a contact-free 33.25 s goal. No truck interaction is claimed for this run.</p><a class="download" href="static/media/crowded.gif">GIF replay</a></article>
+          <article class="replay-card"><div class="card-label"><h3>Source-car turn</h3><span>Town05</span></div><video controls muted playsinline preload="none" poster="static/images/turning-poster.jpg"><source src="static/media/turning.mp4" type="video/mp4"></video><p>A turning source car changes its body heading. The current field follows that measured orientation; the run reaches its goal without contact.</p><a class="download" href="static/media/turning.gif">GIF replay</a></article>
+          <article class="replay-card"><div class="card-label"><h3>Mixed left turn</h3><span>Town10HD</span></div><video controls muted playsinline preload="none" poster="static/images/mixed-poster.jpg"><source src="static/media/mixed.mp4" type="video/mp4"></video><p>A contact-free 30.55 s goal with mixed road users. Pedestrian presence here does not establish a critical pedestrian-prediction test.</p><a class="download" href="static/media/mixed.gif">GIF replay</a></article>
+        </div>
+
+        <details class="historical"><summary>Earlier controller: an additional ORCA contact sequence</summary><p>This paired illustration uses an earlier receiver-axis controller. It is separate from the source-body comparisons above and from the 72-episode density cohort.</p><img src="static/images/legacy-orca-contact.jpg" width="2100" height="1023" loading="lazy" alt="Earlier ORCA approaches a crossing car and records native contact while the paired earlier PairField controller yields"></details>
+      </div>
+    </section>
+
+    <section class="section pale" id="evidence" aria-labelledby="evidence-heading">
+      <div class="wide-container">
+        <div class="section-heading"><p class="eyebrow">Measured tradeoffs</p><h2 id="evidence-heading">Safety, progress and motion</h2><p>One prescribed dense C4/T2 scene and seed per arm. Shared-class and no-field are separately trained systems; APF is a nominal-field substitution.</p></div>
+        <figure class="image-plate"><img src="static/images/dense-statistics.png" width="2300" height="1033" loading="lazy" alt="Dense traffic comparison of route completion, car and HGV SAT margins, raw jerk and command and complete frame latency"><figcaption><a href="static/data/dense-comparison.csv" download>Episode-level values (CSV)</a>. SAT is a planar support margin, not Euclidean clearance. Raw jerk includes launch and the observed terminal stop.</figcaption></figure>
+        <div class="evidence-note"><p>PairField, shared-class and no-field reach contact-free goals in 40.60, 43.45 and 40.35 s. PairField improves on shared-class spacing in this case but nearly ties no-field. Excess NPC stopping is identical across arms against both ego-absent controls. High launch and terminal jerk remains unresolved.</p><p>The system uses semantic-LiDAR returns to gate tracks; association, classes and kinematics remain privileged. These are modular closed-loop experiments. The displayed camera boxes are simulator-instance annotations. Neither raw-sensor end-to-end learning nor improved participant comfort is established by these clips.</p></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="planar-heading"><div class="wide-container">
+      <div class="section-heading"><p class="eyebrow">Level I</p><h2 id="planar-heading">Planar proof of concept</h2><p>The simpler simulator exposes fields and graph interactions directly. CARLA adds simulated sensing, native traffic response and physical tracking.</p></div>
+      <div class="comparison-grid"><figure class="replay-card"><img src="static/media/planar-field.gif" loading="lazy" alt="Planar navigation with potential contours, prediction and graph connections"><figcaption>Field and graph visualization</figcaption></figure><figure class="replay-card"><img src="static/media/planar-navigation.gif" loading="lazy" alt="Planar navigation through moving heterogeneous agents"><figcaption>Navigation replay</figcaption></figure></div>
+    </div></section>
+
+    <section class="section code-section" id="reproduction" aria-labelledby="code-heading"><div class="container is-max-desktop">
+      <p class="eyebrow">Reproduction</p><h2 id="code-heading">Code coming soon</h2>
+      <p>The public repository is <a href="https://github.com/threefur03/PairField-Nav">threefur03/PairField-Nav</a>. The CARLA preview includes source-body field and predictor components, field-based adapters, a portable synchronous example and offline smoke tests. Native portability checks and external checkpoint preparation remain part of the release work.</p>
+      <p>Raw uniD/inD data, CARLA binaries and private experiment caches are not redistributed. The portable example is separate from the frozen experiment harness and does not claim to regenerate the reported numbers unchanged.</p>
+      <a class="button is-dark" href="https://github.com/threefur03/PairField-Nav">Repository</a>
+    </div></section>
+  </main>
+  <footer class="footer"><div class="wide-container"><p>Anonymous research project. Template adapted from <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a>, originally based on <a href="https://nerfies.github.io/">Nerfies</a>.</p><p>Template-derived website layout: <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Research media retain their respective rights. No analytics or author-profile links are included.</p></div></footer>
+</body>
+</html>
