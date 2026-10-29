@@ -78,6 +78,7 @@
     <section class="section" id="carla" aria-labelledby="carla-heading">
       <div class="wide-container">
         <div class="section-heading"><p class="eyebrow">Matched comparison</p><h2 id="carla-heading">Crossing moving cars and heavy trucks</h2><p>Same fixture, source-body predictor, sensing interface and current/future QP. APF replaces the nominal interaction field.</p></div>
+        <p class="pair-note">CARLA tracks are gated by semantic LiDAR; identities, classes and kinematics remain privileged. Camera boxes are native instance-mask annotations, not outputs of a learned detector.</p>
         <div class="pair-controls"><button class="button is-dark" type="button" id="play-pair">Play both from the start</button><button class="button is-light" type="button" id="pause-pair">Pause both</button><span id="pair-status" role="status" aria-live="polite">20 recorded frames per simulated second</span></div>
         <div class="comparison-grid" id="matched-videos">
           <article class="replay-card"><div class="card-label"><h3>APF + common QP</h3><span class="outcome adverse">HGV contact recorded</span></div><video controls muted playsinline preload="none" poster="static/images/dense-apf-poster.jpg"><source src="static/media/dense-apf.mp4" type="video/mp4"></video><p>Contact near 12.1 s, at 21.7% route completion. The last recorded camera precedes the callback by one tick.</p><a class="download" href="static/media/dense-apf.gif">GIF replay</a></article>
