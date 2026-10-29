@@ -191,6 +191,72 @@
       "offscreen_context_allowed": true,
       "safety_and_prediction_inputs_unchanged": true,
       "evidence_scope": "numerical-development recording; not independent efficacy trial"
+    },
+    {
+      "id": "fourclass-shared",
+      "town": "Town10HD",
+      "controller_generation": "source-body",
+      "outcome": "Contact-free goal",
+      "goal_time_s": 34.1,
+      "frames": 683,
+      "fps": 20,
+      "duration_s": 34.15,
+      "scale_only": true,
+      "physics_interpolation": false,
+      "mp4": "static/media/fourclass-shared.mp4",
+      "gif": "static/media/fourclass-shared.gif",
+      "bytes": {
+        "mp4": 8062839,
+        "gif": 30242297
+      },
+      "sha256": {
+        "mp4": "0187e009e8ffef1190b53aa23ae3790f7a55dd1f6fbed7a2a25a49c1b5e352fd",
+        "gif": "193f1f073b501b7025bb58b617341ab9e6f64c149f6c6a02132f8df9fa0518ed"
+      },
+      "viewport_extent_m": [
+        64.0,
+        36.0
+      ],
+      "viewport_mode": "fixed_extent_translation_only",
+      "metric_scale_constant_whole_episode": true,
+      "frame_aspect_ratio": "32:9; each camera/BEV16:9",
+      "offscreen_context_allowed": true,
+      "safety_and_prediction_inputs_unchanged": true,
+      "system_variant": "Shared-class",
+      "evidence_scope": "matched four-class system ablation; all native contacts/outcomes retained"
+    },
+    {
+      "id": "fourclass-no-field",
+      "town": "Town10HD",
+      "controller_generation": "source-body",
+      "outcome": "Contact-free goal",
+      "goal_time_s": 31.75,
+      "frames": 636,
+      "fps": 20,
+      "duration_s": 31.8,
+      "scale_only": true,
+      "physics_interpolation": false,
+      "mp4": "static/media/fourclass-no-field.mp4",
+      "gif": "static/media/fourclass-no-field.gif",
+      "bytes": {
+        "mp4": 7728993,
+        "gif": 29002044
+      },
+      "sha256": {
+        "mp4": "6fe49b622eb5eb04fd5d2356ec5f3c35fe0ce9bf56fe4a14cdf7f5f9b41c16f5",
+        "gif": "cddb8d55bdc2c3bce75ff1090419b2f594891e3bc2782f9ad065af3485873e57"
+      },
+      "viewport_extent_m": [
+        64.0,
+        36.0
+      ],
+      "viewport_mode": "fixed_extent_translation_only",
+      "metric_scale_constant_whole_episode": true,
+      "frame_aspect_ratio": "32:9; each camera/BEV16:9",
+      "offscreen_context_allowed": true,
+      "safety_and_prediction_inputs_unchanged": true,
+      "system_variant": "No field",
+      "evidence_scope": "matched four-class system ablation; all native contacts/outcomes retained"
     }
   ]
 }
