@@ -16,19 +16,20 @@
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/template.css">
   <link rel="stylesheet" href="static/css/pairfield.css?v=20261027-crowds">
-  <script src="static/js/pairfield.js" defer></script>
+  <link rel="stylesheet" href="static/css/paper.css?v=20261029-social">
+  <script src="static/js/pairfield.js?v=20261029-trio" defer></script>
   <title>PairField | Heterogeneous navigation</title>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="topbar" aria-label="Page navigation">
     <a class="wordmark" href="#">PairField<span class="wordmark-dot" aria-hidden="true"></span></a>
-    <div class="navlinks"><a href="#method">Method</a><a href="#carla">CARLA</a><a href="#evidence">Results</a></div>
+    <div class="navlinks"><a href="#abstract">Abstract</a><a href="#method">Framework</a><a href="#carla">CARLA</a><a href="#evidence">Results</a><a href="#hardware">LIMO</a></div>
   </nav>
   <main id="main">
     <header class="hero project-hero">
       <div class="hero-body container is-max-desktop">
-        <p class="eyebrow">Fields · prediction · control</p>
+        <p class="eyebrow">Social navigation · interaction fields · predictive control</p>
         <h1 class="publication-title">PairField</h1>
         <p class="project-subtitle">Class-conditioned fields for<br class="desktop-break"> heterogeneous navigation</p>
         <p class="publication-authors">Anonymous Authors</p>
@@ -41,6 +42,13 @@
         <p class="release-note">The <a href="https://github.com/threefur03/PairField-Nav">repository</a> contains a portable CARLA reproduction preview. The complete release will follow.</p>
       </div>
     </header>
+
+    <section class="section abstract-section" id="abstract" aria-labelledby="abstract-heading">
+      <div class="container is-max-desktop">
+        <h2 id="abstract-heading">Abstract</h2>
+        <div class="abstract-content"><p>Navigation among pedestrians, cyclists and vehicles requires more than reaching a goal without collision: the robot must also regulate how closely it passes others and how much it disrupts shared motion. PairField represents heterogeneous interactions with an ordered class-pair potential aligned to each source agent's body frame. Its gradient supplies features to a directed prediction graph and current/future navigation cues. An engineered route interface and barrier-based filter connect these cues to physical tracking. We examine the resulting tradeoffs through planar simulation, closed-loop CARLA recordings and a ROS 2/LIMO hardware adaptation. The results below distinguish interaction-space proxies, task progress and computational cost; qualitative hardware demonstrations are not treated as four-class quantitative validation.</p></div>
+      </div>
+    </section>
 
     <section class="section lead-section" aria-labelledby="lead-heading">
       <div class="wide-container">
@@ -57,12 +65,13 @@
 
     <section class="section pale" id="method" aria-labelledby="method-heading">
       <div class="wide-container">
-        <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-heading">One pair potential, two consumers</h2></div>
+        <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-heading">Framework</h2></div>
         <div class="method-intro"><p>Surrounding agents differ in size and motion. PairField learns an ordered receiver/source class-pair potential in each source body's coordinate frame. Its longitudinal axis follows that agent's heading, independently of the ego camera.</p><p>The resulting force enters the prediction graph and the current navigation cue. Predicted positions produce a separate anticipatory cue. On roads, negative route-tangent components reduce target speed; they do not authorize lane changes. A CBF-QP filters the shaped reference before tracking.</p></div>
-        <figure class="diagram">
-          <img src="static/images/mechanism.png" width="2425" height="1796" loading="lazy" alt="Source-body coordinate transform, ordered class-pair potential and gradient, directed graph messages and prediction, future field aggregation and longitudinal barrier-filtered execution">
-          <figcaption>Force features and neural attention are different quantities. Future field lobes retain current source headings in this implementation. Figure © Anonymous Authors; please acknowledge PairField when reusing.</figcaption>
+        <figure class="diagram figure-one">
+          <a href="static/images/figure1-framework.png" target="_blank" rel="noopener" aria-label="View the framework PNG at full resolution"><img src="static/images/figure1-framework.png" width="3007" height="1785" loading="lazy" alt="PairField structural framework: offline shared field and graph learning; source-body interaction field; directed graph prediction; current and future longitudinal cues; route reference, soft CBF-QP and embodiment tracking; Python, CARLA and ROS2 LIMO adaptations"></a>
+          <figcaption><strong>Figure 1. PairField framework.</strong> A shared class-pair field supports graph prediction and current/future longitudinal cues. Safety tracks and local geometry bypass graph eligibility; the command and sensing paths close the loop. The platform panels distinguish simulation evidence from hardware adaptation. LIMO currently uses an earlier exported field and optional constant-velocity prediction; parity with the full learned graph remains pending. Figure © Anonymous Authors; please acknowledge PairField when reusing.</figcaption>
         </figure>
+        <details class="historical"><summary>Technical detail: source-body field and graph coupling</summary><img src="static/images/mechanism.png" width="2425" height="1796" loading="lazy" alt="Detailed source-body potential, directed graph messages, residual prediction and filtered longitudinal execution"><p>Force features and neural attention are different quantities. Future field queries retain current source headings in this implementation.</p></details>
       </div>
     </section>
 
@@ -87,6 +96,15 @@
           <article class="replay-card"><div class="card-label"><h3>Mixed left turn</h3><span>Town10HD</span></div><video controls muted playsinline preload="none" poster="static/images/mixed-poster.jpg"><source src="static/media/mixed.mp4" type="video/mp4"></video><p>A contact-free 30.55 s goal with mixed road users. Pedestrian presence here does not establish a critical pedestrian-prediction test.</p><a class="download" href="static/media/mixed.gif">GIF replay</a></article>
         </div>
 
+        <h3 class="gallery-heading">Matched pedestrian encounter: progress versus waiting</h3>
+        <p class="pair-note">One four-class fixture and seed, with all three separately fitted systems. All finish without native contact. Inspect the same 9–20 s interval: Shared-class waits longer and leaves a larger minimum pedestrian gap; PairField progresses with less additional NPC stopping, but does not dominate No field. Cars and the truck are present yet distant in this pilot.</p>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-social-trio">Play all three</button><button class="button is-light" type="button" id="encounter-social-trio">Inspect 9–20 s</button><button class="button is-light" type="button" id="pause-social-trio">Pause</button><span id="social-trio-status" role="status" aria-live="polite">Matched clock · fixed 64 × 36 m BEV · native 20 Hz</span></div>
+        <div class="replay-grid matched-trio" id="social-trio">
+          <article class="replay-card"><div class="card-label"><h3>PairField</h3><span>Goal 31.90 s · no contact</span></div><video controls muted playsinline preload="none" poster="static/images/fourclass-poster.jpg"><source src="static/media/fourclass.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.242 m. Additional NPC stopping over 0–20 s: 0.55 actor-s.</p><a class="download" href="static/media/fourclass.gif">GIF replay</a></article>
+          <article class="replay-card"><div class="card-label"><h3>Shared-class</h3><span>Goal 34.10 s · no contact</span></div><video controls muted playsinline preload="none" poster="static/images/fourclass-shared-poster.jpg"><source src="static/media/fourclass-shared.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.866 m, with 3.35 s ego stopping. Additional NPC stopping: 2.70 actor-s.</p><a class="download" href="static/media/fourclass-shared.gif">GIF replay</a></article>
+          <article class="replay-card"><div class="card-label"><h3>No field</h3><span>Goal 31.75 s · no contact</span></div><video controls muted playsinline preload="none" poster="static/images/fourclass-no-field-poster.jpg"><source src="static/media/fourclass-no-field.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.362 m. Additional NPC stopping is also 0.55 actor-s; the logged interaction field is zero.</p><a class="download" href="static/media/fourclass-no-field.gif">GIF replay</a></article>
+        </div>
+
         <h3 class="gallery-heading">Earlier crowded comparisons</h3>
         <p class="pair-note">Historical receiver-axis V5.1, separate from the source-body controller above. Full videos retain native 20 Hz capture and fixed-scale BEV views. A gray tile means that arm's recording has ended; no endpoint is frozen. These capture-only examples are not added to the 72-episode table below.</p>
         <div class="comparison-grid historical-comparisons">
@@ -100,7 +118,40 @@
 
     <section class="section pale" id="evidence" aria-labelledby="evidence-heading">
       <div class="wide-container">
-        <div class="section-heading"><p class="eyebrow">Measured tradeoffs</p><h2 id="evidence-heading">Safety, progress and motion</h2><p>One prescribed dense C4/T2 scene and seed per arm. Shared-class and no-field are separately trained systems; APF is a nominal-field substitution.</p></div>
+        <div class="section-heading"><p class="eyebrow">Measured interaction quality</p><h2 id="evidence-heading">Space, progress and traffic burden</h2><p>Interaction-space exposure and simulator response complement goal completion and native contact counts. The current pilot and the historical density study are reported separately.</p></div>
+        <div class="metric-definition"><h3>What is measured?</h3><p>For each class, <var>R<sub>c</sub> = J<sub>c</sub> / E<sub>c</sub></var>, where <var>J<sub>c</sub> = ∑ exp(−max(d, 0) / 1 m) Δt</var> and <var>E<sub>c</sub></var> is the observed actor-time. Here <var>d</var> is the signed body SAT support margin. Tables display <strong>1000 R<sub>c</sub></strong>: a dimensionless proximity index, not a percentage. Lower values mean less of this geometric exposure, not measured human comfort. The separate “below 1 m” column is a true actor-time percentage.</p><p>NPC burden is the signed change in summed stopped actor-time against both matched absent-ego recordings over a fixed 0–20 s window. It measures simulator traffic response, not perceived comfort or a verified social convention. These distinctions follow <a href="https://doi.org/10.1145/3700599">social-navigation evaluation guidance</a>.</p></div>
+
+        <h3>Current four-class pilot</h3>
+        <p class="pair-note">Three pedestrians, one bicycle, one car and one truck; one episode per system. All three reach without native contact. Proximity indices include planning through the observed terminal stop; NPC contrasts use the same fixed 0–20 s interval in every arm.</p>
+        <div class="table-scroll" role="region" aria-label="Four-class interaction quality" tabindex="0"><table class="results-table social-table" data-social-table="fourclass"><caption>Current source-body systems · class-wise exposure and NPC stopping</caption><thead><tr><th scope="col">System</th><th scope="col">Goal (s)</th><th scope="col">Pedestrian R ×1000</th><th scope="col">Bicycle R ×1000</th><th scope="col">Min. pedestrian SAT (m)</th><th scope="col">Extra NPC stopped actor-s</th></tr></thead><tbody>
+          <tr><th scope="row">PairField</th><td>31.90</td><td>9.768</td><td>26.869</td><td>1.242</td><td>+0.55</td></tr>
+          <tr><th scope="row">Shared-class</th><td>34.10</td><td>13.923</td><td>21.994</td><td>1.866</td><td>+2.70</td></tr>
+          <tr><th scope="row">No field</th><td>31.75</td><td>8.810</td><td>28.569</td><td>1.362</td><td>+0.55</td></tr>
+        </tbody></table></div>
+        <p class="table-note">The two absent-ego references give the same stopping contrasts shown here. PairField has less additional NPC stopping than Shared-class in this fixture, while No field ties that result and has lower pedestrian exposure. Larger minimum spacing and lower integrated exposure are different objectives. This is a tradeoff, not universal class-aware superiority. <a href="static/data/social-current-interactions.csv" download>All current class/window/threshold values</a> · <a href="static/data/social-npc-burden.csv" download>Both-reference NPC contrasts</a>.</p>
+
+        <h3>Dense cars and heavy trucks</h3>
+        <div class="table-scroll" role="region" aria-label="Dense vehicle interaction exposure" tabindex="0"><table class="results-table social-table" data-social-table="dense"><caption>One current dense C4/T2 episode per arm · actual observation durations retained</caption><thead><tr><th scope="col">Controller</th><th scope="col">Goal / contacts</th><th scope="col">Observed (s)</th><th scope="col">Actor-time (s)</th><th scope="col">R ×1000</th><th scope="col">Below 1 m (% actor-time)</th></tr></thead><tbody>
+          <tr><th scope="row">PairField</th><td>Yes / 0</td><td>41.25</td><td>247.50</td><td>14.622</td><td>1.172</td></tr>
+          <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td>44.10</td><td>264.60</td><td>14.989</td><td>1.134</td></tr>
+          <tr><th scope="row">No field</th><td>Yes / 0</td><td>41.00</td><td>246.00</td><td>14.833</td><td>1.179</td></tr>
+          <tr><th scope="row">APF + common QP</th><td>No / 1</td><td>12.25</td><td>73.50</td><td>18.041</td><td>1.769</td></tr>
+        </tbody></table></div>
+        <p class="table-note">Normalization accounts for observed actor-time, but does not remove contact/abort censoring or endogenous waiting. APF's observation is shorter; a common 0–12.1 s prefix and all 0.5 / 1 / 2 m threshold sensitivities are included in the download. Dense Full, Shared-class and No field have identical NPC stopping contrasts: 0.00 / −0.05 actor-s against reference 1 / 2. No NPC-response advantage is claimed for those three arms.</p>
+
+        <h3>Historical density study: overall and class-wise space exposure</h3>
+        <p class="pair-note">72 episodes: six methods × two towns × two loads × three seeds. D1 has 4 pedestrians / 1 bicycle / 2 cars; D2 has 6 / 2 / 3. Each cell is the median of six episode-specific normalized indices per load, not a pooled frame test. This earlier receiver-axis cohort contains no trucks.</p>
+        <div class="table-scroll" role="region" aria-label="Historical normalized social exposure" tabindex="0"><table class="results-table social-table" data-social-table="historical"><caption>Historical V5.1 · each entry is D1 / D2 · all outcomes retained</caption><thead><tr><th scope="col">Method</th><th scope="col">Contact-free goals<br>(out of 6 each)</th><th scope="col">All classes R ×1000</th><th scope="col">Pedestrian R ×1000</th><th scope="col">Bicycle R ×1000</th></tr></thead><tbody>
+          <tr><th scope="row">ORCA + QP</th><td>3 / 2</td><td>41.825 / 27.290</td><td>1.474 / 0.430</td><td>113.055 / 20.809</td></tr>
+          <tr><th scope="row">SFM + QP</th><td>6 / 3</td><td>6.808 / 24.461</td><td>0.445 / 0.567</td><td>40.572 / 2.750</td></tr>
+          <tr><th scope="row">Geometry + QP</th><td>3 / 2</td><td>35.491 / 32.079</td><td>0.539 / 0.441</td><td>64.959 / 14.339</td></tr>
+          <tr><th scope="row">Class-label ablation</th><td>6 / 6</td><td>3.687 / 5.526</td><td>0.257 / 0.633</td><td>12.928 / 5.062</td></tr>
+          <tr><th scope="row">Longitudinal interface off</th><td>5 / 6</td><td>2.620 / 3.094</td><td>0.407 / 0.486</td><td>6.456 / 3.888</td></tr>
+          <tr><th scope="row">PairField</th><td>6 / 5</td><td>2.805 / 4.843</td><td>0.318 / 0.934</td><td>11.126 / 4.925</td></tr>
+        </tbody></table></div>
+        <p class="table-note">PairField's total normalized exposure is lower than ORCA and Geometry in 12/12 matched cases and SFM in 11/12. Class-specific rankings differ: the high-load pedestrian column does not favor PairField, and the fixed-label ablation has more contact-free goals. The historical numerator is screened at 30 m; current tables use all physical actors, so the cohorts are not pooled. <a href="static/data/social-historical-episodes.csv" download>All 72 normalized episode records</a> · <a href="static/data/social-summary.json" download>Definitions and table values (JSON)</a>.</p>
+
+        <details class="supporting-results"><summary>Supporting safety, motion and runtime statistics</summary>
         <figure class="image-plate"><img src="static/images/dense-statistics.png" width="2300" height="1033" loading="lazy" alt="Dense traffic comparison of route completion, car and HGV SAT margins, raw jerk and command and complete frame latency"><figcaption><a href="static/data/dense-comparison.csv" download>Episode-level values (CSV)</a>. SAT is a planar support margin, not Euclidean clearance. Raw jerk includes launch and the observed terminal stop.</figcaption></figure>
         <div class="table-scroll" role="region" aria-label="Current dense vehicle results" tabindex="0"><table class="results-table"><caption>Current source-body controller · one dense C4/T2 episode per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Goal / contacts</th><th scope="col">Route (%)</th><th scope="col">Min. car / HGV SAT (m)</th><th scope="col">Raw jerk RMS / peak (m/s³)</th><th scope="col">Command p95 / max (ms)</th><th scope="col">Calls &gt; 50 ms</th></tr></thead><tbody>
           <tr><th scope="row">PairField</th><td>Yes / 0</td><td>96.20</td><td>1.23 / 0.40</td><td>19.47 / 324.52</td><td>24.68 / 525.63</td><td>5 / 813</td></tr>
@@ -121,15 +172,21 @@
           <tr><th scope="row">PairField</th><td>6 / 5</td><td>1 / 0</td><td>96.2</td><td>1.24</td><td>1.23</td><td>7.99</td><td>14.09</td></tr>
         </tbody></table></div>
         <p class="table-note">Contact and non-goal counts may overlap. Continuous cells summarize episodes, not frames. Proximity is unnormalized corrected-SAT kernel exposure within 30 m; it is not measured human comfort. Jerk uses a fixed centred 0.25 s velocity mean and is not comparable with the raw-jerk table above. The class-label ablation relabels neighbors as cars under fixed weights; it is not the separately trained shared-class system. These results do not establish a general benefit from class conditioning. <a href="static/data/historical-density-episodes.csv" download>All 72 episode records (CSV)</a>.</p>
+        </details>
       </div>
     </section>
 
-    <section class="section" aria-labelledby="planar-heading"><div class="wide-container">
+    <section class="section" id="planar" aria-labelledby="planar-heading"><div class="wide-container">
       <div class="section-heading"><h2 id="planar-heading">Planar proof of concept</h2><p>The simpler simulator exposes fields and graph interactions directly. CARLA adds simulated sensing, native traffic response and physical tracking.</p></div>
       <div class="comparison-grid planar-comparison">
         <figure class="replay-card"><div class="planar-media"><img src="static/media/planar-field.gif" width="919" height="560" loading="lazy" alt="Planar navigation with potential contours, prediction and graph connections"></div><figcaption>Field and graph visualization</figcaption></figure>
         <figure class="replay-card"><div class="planar-media"><img src="static/media/planar-navigation.gif" width="2080" height="540" loading="lazy" alt="Planar navigation through moving heterogeneous agents"></div><figcaption>Navigation replay</figcaption></figure>
       </div>
+    </div></section>
+
+    <section class="section" id="hardware" aria-labelledby="hardware-heading"><div class="wide-container">
+      <div class="section-heading"><h2 id="hardware-heading">ROS 2 / LIMO hardware adaptation</h2><p>The real robot connects the field formulation to onboard sensing and bounded base commands. This is a deployment interface and qualitative demonstration, not the full CARLA prediction stack running unchanged.</p></div>
+      <div class="hardware-layout"><figure><img src="static/images/limo-platform.png" width="554" height="554" loading="lazy" alt="AgileX LIMO wheeled platform supplied for the project"><figcaption>AgileX LIMO platform.</figcaption></figure><div class="hardware-text"><h3>From tracked observations to local control</h3><p>The ROS 2 bridge uses odometry, LaserScan geometry and tracked agents in the local frame. An exported class-pair field, optional constant-velocity anticipation, speed governor and soft dynamic-agent / hard static-obstacle QP produce bounded <code>Twist</code> commands for the observed differential-drive configuration.</p><p>The available logbook describes an earlier torch-free field runtime and preliminary pedestrian-oriented deployment. Heterogeneous perception, camera-to-BEV calibration, parity with the current source-body predictor and quantitative hardware acceptance remain pending. LIMO is therefore reported as hardware feasibility, separately from the CARLA comparisons.</p></div></div>
     </div></section>
 
   </main>
