@@ -89,7 +89,9 @@ document.querySelectorAll('main img, main video').forEach(media => {
   frame.className = 'research-media';
   const credit = document.createElement('span');
   credit.className = 'media-credit';
-  credit.textContent = 'PairField · © Anonymous Authors';
+  credit.textContent = media.closest('#hardware')
+    ? 'AgileX LIMO · supplied platform image'
+    : 'PairField · © Anonymous Authors';
   credit.setAttribute('aria-hidden', 'true');
   media.before(frame);
   frame.append(media, credit);
