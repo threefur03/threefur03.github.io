@@ -4,9 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="author" content="Anonymous Authors">
-  <meta name="description" content="PairField: class-conditioned interaction fields, graph prediction and barrier filtering for heterogeneous robot navigation. CARLA replays and comparisons.">
+  <meta name="description" content="PAIRFIELD: Edge-Attributed Class-Pair Potentials for Predictive Heterogeneous Navigation. Controlled planar evaluation, closed-loop CARLA and ROS 2/LIMO adaptation.">
   <meta name="robots" content="noindex,nofollow">
-  <meta property="og:title" content="PairField | Heterogeneous navigation">
+  <meta property="og:title" content="PAIRFIELD: Edge-Attributed Class-Pair Potentials for Predictive Heterogeneous Navigation">
   <meta property="og:description" content="Inspect closed-loop CARLA interactions through camera, field and graph replays.">
   <meta property="og:type" content="website">
   <meta property="og:url" content="https://threefur03.github.io/pairfield/">
@@ -16,24 +16,24 @@
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/template.css">
   <link rel="stylesheet" href="static/css/pairfield.css?v=20261027-crowds">
-  <link rel="stylesheet" href="static/css/paper.css?v=20261101-media">
-  <script src="static/js/pairfield.js?v=20261101-attribution" defer></script>
-  <title>PairField | Heterogeneous navigation</title>
+  <link rel="stylesheet" href="static/css/paper.css?v=20261101-planar">
+  <script src="static/js/pairfield.js?v=20261101-planar" defer></script>
+  <title>PAIRFIELD: Edge-Attributed Class-Pair Potentials for Predictive Heterogeneous Navigation</title>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="topbar" aria-label="Page navigation">
-    <a class="wordmark" href="#">PairField<span class="wordmark-dot" aria-hidden="true"></span></a>
-    <div class="navlinks"><a href="#abstract">Abstract</a><a href="#method">Framework</a><a href="#carla">CARLA</a><a href="#evidence">Results</a><a href="#hardware">LIMO</a></div>
+    <a class="wordmark" href="#">PAIRFIELD<span class="wordmark-dot" aria-hidden="true"></span></a>
+    <div class="navlinks"><a href="#abstract">Abstract</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#carla">CARLA</a><a href="#evidence">CARLA results</a><a href="#hardware">LIMO</a></div>
   </nav>
   <main id="main">
     <header class="hero project-hero">
       <div class="hero-body container is-max-desktop">
         <p class="eyebrow">Social navigation · interaction fields · predictive control</p>
-        <h1 class="publication-title">PairField</h1>
-        <p class="project-subtitle">Class-conditioned fields for<br class="desktop-break"> heterogeneous navigation</p>
+        <h1 class="publication-title">PAIRFIELD</h1>
+        <p class="project-subtitle">Edge-Attributed Class-Pair Potentials<br class="desktop-break"> for Predictive Heterogeneous Navigation</p>
         <p class="publication-authors">Anonymous Authors</p>
-        <p class="hero-summary">A shared interaction representation connects source-aligned fields to graph prediction and route-constrained control.</p>
+        <p class="hero-summary">Class-pair potential gradients attribute directed interaction edges, linking prediction to route-constrained control.</p>
         <div class="publication-links">
           <a class="button is-dark" href="#carla">Watch CARLA replays <span aria-hidden="true">↗</span></a>
           <a class="button is-light" href="#method">Explore the mechanism</a>
@@ -46,7 +46,7 @@
     <section class="section abstract-section" id="abstract" aria-labelledby="abstract-heading">
       <div class="container is-max-desktop">
         <h2 id="abstract-heading">Abstract</h2>
-        <div class="abstract-content"><p>Navigation among pedestrians, cyclists and vehicles requires collision avoidance, considerate passing distances and efficient shared motion. PairField represents heterogeneous interactions with an ordered class-pair potential aligned to each source agent's body frame. Its gradient supplies features to a directed prediction graph and current/future navigation cues. A route-constrained interface and barrier-based filter connect these cues to physical tracking. Evaluation spans planar simulation, closed-loop CARLA recordings and a qualitative ROS 2/LIMO hardware adaptation.</p></div>
+        <div class="abstract-content"><p>Navigation among pedestrians, cyclists and vehicles requires collision avoidance, considerate passing distances and efficient shared motion. PAIRFIELD represents heterogeneous interactions with an ordered class-pair potential aligned to each source agent's body frame. Its gradient supplies features to a directed prediction graph and current/future navigation cues. A route-constrained interface and barrier-based filter connect these cues to physical tracking. Evaluation spans planar simulation, closed-loop CARLA recordings and a qualitative ROS 2/LIMO hardware adaptation.</p></div>
       </div>
     </section>
 
@@ -54,7 +54,7 @@
       <div class="wide-container">
         <div class="section-heading"><p class="eyebrow">Closed-loop CARLA</p><h2 id="lead-heading">Interaction, seen from two views</h2><p>Replays pair the recorded camera with a fixed-scale map, logged interaction fields and graph edges.</p></div>
         <figure class="lead-media">
-          <video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline loop preload="metadata" poster="static/images/dense-pairfield-poster.jpg" aria-label="PairField navigating a left turn across moving cars and heavy trucks">
+          <video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline loop preload="metadata" poster="static/images/dense-pairfield-poster.jpg" aria-label="PAIRFIELD navigating a left turn across moving cars and heavy trucks">
             <source src="static/media/dense-pairfield.mp4" type="video/mp4">
             Embedded playback requires an HTML5 video-compatible browser.
           </video>
@@ -66,13 +66,88 @@
     <section class="section pale" id="method" aria-labelledby="method-heading">
       <div class="wide-container">
         <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-heading">Framework</h2></div>
-        <div class="method-intro"><p>PairField learns an ordered receiver/source class-pair potential in each source body's coordinate frame. Its longitudinal axis follows that agent's heading. The field gradient informs graph prediction and current navigation; predicted positions supply an anticipatory cue.</p><p>Road execution projects interaction cues onto the assigned route and regulates target speed within that route. A CBF-QP filters the shaped reference before tracking.</p></div>
+        <div class="method-intro"><p>PAIRFIELD learns an ordered receiver/source class-pair potential in each source body's coordinate frame. Its longitudinal axis follows that agent's heading. The field gradient informs graph prediction and current navigation; predicted positions supply an anticipatory cue.</p><p>Road execution projects interaction cues onto the assigned route and regulates target speed within that route. A CBF-QP filters the shaped reference before tracking.</p></div>
         <figure class="diagram figure-one">
-          <img draggable="false" src="static/images/figure1-framework.png" width="3007" height="1785" loading="lazy" alt="PairField structural framework: offline shared field and graph learning; source-body interaction field; directed graph prediction; current and future longitudinal cues; route reference, soft CBF-QP and embodiment tracking; Python, CARLA and ROS2 LIMO adaptations">
-          <figcaption><strong>Figure 1. PairField framework.</strong> Source-aligned class-pair fields support graph prediction and longitudinal cues. Independent safety tracks and local geometry feed the filter; sensing closes the control loop. Platform panels cover planar simulation, closed-loop CARLA and an exported-field ROS 2/LIMO adaptation.</figcaption>
+          <img draggable="false" src="static/images/figure1-framework.png" width="3007" height="1785" loading="lazy" alt="PAIRFIELD structural framework: offline shared field and graph learning; source-body interaction field; directed graph prediction; current and future longitudinal cues; route reference, soft CBF-QP and embodiment tracking; Python, CARLA and ROS2 LIMO adaptations">
+          <figcaption><strong>Figure 1. PAIRFIELD framework.</strong> Source-aligned class-pair fields support graph prediction and longitudinal cues. Independent safety tracks and local geometry feed the filter; sensing closes the control loop. Platform panels cover planar simulation, closed-loop CARLA and an exported-field ROS 2/LIMO adaptation.</figcaption>
         </figure>
       </div>
     </section>
+
+    <section class="section" id="planar" aria-labelledby="planar-heading"><div class="wide-container">
+      <div class="section-heading"><p class="eyebrow">Controlled evaluation</p><h2 id="planar-heading">Planar mechanisms and constrained-space navigation</h2><p>Planar simulation separates passing geometry, anticipation and wait/recommit control under known agent states.</p></div>
+      <p class="pair-note">One method family, two forecast configurations: <strong>PAIRFIELD (linear forecast)</strong> uses constant-velocity extrapolation; <strong>PAIRFIELD (graph forecast)</strong> uses the learned interaction graph. The primary planar suite uses linear forecasts. CARLA's source-body experiments use the learned graph predictor.</p>
+
+      <h3>Primary layouts: safety and travel cost</h3>
+      <div class="table-scroll" role="region" aria-label="Planar primary comparison" tabindex="0"><table class="results-table planar-primary" data-planar-table="primary"><caption>Five layouts × 30 paired seeds · 150 episodes per controller</caption><thead><tr><th scope="col">Controller / configuration</th><th scope="col">Contact-free success</th><th scope="col">Collision [95% CI] ↓</th><th scope="col">Travel-time premium (%) ↓</th></tr></thead><tbody>
+        <tr data-planar-id="vis_cbf"><th scope="row">Vis-CBF</th><td>0.79</td><td>0.213 [0.15, 0.29]</td><td>91.5</td></tr>
+        <tr data-planar-id="height_style"><th scope="row">HEIGHT-style adapter</th><td>0.89</td><td>0.113 [0.07, 0.18]</td><td>45.2</td></tr>
+        <tr data-planar-id="attngraph_style"><th scope="row">AttnGraph-style adapter</th><td>0.98</td><td>0.020 [0.00, 0.06]</td><td>21.4</td></tr>
+        <tr data-planar-id="shared_linear"><th scope="row">Shared potentials (linear forecast)</th><td>0.91</td><td>0.093 [0.05, 0.15]</td><td>30.6</td></tr>
+        <tr data-planar-id="pairfield_graph"><th scope="row">PAIRFIELD (graph forecast)</th><td>0.83</td><td>0.167 [0.11, 0.24]</td><td>31.5</td></tr>
+        <tr data-planar-id="pairfield_linear"><th scope="row">PAIRFIELD (linear forecast)</th><td>0.89</td><td>0.113 [0.07, 0.18]</td><td>30.2</td></tr>
+      </tbody></table></div>
+      <p class="table-note">PAIRFIELD reduces collision from 0.213 to 0.113 relative to Vis-CBF, with reported Holm-adjusted paired McNemar <i>p</i> = 0.040. Shared potentials have a lower collision point estimate; AttnGraph-style also has lower collision and travel-time premium. Travel-time premium is 100(Tv<sub>r</sub>/L − 1)%, with traversal time T, reference speed v<sub>r</sub> and reference length L.</p>
+
+      <h3>Single-file doorway: contact-free progress</h3>
+      <div class="table-scroll" role="region" aria-label="Planar doorway regime" tabindex="0"><table class="results-table compact-table" data-planar-table="doorway"><caption>Separate doorway regime · 30 trials per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Episodes with contact</th><th scope="col">Reported outcome</th></tr></thead><tbody>
+        <tr><th scope="row">Safe-VF</th><td>30 / 30</td><td>Contact in every trial</td></tr>
+        <tr><th scope="row">Geo+S+QP</th><td>30 / 30</td><td>Contact in every trial</td></tr>
+        <tr><th scope="row">AttnGraph-style adapter</th><td>30 / 30</td><td>Contact in every trial</td></tr>
+        <tr><th scope="row">HEIGHT-style adapter</th><td>0 / 30</td><td>One timeout</td></tr>
+        <tr><th scope="row">PAIRFIELD (linear forecast)</th><td>0 / 30</td><td>30 contact-free completions</td></tr>
+      </tbody></table></div>
+      <p class="table-note">The ranking changes in the bottleneck. PAIRFIELD's wait/recommit stack completes all 30 trials, with a median 7.86 s below the deadlock-speed threshold before passing. This result identifies the constrained geometry where its execution strategy helps.</p>
+
+      <h3>Class-conditioned passing, with geometry controlled</h3>
+      <div class="table-scroll" role="region" aria-label="Controlled class-pair passing offset" tabindex="0"><table class="results-table compact-table" data-planar-table="classes"><caption>Signed lateral offset (m) · class-conditioned / shared potentials · 24 paired trials per contrast</caption><thead><tr><th scope="col">Class contrast</th><th scope="col">Deployed geometry</th><th scope="col">Matched geometry</th></tr></thead><tbody>
+        <tr><th scope="row">Truck–pedestrian</th><td>0.244 / 0.140</td><td>0.086 / 0.000</td></tr>
+        <tr><th scope="row">Car–pedestrian</th><td>0.132 / 0.050</td><td>0.087 / 0.000</td></tr>
+        <tr><th scope="row">Car–bicycle</th><td>0.140 / 0.043</td><td>0.086 / 0.000</td></tr>
+      </tbody></table></div>
+      <p class="table-note">Positive offsets point away from the first-listed class. Mirrored scenes and longitudinal jitters control orientation. Equalizing radii and nonlearned class-dependent forces leaves an 8.6–8.7 cm passing offset induced by the learned parameter tables. Each geometry condition has three Holm-adjusted Wilcoxon contrasts, all reported <i>p</i> &lt; 0.001. The primary suite is 79% pedestrian and contains no trucks; this controlled test isolates passing direction.</p>
+
+      <details class="supporting-results"><summary>Complete planar comparisons, component tests and computational scope</summary>
+        <p class="pair-note">The speed governor gives the largest isolated collision reduction from Geo+S+QP (0.527 to 0.193); the complete linear-forecast stack reaches 0.113. Graph forecasts and shared potentials retain their own measured results in the complete comparison below.</p>
+        <div class="table-scroll" role="region" aria-label="Complete nineteen-arm planar comparison" tabindex="0"><table class="results-table planar-complete" data-planar-table="complete"><caption>All 19 reported primary-suite arms · rates and medians</caption><thead><tr><th scope="col">Controller / configuration</th><th scope="col">Success</th><th scope="col">Contact-free success</th><th scope="col">Collision [95% CI]</th><th scope="col">Time premium (%)</th><th scope="col">Min. clearance (m)</th><th scope="col">Proximity (s)</th><th scope="col">Adjusted p</th></tr></thead><tbody id="planar-complete-rows">
+          <tr data-planar-id="goal"><th scope="row">Goal</th><td>0.80</td><td>0.00</td><td>0.800 [0.73, 0.86]</td><td>28.2</td><td>-0.275</td><td>2.60</td><td>8e-26</td></tr>
+          <tr data-planar-id="cbf"><th scope="row">CBF</th><td>1.00</td><td>0.43</td><td>0.567 [0.48, 0.65]</td><td>35.7</td><td>-0.049</td><td>3.30</td><td>—</td></tr>
+          <tr data-planar-id="geo_qp"><th scope="row">Geo+QP</th><td>1.00</td><td>0.52</td><td>0.480 [0.40, 0.56]</td><td>16.5</td><td>0.004</td><td>3.25</td><td>—</td></tr>
+          <tr data-planar-id="geo_social_analytic"><th scope="row">Geo+S_a</th><td>1.00</td><td>0.49</td><td>0.507 [0.42, 0.59]</td><td>15.8</td><td>-0.014</td><td>3.35</td><td>—</td></tr>
+          <tr data-planar-id="geo_social"><th scope="row">Geo+S</th><td>1.00</td><td>0.42</td><td>0.580 [0.50, 0.66]</td><td>18.4</td><td>-0.097</td><td>3.70</td><td>—</td></tr>
+          <tr data-planar-id="geo_social_qp"><th scope="row">Geo+S+QP</th><td>1.00</td><td>0.47</td><td>0.527 [0.44, 0.61]</td><td>19.2</td><td>-0.018</td><td>3.32</td><td>—</td></tr>
+          <tr data-planar-id="geo_prediction_qp"><th scope="row">Geo+P+QP</th><td>1.00</td><td>0.87</td><td>0.133 [0.08, 0.20]</td><td>29.7</td><td>0.195</td><td>1.83</td><td>—</td></tr>
+          <tr data-planar-id="shared_linear"><th scope="row">Shared potentials (linear forecast)</th><td>1.00</td><td>0.91</td><td>0.093 [0.05, 0.15]</td><td>30.6</td><td>0.211</td><td>2.00</td><td>—</td></tr>
+          <tr data-planar-id="pairfield_graph"><th scope="row">PAIRFIELD (graph forecast)</th><td>1.00</td><td>0.83</td><td>0.167 [0.11, 0.24]</td><td>31.5</td><td>0.179</td><td>2.25</td><td>—</td></tr>
+          <tr data-planar-id="safe_vf"><th scope="row">Safe-VF</th><td>1.00</td><td>0.37</td><td>0.627 [0.54, 0.70]</td><td>14.7</td><td>-0.028</td><td>3.12</td><td>—</td></tr>
+          <tr data-planar-id="apf"><th scope="row">APF</th><td>1.00</td><td>0.63</td><td>0.373 [0.30, 0.46]</td><td>44.0</td><td>0.096</td><td>1.85</td><td>3e-7</td></tr>
+          <tr data-planar-id="orca"><th scope="row">ORCA</th><td>0.92</td><td>0.07</td><td>0.847 [0.78, 0.90]</td><td>53.2</td><td>-0.060</td><td>5.47</td><td>2e-28</td></tr>
+          <tr data-planar-id="sfm"><th scope="row">SFM</th><td>0.78</td><td>0.15</td><td>0.813 [0.74, 0.87]</td><td>61.6</td><td>-0.144</td><td>2.60</td><td>9e-29</td></tr>
+          <tr data-planar-id="vis_cbf"><th scope="row">Vis-CBF</th><td>1.00</td><td>0.79</td><td>0.213 [0.15, 0.29]</td><td>91.5</td><td>0.116</td><td>4.20</td><td>0.04</td></tr>
+          <tr data-planar-id="adapt_cbf"><th scope="row">Adapt-CBF</th><td>1.00</td><td>0.41</td><td>0.587 [0.50, 0.67]</td><td>43.1</td><td>-0.079</td><td>2.75</td><td>—</td></tr>
+          <tr data-planar-id="height_style"><th scope="row">HEIGHT-style adapter</th><td>1.00</td><td>0.89</td><td>0.113 [0.07, 0.18]</td><td>45.2</td><td>0.333</td><td>0.60</td><td>—</td></tr>
+          <tr data-planar-id="attngraph_style"><th scope="row">AttnGraph-style adapter</th><td>1.00</td><td>0.98</td><td>0.020 [0.00, 0.06]</td><td>21.4</td><td>0.351</td><td>1.15</td><td>—</td></tr>
+          <tr data-planar-id="pairfield_linear"><th scope="row">PAIRFIELD (linear forecast)</th><td>1.00</td><td>0.89</td><td>0.113 [0.07, 0.18]</td><td>30.2</td><td>0.195</td><td>2.15</td><td>—</td></tr>
+          <tr data-planar-id="pairfield_linear_tuned"><th scope="row">PAIRFIELD (linear forecast; tuned)</th><td>1.00</td><td>0.87</td><td>0.127 [0.08, 0.19]</td><td>38.2</td><td>0.181</td><td>2.30</td><td>—</td></tr>
+        </tbody></table></div>
+        <p class="table-note">Collision intervals are descriptive exact 95% intervals. Adjusted p values cover five prespecified McNemar comparisons with PAIRFIELD (linear forecast). HEIGHT-style and AttnGraph-style are adapters. The reported shared-potentials comparison has unadjusted p = 0.607. <a href="static/data/planar-evidence.json">Complete values, component tests and definitions</a>.</p>
+        <h3>Controller computation and stress envelope</h3>
+        <div class="table-scroll" role="region" aria-label="Planar controller timing" tabindex="0"><table class="results-table compact-table" data-planar-table="runtime"><caption>Single thread · Intel Core Ultra 9 285K · median / 95th percentile (ms)</caption><thead><tr><th scope="col">Controller</th><th scope="col">Nominal density</th><th scope="col">40 agents</th></tr></thead><tbody>
+          <tr><th scope="row">Geo+S+QP</th><td>2.22 / 5.37</td><td>2.05 / 6.04</td></tr>
+          <tr><th scope="row">AttnGraph-style adapter</th><td>2.94 / 5.67</td><td>6.37 / 12.64</td></tr>
+          <tr><th scope="row">PAIRFIELD (graph forecast)</th><td>5.04 / 11.14</td><td>—</td></tr>
+          <tr><th scope="row">PAIRFIELD (linear forecast)</th><td>5.54 / 11.93</td><td>16.65 / 24.71</td></tr>
+        </tbody></table></div>
+        <p class="table-note">Timing covers nominal command construction and CBF-QP, excluding simulation and metric bookkeeping. The observed PAIRFIELD linear-forecast 95th percentile is below the 50 ms budget at both reported densities. The density stress sweep separately increases collision from 0.10 at five agents to 0.85 at thirty.</p>
+        <p class="table-note">The post-QP contact guard activates in 26% of primary PAIRFIELD runs and 0.40% of control cycles, with mean / maximum activation displacement 9.6 / 23.8 mm. This guard lies outside the CBF certificate; boundaries are sampled. Across four training seeds, selected car-receiver amplitude entries retain truck &gt; car &gt; bicycle &gt; pedestrian ordering, with coefficients of variation 1.3–16.1%; closing-rate gains vary by up to 65%.</p>
+      </details>
+
+      <div class="comparison-grid planar-comparison">
+        <figure class="replay-card"><div class="planar-media"><img draggable="false" src="static/media/planar-field.gif" width="919" height="560" loading="lazy" alt="Illustrative planar navigation with potential contours and graph connections"></div><figcaption>Illustrative field and graph replay</figcaption></figure>
+        <figure class="replay-card"><div class="planar-media"><img draggable="false" src="static/media/planar-navigation.gif" width="2080" height="540" loading="lazy" alt="Illustrative planar navigation through moving heterogeneous agents"></div><figcaption>Illustrative navigation replay</figcaption></figure>
+      </div>
+      <p class="validation-bridge">The planar tests isolate mechanism and topology. CARLA evaluates the field-and-control framework with learned graph forecasts, sensor-gated tracks, responsive road users and physical tracking. The ROS 2/LIMO adaptation connects exported fields to onboard sensing and base commands.</p>
+    </div></section>
 
     <section class="section" id="carla" aria-labelledby="carla-heading">
       <div class="wide-container">
@@ -81,10 +156,10 @@
         <div class="pair-controls"><button class="button is-dark" type="button" id="play-pair">Play both from the start</button><button class="button is-light" type="button" id="pause-pair">Pause both</button><span id="pair-status" role="status" aria-live="polite">20 recorded frames per simulated second</span></div>
         <div class="comparison-grid" id="matched-videos">
           <article class="replay-card"><div class="card-label"><h3>DREAM APF + common QP</h3><span class="outcome adverse">HGV contact recorded</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dense-apf-poster.jpg"><source src="static/media/dense-apf.mp4" type="video/mp4"></video><p>Contact near 12.1 s, at 21.7% route completion. The last recorded camera precedes the callback by one tick.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>PairField</h3><span class="outcome">Contact-free goal</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dense-pairfield-poster.jpg"><source src="static/media/dense-pairfield.mp4" type="video/mp4"></video><p>Goal at 40.60 s on the assigned route. The minimum actual-body SAT margin is 0.40 m.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome">Contact-free goal</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dense-pairfield-poster.jpg"><source src="static/media/dense-pairfield.mp4" type="video/mp4"></video><p>Goal at 40.60 s on the assigned route. The minimum actual-body SAT margin is 0.40 m.</p></article>
         </div>
         <p class="pair-note">Paired playback starts at the same elapsed time and retains each recording's native duration. DREAM APF uses its released 15 m radial influence region. Field colours represent method-specific potential units.</p>
-        <figure class="image-plate"><img draggable="false" src="static/images/dense-pairs.jpg" width="2300" height="888" loading="lazy" alt="APF and PairField camera and field panels at matched approach and HGV crossing times"><figcaption>Matched snapshots at 10.35 and 12.05 s. Snapshot times follow APF class-wise SAT minima within the geometric crossing window, with the same logical actor in the paired PairField frame.</figcaption></figure>
+        <figure class="image-plate"><img draggable="false" src="static/images/dense-pairs.jpg" width="2300" height="888" loading="lazy" alt="APF and PAIRFIELD camera and field panels at matched approach and HGV crossing times"><figcaption>Matched snapshots at 10.35 and 12.05 s. Snapshot times follow APF class-wise SAT minima within the geometric crossing window, with the same logical actor in the paired PAIRFIELD frame.</figcaption></figure>
 
         <div class="section-heading gallery-heading"><p class="eyebrow">More interactions</p><h2>Different class mixtures and crowd loads</h2><p>Illustrative recordings vary prescribed traffic count and class mixture. Rosters describe the scenario's moving agents.</p></div>
         <p class="pair-note">Current replays use a fixed 64 × 36 m BEV crop with no per-frame zoom. Distant actors can leave the display without leaving the controller's inputs.</p>
@@ -97,10 +172,10 @@
         </div>
 
         <h3 class="gallery-heading">Matched pedestrian encounter: progress versus waiting</h3>
-        <p class="pair-note">Three separately fitted systems share one fixture and seed. All reach contact-free goals. In the 9–20 s pedestrian encounter, Shared-class waits longer and leaves a larger gap; PairField and No field record the same additional NPC stopping. Cars and the truck remain distant in this pilot.</p>
+        <p class="pair-note">Three separately fitted systems share one fixture and seed. All reach contact-free goals. In the 9–20 s pedestrian encounter, Shared-class waits longer and leaves a larger gap; PAIRFIELD and No field record the same additional NPC stopping. Cars and the truck remain distant in this pilot.</p>
         <div class="pair-controls"><button class="button is-dark" type="button" id="play-social-trio">Play all three</button><button class="button is-light" type="button" id="encounter-social-trio">Inspect 9–20 s</button><button class="button is-light" type="button" id="pause-social-trio">Pause</button><span id="social-trio-status" role="status" aria-live="polite">Matched clock · fixed 64 × 36 m BEV · native 20 Hz</span></div>
         <div class="replay-grid matched-trio" id="social-trio">
-          <article class="replay-card"><div class="card-label"><h3>PairField</h3><span>Goal 31.90 s · no contact</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/fourclass-poster.jpg"><source src="static/media/fourclass.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.242 m. Additional NPC stopping over 0–20 s: 0.55 actor-s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span>Goal 31.90 s · no contact</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/fourclass-poster.jpg"><source src="static/media/fourclass.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.242 m. Additional NPC stopping over 0–20 s: 0.55 actor-s.</p></article>
           <article class="replay-card"><div class="card-label"><h3>Shared-class</h3><span>Goal 34.10 s · no contact</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/fourclass-shared-poster.jpg"><source src="static/media/fourclass-shared.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.866 m, with 3.35 s ego stopping. Additional NPC stopping: 2.70 actor-s.</p></article>
           <article class="replay-card"><div class="card-label"><h3>No field</h3><span>Goal 31.75 s · no contact</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/fourclass-no-field-poster.jpg"><source src="static/media/fourclass-no-field.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.362 m. Additional NPC stopping is also 0.55 actor-s; the logged interaction field is zero.</p></article>
         </div>
@@ -108,7 +183,7 @@
         <h3 class="gallery-heading">Additional field baselines</h3>
         <p class="pair-note">Dynamic APF adds measured source-body dimensions, heading and velocity to a compact potential. ADA and Gaussian substitute their own nominal fields within the shared prediction/control host. MA-DV2F supplies its analytical vector policy with a route/QP adapter. All views keep a fixed 64 × 36 m scale and native 20 Hz cadence.</p>
         <div class="replay-grid field-replays">
-          <article class="replay-card"><div class="card-label"><h3>Dynamic APF · body / velocity</h3><span>Town10HD · four-class fixture</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dynamic-apf-poster.jpg"><source src="static/media/dynamic-apf.mp4" type="video/mp4"></video><p>Contact-free goal at 31.75 s. Additional NPC stopping ties PairField at 0.55 actor-s. Compact fields follow source headings; the graph belongs to the shared predictor.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>Dynamic APF · body / velocity</h3><span>Town10HD · four-class fixture</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dynamic-apf-poster.jpg"><source src="static/media/dynamic-apf.mp4" type="video/mp4"></video><p>Contact-free goal at 31.75 s. Additional NPC stopping ties PAIRFIELD at 0.55 actor-s. Compact fields follow source headings; the graph belongs to the shared predictor.</p></article>
           <article class="replay-card"><div class="card-label"><h3>DREAM ADA scalar-gradient</h3><span>Town10HD · vehicle left turn</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/ada-field-poster.jpg"><source src="static/media/ada-field.mp4" type="video/mp4"></video><p>Contact-free goal at 31.35 s. The display uses ADA's recorded nominal risk field and the common predictor's logged graph.</p></article>
           <article class="replay-card"><div class="card-label"><h3>Source-body Gaussian</h3><span>Town10HD · vehicle left turn</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/gaussian-field-poster.jpg"><source src="static/media/gaussian-field.mp4" type="video/mp4"></video><p>Contact-free goal at 31.65 s. This declared source-frame adaptation rotates the Gaussian field with measured source headings.</p></article>
           <article class="replay-card"><div class="card-label"><h3>MA-DV2F analytical policy</h3><span>Town10HD · vehicle left turn</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/ma-vector-poster.jpg"><source src="static/media/ma-vector.mp4" type="video/mp4"></video><p>Contact-free goal at 32.60 s. BEV shows the policy's native analytical direction components and interaction edges.</p></article>
@@ -118,11 +193,11 @@
         <h3 class="gallery-heading">Earlier crowded comparisons</h3>
         <p class="pair-note">Earlier receiver-axis V5.1 recordings retain native 20 Hz capture and fixed-scale BEV. Gray tiles mark completed recordings. These capture-only examples form a separate set from the 72-episode study.</p>
         <div class="comparison-grid historical-comparisons">
-          <article class="replay-card"><div class="card-label"><h3>ORCA: close cyclist passage</h3><span>Town05 · 11 agents</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" class="archive-video" controls muted playsinline preload="none" poster="static/images/historical-orca-near-poster.jpg"><source src="static/media/historical-orca-near.mp4" type="video/mp4"></video><p>Both finish without contact. ORCA's closest corrected body margin to the cyclist is 0.23 m; PairField's is 2.41 m. Goal times: 36.10 / 38.95 s.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>SFM: incomplete crowded crossing</h3><span>Town10HD · 11 agents</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" class="archive-video" controls muted playsinline preload="none" poster="static/images/historical-sfm-poster.jpg"><source src="static/media/historical-sfm.mp4" type="video/mp4"></video><p>SFM completes 29.36% of the route within 75 s; PairField reaches its goal at 36.00 s. Both recordings have zero native contacts.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>ORCA: close cyclist passage</h3><span>Town05 · 11 agents</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" class="archive-video" controls muted playsinline preload="none" poster="static/images/historical-orca-near-poster.jpg"><source src="static/media/historical-orca-near.mp4" type="video/mp4"></video><p>Both finish without contact. ORCA's closest corrected body margin to the cyclist is 0.23 m; PAIRFIELD's is 2.41 m. Goal times: 36.10 / 38.95 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>SFM: incomplete crowded crossing</h3><span>Town10HD · 11 agents</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" class="archive-video" controls muted playsinline preload="none" poster="static/images/historical-sfm-poster.jpg"><source src="static/media/historical-sfm.mp4" type="video/mp4"></video><p>SFM completes 29.36% of the route within 75 s; PAIRFIELD reaches its goal at 36.00 s. Both recordings have zero native contacts.</p></article>
         </div>
-        <details class="historical"><summary>Archived ORCA contact versus contact-free PairField (sampled 2 Hz)</summary><p>Town10HD, seven agents: four pedestrians, one bicycle and two cars. ORCA records pedestrian contact and does not finish within 75 s; the matched historical PairField run finishes at 37.70 s without contact. Complete-run replays sample native 5 Hz camera captures at 2 Hz.</p><div class="comparison-grid"><figure class="replay-card"><img draggable="false" src="static/media/historical-contact-orca.gif" width="1038" height="529" loading="lazy" alt="Historical ORCA complete-run sampled replay with recorded pedestrian contact"><figcaption>ORCA + common QP · contact and noncompletion</figcaption></figure><figure class="replay-card"><img draggable="false" src="static/media/historical-contact-pairfield.gif" width="1038" height="529" loading="lazy" alt="Matched historical PairField complete-run sampled replay without native contact"><figcaption>Historical PairField · contact-free goal</figcaption></figure></div></details>
-        <details class="historical"><summary>Earlier controller: additional ORCA contact snapshots</summary><p>This still illustration uses a different earlier receiver-axis controller. It is separate from the source-body comparisons and the 72-episode density cohort.</p><img draggable="false" src="static/images/legacy-orca-contact.jpg" width="2100" height="1023" loading="lazy" alt="Earlier ORCA approaches a crossing car and records native contact while the paired earlier PairField controller yields"></details>
+        <details class="historical"><summary>Archived ORCA contact versus contact-free PAIRFIELD (sampled 2 Hz)</summary><p>Town10HD, seven agents: four pedestrians, one bicycle and two cars. ORCA records pedestrian contact and does not finish within 75 s; the matched historical PAIRFIELD run finishes at 37.70 s without contact. Complete-run replays sample native 5 Hz camera captures at 2 Hz.</p><div class="comparison-grid"><figure class="replay-card"><img draggable="false" src="static/media/historical-contact-orca.gif" width="1038" height="529" loading="lazy" alt="Historical ORCA complete-run sampled replay with recorded pedestrian contact"><figcaption>ORCA + common QP · contact and noncompletion</figcaption></figure><figure class="replay-card"><img draggable="false" src="static/media/historical-contact-pairfield.gif" width="1038" height="529" loading="lazy" alt="Matched historical PAIRFIELD complete-run sampled replay without native contact"><figcaption>Historical PAIRFIELD · contact-free goal</figcaption></figure></div></details>
+        <details class="historical"><summary>Earlier controller: additional ORCA contact snapshots</summary><p>This still illustration uses a different earlier receiver-axis controller. It is separate from the source-body comparisons and the 72-episode density cohort.</p><img draggable="false" src="static/images/legacy-orca-contact.jpg" width="2100" height="1023" loading="lazy" alt="Earlier ORCA approaches a crossing car and records native contact while the paired earlier PAIRFIELD controller yields"></details>
       </div>
     </section>
 
@@ -137,17 +212,17 @@
           <tr><th scope="row">Geometry + QP</th><td>3 / 2</td><td>35.491 / 32.079</td></tr>
           <tr><th scope="row">Class-label ablation</th><td>6 / 6</td><td>3.687 / 5.526</td></tr>
           <tr><th scope="row">Longitudinal interface off</th><td>5 / 6</td><td>2.620 / 3.094</td></tr>
-          <tr><th scope="row">PairField</th><td>6 / 5</td><td>2.805 / 4.843</td></tr>
+          <tr><th scope="row">PAIRFIELD</th><td>6 / 5</td><td>2.805 / 4.843</td></tr>
         </tbody></table></div>
-        <p class="table-note">Two towns, three seeds; D1 has 7 agents and D2 has 11. PairField has lower total proximity exposure than ORCA and Geometry in 12/12 matched cases and SFM in 11/12. At high load, several comparison arms have lower pedestrian exposure. <a href="static/data/social-historical-episodes.csv">All episode and class-wise values</a>.</p>
+        <p class="table-note">Two towns, three seeds; D1 has 7 agents and D2 has 11. PAIRFIELD has lower total proximity exposure than ORCA and Geometry in 12/12 matched cases and SFM in 11/12. At high load, several comparison arms have lower pedestrian exposure. <a href="static/data/social-historical-episodes.csv">All episode and class-wise values</a>.</p>
 
         <h3>Traffic response in the pedestrian encounter</h3>
         <div class="table-scroll" role="region" aria-label="Current four-class traffic response" tabindex="0"><table class="results-table compact-table" data-social-table="fourclass"><caption>Current source-body pilot · one matched episode per system · all goals contact-free</caption><thead><tr><th scope="col">System</th><th scope="col">Goal (s)</th><th scope="col">Min. pedestrian SAT (m)</th><th scope="col">Extra NPC stopping ↓<br>(actor-s)</th></tr></thead><tbody>
-          <tr><th scope="row">PairField</th><td>31.90</td><td>1.242</td><td>+0.55</td></tr>
+          <tr><th scope="row">PAIRFIELD</th><td>31.90</td><td>1.242</td><td>+0.55</td></tr>
           <tr><th scope="row">Shared-class</th><td>34.10</td><td>1.866</td><td>+2.70</td></tr>
           <tr><th scope="row">No field</th><td>31.75</td><td>1.362</td><td>+0.55</td></tr>
         </tbody></table></div>
-        <p class="table-note">PairField and No field induce the same additional NPC stopping; Shared-class leaves a larger minimum gap and waits longer. Stopping is summed over 0–20 s against two matched absent-ego controls. <a href="static/data/social-npc-burden.csv">NPC contrasts</a>.</p>
+        <p class="table-note">PAIRFIELD and No field induce the same additional NPC stopping; Shared-class leaves a larger minimum gap and waits longer. Stopping is summed over 0–20 s against two matched absent-ego controls. <a href="static/data/social-npc-burden.csv">NPC contrasts</a>.</p>
 
         <div class="metric-definition"><p>Proximity index: actor-time-normalized exponential exposure to signed body SAT margin, with 1 m scale; cells show the median episode index at each load. NPC stopping measures simulator traffic response. These complementary proxies follow the evaluation categories in <a href="https://doi.org/10.1145/3700599">social-navigation evaluation guidance</a>. <a href="static/data/social-summary.json">Definitions and full measurements</a>.</p></div>
 
@@ -156,14 +231,14 @@
           <tr><th scope="row">DREAM APF</th><td>32.50</td><td>0</td><td>17.65</td><td>26.14</td></tr>
           <tr><th scope="row">DREAM ADA scalar-gradient</th><td>31.35</td><td>0</td><td>18.08</td><td>27.62</td></tr>
           <tr><th scope="row">Source-body Gaussian</th><td>31.65</td><td>0</td><td>17.09</td><td>28.52</td></tr>
-          <tr><th scope="row">PairField</th><td>31.40</td><td>0</td><td>17.17</td><td>27.00</td></tr>
+          <tr><th scope="row">PAIRFIELD</th><td>31.40</td><td>0</td><td>17.17</td><td>27.00</td></tr>
         </tbody></table></div>
         <p class="table-note">Development settings use a common bounded longitudinal cue map. Field modules substitute the nominal cue within the shared host. Raw jerk includes launch and observed stopping; command timing includes controller-to-command work. <a href="https://github.com/SAS-HKU/DREAM">DREAM sources</a> · <a href="static/data/vehicle-field-comparison.json">Recorded values and method scope</a>.</p>
 
         <details class="supporting-results"><summary>Supporting safety, motion and runtime statistics</summary>
         <figure class="image-plate"><img draggable="false" src="static/images/dense-statistics.png" width="2300" height="1033" loading="lazy" alt="Dense traffic comparison of route completion, car and HGV SAT margins, raw jerk and command and complete frame latency"><figcaption><a href="static/data/dense-comparison.csv">Episode-level values (CSV)</a>. SAT denotes a planar body support margin. Raw jerk includes launch and the observed terminal stop.</figcaption></figure>
         <div class="table-scroll" role="region" aria-label="Current dense vehicle results" tabindex="0"><table class="results-table"><caption>Current source-body controller · one dense C4/T2 episode per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Goal / contacts</th><th scope="col">Route (%)</th><th scope="col">Min. car / HGV SAT (m)</th><th scope="col">Raw jerk RMS / peak (m/s³)</th><th scope="col">Command p95 / max (ms)</th><th scope="col">Calls &gt; 50 ms</th></tr></thead><tbody>
-          <tr><th scope="row">PairField</th><td>Yes / 0</td><td>96.20</td><td>1.23 / 0.40</td><td>19.47 / 324.52</td><td>24.68 / 525.63</td><td>5 / 813</td></tr>
+          <tr><th scope="row">PAIRFIELD</th><td>Yes / 0</td><td>96.20</td><td>1.23 / 0.40</td><td>19.47 / 324.52</td><td>24.68 / 525.63</td><td>5 / 813</td></tr>
           <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td>96.27</td><td>1.33 / 0.25</td><td>26.42 / 402.81</td><td>23.46 / 120.42</td><td>3 / 870</td></tr>
           <tr><th scope="row">No field</th><td>Yes / 0</td><td>96.29</td><td>1.18 / 0.40</td><td>20.97 / 324.54</td><td>25.76 / 114.79</td><td>3 / 808</td></tr>
           <tr><th scope="row">APF + common QP</th><td>No / 1</td><td>21.75</td><td>4.02 / −0.30</td><td>21.26 / 136.62</td><td>24.10 / 85.21</td><td>1 / 242</td></tr>
@@ -177,21 +252,13 @@
           <tr><th scope="row">SFM + QP</th><td>6 / 3</td><td>0 / 3</td><td>81.1</td><td>0.53</td><td>2.67</td><td>8.14</td><td>5.18</td></tr>
           <tr><th scope="row">Geometry + QP</th><td>3 / 2</td><td>0 / 7</td><td>60.3</td><td>0.61</td><td>25.24</td><td>4.73</td><td>5.28</td></tr>
           <tr><th scope="row">Class-label ablation</th><td>6 / 6</td><td>0 / 0</td><td>96.2</td><td>1.27</td><td>1.64</td><td>7.09</td><td>14.18</td></tr>
-          <tr><th scope="row">PairField w/o longitudinal interface</th><td>5 / 6</td><td>1 / 0</td><td>96.2</td><td>1.39</td><td>1.08</td><td>8.40</td><td>14.08</td></tr>
-          <tr><th scope="row">PairField</th><td>6 / 5</td><td>1 / 0</td><td>96.2</td><td>1.24</td><td>1.23</td><td>7.99</td><td>14.09</td></tr>
+          <tr><th scope="row">PAIRFIELD w/o longitudinal interface</th><td>5 / 6</td><td>1 / 0</td><td>96.2</td><td>1.39</td><td>1.08</td><td>8.40</td><td>14.08</td></tr>
+          <tr><th scope="row">PAIRFIELD</th><td>6 / 5</td><td>1 / 0</td><td>96.2</td><td>1.24</td><td>1.23</td><td>7.99</td><td>14.09</td></tr>
         </tbody></table></div>
         <p class="table-note">Contact and non-goal counts can overlap. Continuous cells summarize episodes. Historical jerk uses a fixed 0.25 s velocity mean; current raw jerk uses the native signal. Class-label ablation changes neighbour labels to cars with fixed weights. <a href="static/data/historical-density-episodes.csv">Episode records</a>.</p>
         </details>
       </div>
     </section>
-
-    <section class="section" id="planar" aria-labelledby="planar-heading"><div class="wide-container">
-      <div class="section-heading"><h2 id="planar-heading">Planar proof of concept</h2><p>The simpler simulator exposes fields and graph interactions directly. CARLA adds simulated sensing, native traffic response and physical tracking.</p></div>
-      <div class="comparison-grid planar-comparison">
-        <figure class="replay-card"><div class="planar-media"><img draggable="false" src="static/media/planar-field.gif" width="919" height="560" loading="lazy" alt="Planar navigation with potential contours, prediction and graph connections"></div><figcaption>Field and graph visualization</figcaption></figure>
-        <figure class="replay-card"><div class="planar-media"><img draggable="false" src="static/media/planar-navigation.gif" width="2080" height="540" loading="lazy" alt="Planar navigation through moving heterogeneous agents"></div><figcaption>Navigation replay</figcaption></figure>
-      </div>
-    </div></section>
 
     <section class="section" id="hardware" aria-labelledby="hardware-heading"><div class="wide-container">
       <div class="section-heading"><h2 id="hardware-heading">ROS 2 / LIMO hardware adaptation</h2><p>The ROS 2/LIMO adaptation connects onboard observations to bounded differential-drive commands using an exported class-pair field and optional constant-velocity anticipation.</p></div>
@@ -199,6 +266,6 @@
     </div></section>
 
   </main>
-  <footer class="footer"><div class="wide-container"><p>Anonymous research project. Template adapted from <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a>, originally based on <a href="https://nerfies.github.io/">Nerfies</a>.</p><p>Template-derived website layout: <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Original PairField figures and research replays © Anonymous Authors. Third-party platform images retain their respective rights. Please cite PairField and request permission for reuse.</p></div></footer>
+  <footer class="footer"><div class="wide-container"><p>Anonymous research project. Template adapted from <a href="https://github.com/eliahuhorwitz/Academic-project-page-template">Academic Project Page Template</a>, originally based on <a href="https://nerfies.github.io/">Nerfies</a>.</p><p>Template-derived website layout: <a rel="license" href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Original PAIRFIELD figures and research replays © Anonymous Authors. Third-party platform images retain their respective rights. Please cite PAIRFIELD and request permission for reuse.</p></div></footer>
 </body>
 </html>

@@ -337,6 +337,10 @@ h3.gallery-heading { margin-bottom: 10px; font: 700 21px/1.35 var(--paper-serif)
 .planar-media .research-media { height: 100%; }
 .results-table.compact-table { min-width: 680px; }
 .results-table[data-social-table="historical"] { min-width: 580px; }
+.results-table.planar-primary { min-width: 780px; }
+.results-table.planar-complete { min-width: 1180px; }
+.planar-primary tbody th, .planar-complete tbody th { min-width: 285px; }
+.validation-bridge { max-width: 900px; margin: 24px 0 0; font-size: 16px; line-height: 1.8; }
 
 /* Booktabs-like tables: the complete source values remain scrollable. */
 .table-scroll {
