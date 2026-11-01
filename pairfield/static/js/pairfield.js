@@ -23,7 +23,7 @@ function bindMatchedPlayback({root, play, pause, status, encounter}) {
         video.load();
       })));
     } catch (_) {
-      feedback.textContent = 'A recording could not load. Please try its download link.';
+      feedback.textContent = 'A recording could not load. Please reload the page and try again.';
       return;
     }
     if (request !== requestId) return;
@@ -73,3 +73,24 @@ function bindMatchedPlayback({root, play, pause, status, encounter}) {
 
 bindMatchedPlayback({root:'matched-videos',play:'play-pair',pause:'pause-pair',status:'pair-status'});
 bindMatchedPlayback({root:'social-trio',play:'play-social-trio',pause:'pause-social-trio',status:'social-trio-status',encounter:'encounter-social-trio'});
+
+// Attribution and casual-saving deterrents. Public browser media remain
+// retrievable; these controls are deliberately not represented as DRM.
+document.querySelectorAll('main img, main video').forEach(media => {
+  media.draggable = false;
+  media.addEventListener('dragstart', event => event.preventDefault());
+  media.addEventListener('contextmenu', event => event.preventDefault());
+  if (media instanceof HTMLVideoElement) {
+    media.controlsList?.add('nodownload', 'noremoteplayback');
+    media.disablePictureInPicture = true;
+    media.disableRemotePlayback = true;
+  }
+  const frame = document.createElement('div');
+  frame.className = 'research-media';
+  const credit = document.createElement('span');
+  credit.className = 'media-credit';
+  credit.textContent = 'PairField · © Anonymous Authors';
+  credit.setAttribute('aria-hidden', 'true');
+  media.before(frame);
+  frame.append(media, credit);
+});
