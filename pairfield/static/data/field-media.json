@@ -1,0 +1,145 @@
+{
+  "cases": [
+    {
+      "id": "dynamic-apf",
+      "method": "Dynamic APF (body/velocity)",
+      "scope": "four-class fixture; shared Full predictor and route/QP host",
+      "town": "Town10HD",
+      "frames": 636,
+      "fps": 20,
+      "duration_s": 31.8,
+      "canvas": [
+        1920,
+        540
+      ],
+      "each_view": [
+        960,
+        540
+      ],
+      "viewport_extent_m": [
+        64,
+        36
+      ],
+      "viewport_axes": "fixed episode axes; translation-only follow",
+      "physics_interpolation": false,
+      "potential_units": "method-specific raw potential",
+      "palette_range": [
+        0.0,
+        2.0
+      ],
+      "graph_role": "SHARED_FULL_PREDICTOR_INTERNAL_NOT_NOMINAL_CONTROL_FIELD",
+      "mp4": "static/media/dynamic-apf.mp4",
+      "poster": "static/images/dynamic-apf-poster.jpg",
+      "sha256": {
+        "mp4": "6a1a4f641b93a8b1c02c88dfe5931d02a6a4054facbe088d25e424722c121bda",
+        "poster": "389320bab31d520649b79638edcf5e36a96f749d07305fd5c2d7505c5828a094"
+      },
+      "bytes": 17879049
+    },
+    {
+      "id": "ada-field",
+      "method": "DREAM ADA scalar-gradient",
+      "scope": "vehicle-only left turn; shared Full predictor and route/QP host",
+      "town": "Town10HD",
+      "frames": 628,
+      "fps": 20,
+      "duration_s": 31.4,
+      "canvas": [
+        1920,
+        540
+      ],
+      "each_view": [
+        960,
+        540
+      ],
+      "viewport_extent_m": [
+        64,
+        36
+      ],
+      "viewport_axes": "fixed episode axes; translation-only follow",
+      "physics_interpolation": false,
+      "potential_units": "method-specific raw potential",
+      "palette_range": [
+        0.0,
+        6.0
+      ],
+      "graph_role": "SHARED_FULL_PREDICTOR_INTERNAL_NOT_NOMINAL_CONTROL_FIELD",
+      "mp4": "static/media/ada-field.mp4",
+      "poster": "static/images/ada-field-poster.jpg",
+      "sha256": {
+        "mp4": "4b9a9f03c18f7ad1fd6d1f998b0dbb6024bc160c2325edd59fa44e6e4317fa29",
+        "poster": "068e3b9ed95983ec736f2e07a221641f9a9ba9981a5f3474b39e4738fa059e61"
+      },
+      "bytes": 18745031
+    },
+    {
+      "id": "gaussian-field",
+      "method": "Source-body Gaussian",
+      "scope": "vehicle-only left turn; shared Full predictor and route/QP host",
+      "town": "Town10HD",
+      "frames": 634,
+      "fps": 20,
+      "duration_s": 31.7,
+      "canvas": [
+        1920,
+        540
+      ],
+      "each_view": [
+        960,
+        540
+      ],
+      "viewport_extent_m": [
+        64,
+        36
+      ],
+      "viewport_axes": "fixed episode axes; translation-only follow",
+      "physics_interpolation": false,
+      "potential_units": "method-specific raw potential",
+      "palette_range": [
+        0.0,
+        6.0
+      ],
+      "graph_role": "SHARED_FULL_PREDICTOR_INTERNAL_NOT_NOMINAL_CONTROL_FIELD",
+      "mp4": "static/media/gaussian-field.mp4",
+      "poster": "static/images/gaussian-field-poster.jpg",
+      "sha256": {
+        "mp4": "22a5ba8adb73a5d1806c2c29a489014cda0cbc17ba573382b0ebc1acd6cc23d5",
+        "poster": "20f4f7299a9c307a9e834ba53dc37b4f1118bfb33294c0cc8a03cb68e1ed0bc7"
+      },
+      "bytes": 19089526
+    },
+    {
+      "id": "ma-vector",
+      "method": "MA-DV2F analytical policy with constraint adapter",
+      "scope": "vehicle-only left turn; native analytical vectors",
+      "town": "Town10HD",
+      "frames": 653,
+      "fps": 20,
+      "duration_s": 32.65,
+      "canvas": [
+        1920,
+        540
+      ],
+      "each_view": [
+        960,
+        540
+      ],
+      "viewport_extent_m": [
+        64,
+        36
+      ],
+      "viewport_axes": "fixed episode axes; translation-only follow",
+      "physics_interpolation": false,
+      "potential_units": "analytical vectors",
+      "palette_range": null,
+      "graph_role": "analytical policy edges",
+      "mp4": "static/media/ma-vector.mp4",
+      "poster": "static/images/ma-vector-poster.jpg",
+      "sha256": {
+        "mp4": "30981f9fbfebc442345ef7ef7a0fdc5fe3ed360a7f9e1db886e9b6635e19272f",
+        "poster": "4169ba19a2e9ea81d1fbdcb575f64ae3c99d23ef37d3425b7510b774daf560e2"
+      },
+      "bytes": 18693502
+    }
+  ]
+}

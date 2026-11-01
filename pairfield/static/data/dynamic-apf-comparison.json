@@ -1,0 +1,52 @@
+{
+  "schema": "pairfield.dynamic_APF.samefixture.descriptive_native_comparison.v1",
+  "fixture": "Town10HD four-class pedestrian encounter",
+  "scope": "one new fixed-development Dynamic APF episode versus existing same-fixture Full technical prerequisite",
+  "rows": [
+    {
+      "method": "PairField",
+      "goal": true,
+      "native_contacts": 0,
+      "goal_time_s": 31.900000000000002,
+      "active_with_terminal_duration_s": 32.5,
+      "raw_jerk_RMS_mps3": 15.87469205324468,
+      "raw_jerk_p95_mps3": 2.3695018378477184,
+      "raw_jerk_max_mps3": 263.1679639876703,
+      "prefix_active_terminal_raw_jerk_RMS_mps3": 15.647460037621515,
+      "ego_stopped_time_s": 1.8500000000000014,
+      "NPC_extra_stopped_vs_ref1_actor_s": 0.549999999999998,
+      "NPC_extra_stopped_vs_ref2_actor_s": 0.549999999999998,
+      "NPC_extra_deceleration_vs_ref1_actor_mps": 0.050815093538536554,
+      "NPC_extra_deceleration_vs_ref2_actor_mps": 0.07370477785784127,
+      "controller_to_command_p50_ms": 21.5368,
+      "controller_to_command_p95_ms": 28.2723,
+      "controller_to_command_max_ms": 116.2682,
+      "controller_to_command_deadline_misses": 4,
+      "QP_fallback": 0
+    },
+    {
+      "method": "Dynamic APF (body/velocity)",
+      "goal": true,
+      "native_contacts": 0,
+      "goal_time_s": 31.75,
+      "active_with_terminal_duration_s": 32.35,
+      "raw_jerk_RMS_mps3": 15.9075313720723,
+      "raw_jerk_p95_mps3": 2.5093715336537086,
+      "raw_jerk_max_mps3": 236.01656000748102,
+      "prefix_active_terminal_raw_jerk_RMS_mps3": 15.678793909072619,
+      "ego_stopped_time_s": 1.8500000000000014,
+      "NPC_extra_stopped_vs_ref1_actor_s": 0.549999999999998,
+      "NPC_extra_stopped_vs_ref2_actor_s": 0.549999999999998,
+      "NPC_extra_deceleration_vs_ref1_actor_mps": 0.05035724899927185,
+      "NPC_extra_deceleration_vs_ref2_actor_mps": 0.07324693331857657,
+      "controller_to_command_p50_ms": 24.61275,
+      "controller_to_command_p95_ms": 33.198375,
+      "controller_to_command_max_ms": 355.8524,
+      "controller_to_command_deadline_misses": 5,
+      "QP_fallback": 0
+    }
+  ],
+  "jerk": "Native velocity finite differences through observed stop; all raw spikes retained",
+  "npc": "Signed extra stopping over fixed0\u201320s against both matched absent-ego references",
+  "tuning": "Fixed development configuration; one episode per arm"
+}
