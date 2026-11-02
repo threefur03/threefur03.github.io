@@ -7,15 +7,19 @@
       "width": 1920,
       "height": 1080,
       "fps": 30,
-      "frames": 2088,
-      "duration_s": 69.6,
+      "frames": 1638,
+      "duration_s": 54.6,
       "playback_speed": 1,
+      "source_window_s": [
+        0,
+        54.6
+      ],
       "spatial_resize": false,
       "temporal_resampling": false,
       "audio": false,
-      "bytes": 18747011,
+      "bytes": 14647395,
       "sha256": {
-        "mp4": "4cb8ea65f0c35175292a0df917378e42c43df2ba2de840d05cbaad8b7ac32d31",
+        "mp4": "7c96afdaa16b473db53a2982a7e249ba6898d5048c5795136306d76bd9fc82ab",
         "poster": "206e502edc71fde5c0566f1ed9ee0abf0a1860c184352871b9ca2c619ccf3ca1"
       }
     },
@@ -29,6 +33,10 @@
       "frames": 1684,
       "duration_s": 56.13333333333333,
       "playback_speed": 1,
+      "source_window_s": [
+        0,
+        56.13333333333333
+      ],
       "spatial_resize": false,
       "temporal_resampling": false,
       "audio": false,
