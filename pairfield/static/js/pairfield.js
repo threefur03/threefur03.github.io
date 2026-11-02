@@ -89,7 +89,7 @@ document.querySelectorAll('main img, main video').forEach(media => {
   frame.className = 'research-media';
   const credit = document.createElement('span');
   credit.className = 'media-credit';
-  credit.textContent = media.closest('#hardware')
+  credit.textContent = media.matches('#hardware img[src$="limo-platform.png"]')
     ? 'AgileX LIMO · supplied platform image'
     : 'PAIRFIELD · © Anonymous Authors';
   credit.setAttribute('aria-hidden', 'true');

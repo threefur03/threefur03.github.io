@@ -1,0 +1,44 @@
+{
+  "recordings": [
+    {
+      "setting": "indoor",
+      "mp4": "static/media/limo-indoor.mp4",
+      "poster": "static/images/limo-indoor-poster.jpg",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "frames": 2088,
+      "duration_s": 69.6,
+      "playback_speed": 1,
+      "spatial_resize": false,
+      "temporal_resampling": false,
+      "audio": false,
+      "bytes": 18747011,
+      "sha256": {
+        "mp4": "4cb8ea65f0c35175292a0df917378e42c43df2ba2de840d05cbaad8b7ac32d31",
+        "poster": "206e502edc71fde5c0566f1ed9ee0abf0a1860c184352871b9ca2c619ccf3ca1"
+      }
+    },
+    {
+      "setting": "outdoor",
+      "mp4": "static/media/limo-outdoor.mp4",
+      "poster": "static/images/limo-outdoor-poster.jpg",
+      "width": 1920,
+      "height": 1080,
+      "fps": 30,
+      "frames": 1684,
+      "duration_s": 56.13333333333333,
+      "playback_speed": 1,
+      "spatial_resize": false,
+      "temporal_resampling": false,
+      "audio": false,
+      "bytes": 21439554,
+      "sha256": {
+        "mp4": "ae4214891862b17a1361ac5a4c81031216af57f8a750f763bd3026220acec25f",
+        "poster": "dec9879bec34a6c342fddbd4812f0933b832462cb6fc84be9b05f05fd73a0dfd"
+      }
+    }
+  ],
+  "evidence": "qualitative supplied recordings",
+  "runtime_measurements": "pending synchronized computational logs"
+}

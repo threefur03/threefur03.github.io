@@ -214,6 +214,9 @@ h3 {
 .hardware-layout figcaption { text-align: center; }
 .hardware-text p { margin: 12px 0; font-size: 16px; line-height: 1.8; }
 .hardware-text code { color: #2b3a4c; background: #f2f4f6; font-size: .88em; }
+.hardware-replays { margin-top: 24px; }
+.hardware-replays .replay-card video { width: 100%; height: auto; aspect-ratio: 16 / 9; object-fit: contain; }
+.hardware-recording-note { max-width: 920px; }
 @media (max-width: 650px) { .hardware-layout { grid-template-columns: 1fr; gap: 16px; } .hardware-layout figure { max-width: 280px; margin: 0 auto; } .navlinks { flex-wrap: wrap; justify-content: flex-end; row-gap: 4px; } }
 .method-intro {
   display: block;
