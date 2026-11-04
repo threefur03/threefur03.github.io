@@ -201,6 +201,17 @@ h3 {
   text-align: left;
 }
 .abstract-content p + p { margin-top: .8em; }
+.abstract-section > .wide-container > h2 { text-align: center; margin-bottom: 16px; }
+.contribution-stats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); margin: 27px 0 12px; border-top: 1px solid #657285; border-bottom: 1px solid #657285; }
+.contribution-stats > div { padding: 17px 10px; text-align: center; border-left: 1px solid #dce0e5; }
+.contribution-stats > div:first-child { border-left: 0; }
+.contribution-stats strong { display: block; color: #183f69; font: 700 30px/1.2 var(--paper-serif); margin-bottom: 7px; }
+.contribution-stats span { display: block; color: #26313e; font: 600 12px/1.5 var(--paper-sans); }
+.contribution-stats small { display: block; margin-top: 5px; color: #505965; font: 11px/1.5 var(--paper-sans); }
+.contribution-scope { color: #4c5662; font: 12px/1.65 var(--paper-sans); text-align: center; }
+.contribution-scope a { text-decoration: underline; }
+@media (max-width: 850px) { .contribution-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); } .contribution-stats > div { border-bottom: 1px solid #dce0e5; } }
+@media (max-width: 650px) { .contribution-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); } .contribution-stats > div:last-child { grid-column: 1 / -1; border-left: 0; border-bottom: 0; } }
 .metric-definition { max-width: 920px; margin: 24px 0; border-left: 3px solid #72859b; padding: 4px 0 4px 20px; }
 .metric-definition p { margin: 10px 0; font-size: 15px; line-height: 1.8; }
 .supporting-results { margin-top: 28px; border-top: 1px solid #b8c2ce; padding-top: 16px; }
@@ -342,6 +353,7 @@ h3.gallery-heading { margin-bottom: 10px; font: 700 21px/1.35 var(--paper-serif)
 .results-table[data-social-table="historical"] { min-width: 580px; }
 .results-table.planar-primary { min-width: 780px; }
 .results-table.dense-key-results { min-width: 720px; }
+.results-table.responsive40-table { min-width: 1000px; }
 .results-table.planar-complete { min-width: 1180px; }
 .planar-primary tbody th, .planar-complete tbody th { min-width: 285px; }
 .validation-bridge { max-width: 900px; margin: 24px 0 0; font-size: 16px; line-height: 1.8; }
