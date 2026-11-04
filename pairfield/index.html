@@ -16,7 +16,7 @@
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/template.css">
   <link rel="stylesheet" href="static/css/pairfield.css?v=20261027-crowds">
-  <link rel="stylesheet" href="static/css/paper.css?v=20261102-evidence">
+  <link rel="stylesheet" href="static/css/paper.css?v=20261104-contributions">
   <script src="static/js/pairfield.js?v=20261102-hardware" defer></script>
   <title>PAIRFIELD: Edge-Attributed Class-Pair Potentials for Predictive Heterogeneous Navigation</title>
 </head>
@@ -24,7 +24,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="topbar" aria-label="Page navigation">
     <a class="wordmark" href="#">PAIRFIELD<span class="wordmark-dot" aria-hidden="true"></span></a>
-    <div class="navlinks"><a href="#abstract">Abstract</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#carla">CARLA</a><a href="#evidence">CARLA results</a><a href="#hardware">LIMO</a></div>
+    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#carla">CARLA</a><a href="#evidence">CARLA results</a><a href="#hardware">LIMO</a></div>
   </nav>
   <main id="main">
     <header class="hero project-hero">
@@ -43,9 +43,18 @@
     </header>
 
     <section class="section abstract-section" id="abstract" aria-labelledby="abstract-heading">
-      <div class="container is-max-desktop">
-        <h2 id="abstract-heading">Abstract</h2>
-        <div class="abstract-content"><p>Navigation among pedestrians, cyclists and vehicles requires collision avoidance, considerate passing distances and efficient shared motion. PAIRFIELD represents heterogeneous interactions with an ordered class-pair potential aligned to each source agent's body frame. Its gradient supplies features to a directed prediction graph and current/future navigation cues. A route-constrained interface and barrier-based filter connect these cues to physical tracking. Evaluation spans planar simulation, closed-loop CARLA recordings and a qualitative ROS 2/LIMO hardware adaptation.</p></div>
+      <div class="wide-container">
+        <h2 id="abstract-heading">Core contributions</h2>
+        <div class="abstract-content"><p>PAIRFIELD connects continuous interaction fields with directed, inspectable relations. A single ordered class-pair kernel produces a cycle-frozen anisotropic force for each neighbour. The force norm defines edge salience, and the vector sum forms the nominal social cue, giving an exact force-to-edge correspondence before command saturation and filtering.</p>
+        <p>Offline calibration distils class-asymmetric signatures into compact parameter tables. Analytical field queries and the linear-forecast configuration run without neural inference. A goal-ray commit gate, go/creep governor and CBF-QP connect these cues to motion. Controlled planar tests isolate class-conditioned passing and bottleneck execution; CARLA integration configurations and mapless ROS 2/LIMO recordings extend evaluation to physical tracking and onboard observations.</p></div>
+        <div class="contribution-stats" aria-label="Representative controlled planar results">
+          <div><strong>89%</strong><span>Collision-free success</span><small>150 paired planar episodes</small></div>
+          <div><strong>47%</strong><span>Fewer collisions vs Vis-CBF</span><small>0.213 → 0.113 collision rate</small></div>
+          <div><strong>3.03×</strong><span>Smaller travel-time premium</span><small>91.5% → 30.2% vs Vis-CBF</small></div>
+          <div><strong>30/30</strong><span>Contact-free doorway goals</span><small>Separate constrained-passage regime</small></div>
+          <div><strong>5.54 ms</strong><span>Planar controller median</span><small>p95 11.93 ms · 50 ms cycle budget</small></div>
+        </div>
+        <p class="contribution-scope">Linear-forecast configuration; timing includes nominal command construction and CBF-QP. Comparative statistics use Vis-CBF as the reference. <a href="#planar">Complete baselines, ablations and measurement scope</a>.</p>
       </div>
     </section>
 
@@ -65,7 +74,7 @@
     <section class="section pale" id="method" aria-labelledby="method-heading">
       <div class="wide-container">
         <div class="section-heading"><p class="eyebrow">Method</p><h2 id="method-heading">Framework</h2></div>
-        <div class="method-intro"><p>Interaction risk depends on who approaches, in which direction and along which future path. PAIRFIELD represents these distinctions through an ordered receiver/source class-pair potential aligned to each source body's heading. Its gradient attributes directed graph edges and supplies current navigation cues; predicted positions supply an anticipatory cue.</p><p>Road execution projects interaction cues onto the assigned route and regulates target speed within that route. A CBF-QP filters the shaped reference before tracking.</p></div>
+        <div class="method-intro"><p>Interaction risk depends on who approaches, in which direction and along which future path. PAIRFIELD represents these distinctions through ordered receiver/source classes and body-aligned anisotropy. Its gradient supplies pairwise social cues and directed edge salience; future positions supply an anticipatory cue. Coordinate-frame choices and forecast backends are declared with each experimental configuration.</p><p>Road execution projects interaction cues onto the assigned route and regulates target speed within that route. A CBF-QP filters the shaped reference before tracking.</p></div>
         <figure class="diagram figure-one">
           <img draggable="false" src="static/images/figure1-framework.png?v=20261102-supplied" width="4568" height="1698" loading="lazy" alt="PAIRFIELD framework showing scene inputs, offline class-conditioned field learning and interaction graph modeling, online field synthesis, CBF-QP filtering, embodiment-specific chassis commands, and planar, CARLA and real-world deployment">
           <figcaption><strong>Figure 1. PAIRFIELD framework.</strong> Scene observations and learned class-pair potentials support interaction-graph modeling and predictive field synthesis. CBF-QP filtering and embodiment-specific tracking connect the planner to planar, CARLA and real-world evaluation.</figcaption>
@@ -213,10 +222,21 @@
           <tr><th scope="row">No field</th><td>Yes / 0</td><td>0.40</td><td>20.97</td><td>25.76</td></tr>
           <tr><th scope="row">PAIRFIELD</th><td>Yes / 0</td><td>0.40</td><td>19.47</td><td>24.68</td></tr>
         </tbody></table></div>
-        <p class="table-note">In the <a href="#matched-videos">paired crossing replay</a>, APF records truck contact and PAIRFIELD reaches its goal. PAIRFIELD has a larger truck body-support margin and lower recorded jerk than Shared-class in this episode; No field also finishes with a similar truck margin. Raw jerk includes launch and stopping over unequal run durations, with APF ending at contact. Command timing excludes upstream sensing/simulation; PAIRFIELD records 5/813 calls above 50 ms. Full timings and peaks appear below.</p>
+        <p class="table-note">In the <a href="#matched-videos">paired crossing replay</a>, APF records truck contact and PAIRFIELD reaches its goal. PAIRFIELD has a larger truck body-support margin and lower recorded jerk than Shared-class in this episode; No field also finishes with a similar truck margin. Body margins use the fixed 60 s state capture. Raw jerk includes launch and stopping over unequal active-command durations, with APF commands ending at contact. Command timing excludes upstream sensing/simulation; PAIRFIELD records 5/813 calls above 50 ms. Full timings and peaks appear below.</p>
         <p class="table-note">In the separate pedestrian pilot, all three systems finish contact-free. Additional NPC stopping is 0.55 actor-s for PAIRFIELD and No field, versus 2.70 for Shared-class.</p>
 
-        <details class="supporting-results"><summary>Density, traffic response and field-module comparisons</summary>
+        <details class="supporting-results" id="responsive40"><summary>Manuscript responsive cohort: 40 episodes</summary>
+        <div class="table-scroll" role="region" aria-label="Forty-episode responsive CARLA cohort" tabindex="0"><table class="results-table responsive40-table" data-evidence-table="responsive40"><caption>Receiver-aligned integration · five controllers × eight matched cases · all native contact counts zero</caption><thead><tr><th scope="col">Controller</th><th scope="col">Contact-free goals / 8</th><th scope="col">Median support margin (m)</th><th scope="col">Proximity exposure (s)</th><th scope="col">Smoothed jerk RMS (m/s³)</th><th scope="col">Median episode p95 (ms)</th></tr></thead><tbody>
+          <tr><th scope="row">ORCA + common QP</th><td>8 / 8</td><td>0.430</td><td>11.29</td><td>11.59</td><td>4.35</td></tr>
+          <tr><th scope="row">SFM + common QP</th><td>8 / 8</td><td>0.517</td><td>3.94</td><td>6.95</td><td>3.75</td></tr>
+          <tr><th scope="row">Reactive stack</th><td>6 / 8</td><td>0.533</td><td>9.13</td><td>6.31</td><td>3.89</td></tr>
+          <tr><th scope="row">Class-label collapse</th><td>8 / 8</td><td>0.884</td><td>3.08</td><td>11.61</td><td>17.99</td></tr>
+          <tr><th scope="row">PAIRFIELD</th><td>8 / 8</td><td>1.525</td><td>1.17</td><td>14.09</td><td>18.00</td></tr>
+        </tbody></table></div>
+        <p class="table-note">Town10HD and Town05, two actor loads and two traffic evolutions, retrospectively assembled from separately frozen cohorts without outcome-based filtering. This configuration uses oracle states, green-frozen signals and a learned forecast adapter. PAIRFIELD has larger support margins and lower proximity exposure than ORCA and SFM in all eight matched cases, with higher measured jerk and computation. Runtime includes prediction where used, cache, planning/QP and tracking; PAIRFIELD records 1/6224 calls above 50 ms, maximum 56.42 ms. All 40 navigation traces are complete; 16 abnormal cleanup/process exits remain documented. <a href="static/data/responsive40-summary.json">Protocol, definitions and reported values</a>.</p>
+        </details>
+
+        <details class="supporting-results"><summary>Other density, traffic response and field-module comparisons</summary>
         <h3>Density benchmark</h3>
         <div class="table-scroll" role="region" aria-label="Historical density benchmark summary" tabindex="0"><table class="results-table compact-table" data-social-table="historical"><caption>Earlier receiver-axis V5.1 · 72 episodes · values are D1 / D2</caption><thead><tr><th scope="col">Method</th><th scope="col">Contact-free goals<br>(out of 6 per load)</th><th scope="col">Proximity index ↓<br>(×1000)</th></tr></thead><tbody>
           <tr><th scope="row">ORCA + QP</th><td>3 / 2</td><td>41.825 / 27.290</td></tr>

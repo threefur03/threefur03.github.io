@@ -1,0 +1,30 @@
+{
+  "cohort": "receiver-aligned responsive CARLA integration",
+  "episodes": 40,
+  "episodes_per_controller": 8,
+  "towns": ["Town10HD", "Town05"],
+  "class_order": ["pedestrian", "bicycle", "car", "truck"],
+  "actor_loads": [[4, 1, 2, 1], [7, 2, 4, 1]],
+  "traffic_evolutions_per_scene_load": 2,
+  "assembly": "Retrospective combination of two separately frozen 20-episode cohorts; all declared controller/case combinations retained irrespective of outcome.",
+  "observation": "Oracle actor states; traffic signals frozen green.",
+  "forecast": "Frozen inD-finetuned learned forecast adapter; separate from the analytical linear-forecast planar timing configuration.",
+  "hardware": {"cpu": "Intel Core i9-9900 @ 3.10GHz", "inference": "CPU", "inference_threads": 1},
+  "definitions": {
+    "support_margin": "Signed ego-enclosing-circle/oriented-actor support proxy; not Euclidean box clearance.",
+    "proximity_exposure": "Time integral of sum_i exp(-max(d_i,0)/0.8m), in seconds.",
+    "jerk": "RMS from velocity after a fixed centered 0.25 s mean, retaining startup and stopping.",
+    "continuous_summaries": "Median of eight episode values, including non-goal episodes.",
+    "runtime_p95": "Median of episode-level p95, including learned forecast where used, cache/planning/QP/tracking; excludes world tick, observation acquisition, visualization and logging."
+  },
+  "reported_rows": [
+    {"arm": "orca", "label": "ORCA + common QP", "n": 8, "contact_free_goals": 8, "contact_episodes": 0, "support_margin_m": 0.430, "proximity_s": 11.29, "smoothed_jerk_rms_mps3": 11.59, "median_episode_p95_ms": 4.35},
+    {"arm": "sfm", "label": "SFM + common QP", "n": 8, "contact_free_goals": 8, "contact_episodes": 0, "support_margin_m": 0.517, "proximity_s": 3.94, "smoothed_jerk_rms_mps3": 6.95, "median_episode_p95_ms": 3.75},
+    {"arm": "no_anticipation", "label": "Reactive stack", "n": 8, "contact_free_goals": 6, "contact_episodes": 0, "support_margin_m": 0.533, "proximity_s": 9.13, "smoothed_jerk_rms_mps3": 6.31, "median_episode_p95_ms": 3.89},
+    {"arm": "class_blind", "label": "Class-label collapse", "n": 8, "contact_free_goals": 8, "contact_episodes": 0, "support_margin_m": 0.884, "proximity_s": 3.08, "smoothed_jerk_rms_mps3": 11.61, "median_episode_p95_ms": 17.99},
+    {"arm": "pairfield", "label": "PAIRFIELD", "n": 8, "contact_free_goals": 8, "contact_episodes": 0, "support_margin_m": 1.525, "proximity_s": 1.17, "smoothed_jerk_rms_mps3": 14.09, "median_episode_p95_ms": 18.00}
+  ],
+  "pairfield_timing": {"calls_above_50ms": 1, "timed_calls": 6224, "maximum_ms": 56.4247},
+  "process_lifecycle": {"complete_navigation_traces": 40, "clean_exits": 24, "post_cleanup_native_faults": 15, "during_cleanup_after_navigation_termination": 1},
+  "interpretation": "Descriptive spacing/exposure and execution differences. Collision-free completion ties several references; higher measured jerk and runtime remain visible. Class-label intervention changes both field and predictor inputs."
+}
