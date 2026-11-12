@@ -1,0 +1,211 @@
+{
+  "schema": "pairfield.anonymous_site.daylight_media.v1",
+  "scope": "Daylight pose replays of selected logged closed-loop runs.",
+  "evaluation_cohort": "original v9.4 closed-loop runs",
+  "controller_version": "v9.4",
+  "forecast_backend": "common learned graph",
+  "rgb_rerendered_from_logged_native_poses": true,
+  "physics_interpolation": false,
+  "field_links": "Pre-filter source-to-receiver force norms.",
+  "render": {
+    "combined_size_px": [
+      2560,
+      720
+    ],
+    "panel_size_px": [
+      1280,
+      720
+    ],
+    "fps": 20,
+    "bev_extent_m": [
+      60,
+      33.75
+    ],
+    "bev_north_up": true,
+    "adaptive_zoom": false,
+    "chase_rig": {
+      "rear_offset_m": 8,
+      "height_m": 7,
+      "target_height_m": 1,
+      "fov_deg": 90
+    },
+    "weather": {
+      "preset": "ClearNoon",
+      "sun_altitude_deg": 70,
+      "sun_azimuth_deg": 0,
+      "cloudiness": 0,
+      "precipitation": 0,
+      "wetness": 0,
+      "fog_density": 0
+    },
+    "postprocess": true,
+    "gamma": 2.2,
+    "motion_blur_intensity": 0,
+    "web_encoding": {
+      "codec": "h264",
+      "encoder": "libx264",
+      "crf": 18,
+      "preset": "medium",
+      "pixel_format": "yuv420p",
+      "faststart": true,
+      "audio": false,
+      "resize": false,
+      "crop": false
+    },
+    "ffmpeg_sha256": "2ce797a0f88d7f067180338fb227f7b1928ea727bd9a4d7a1d022f7c52af71a3"
+  },
+  "cases": [
+    {
+      "id": "daytime-truck-stream-geometry",
+      "case": "Truck stream",
+      "case_id": "v8.pilot.D-T.000009.seed20261111",
+      "backend": "R2",
+      "method": "Geometry field",
+      "arm": "G",
+      "original_run_id": "v8.pilot.D-T.000009.seed20261111.R2.G",
+      "original_outcome": "goal reached",
+      "native_contacts": 0,
+      "source_ticks_inclusive": [
+        508,
+        624
+      ],
+      "poster_source_tick": 568,
+      "frame_count": 117,
+      "fps": 20,
+      "duration_s": 5.85,
+      "camera_revision": "fixed-raised-chase-daylight.v9.6r2",
+      "mp4": "static/media/daytime-truck-stream-geometry.mp4",
+      "poster": "static/images/daytime-truck-stream-geometry-poster.jpg",
+      "bytes": {
+        "mp4": 7645546,
+        "poster": 413292
+      },
+      "sha256": {
+        "mp4": "29402730f32e9c100f46ce5fcf5dd9e4b38bc72b88300a954ea0086d7602cb90",
+        "poster": "a71111a038178d418d255d5b56ee6a692a04da886f99ca27be34c88f65eb4cf4"
+      },
+      "source_sha256": {
+        "rendered_replay": "a861381b4bd02ebe4c604a5ca9cdcdbdd431091eefd3aa33586036a5d0aeaf02",
+        "run": "4bddef8995b67a7fe75f62469ffa2a4c2adb921613835c16fdfe1f4b7141f979",
+        "states": "3497f866807e0eb7e5c2ff47ecae7cd45cb692227df5f4c8549cc549ba1eebb5",
+        "controls": "10ebe5ee31d166beea4948aca15c23f2a9ea9a6cb00ff30e5e6fc3dbe3390b22",
+        "poster_frame": "53992a46bd86033c1931bfc2aa99989ccebf8cca82da84d8829ceaeabbdfb9af",
+        "replay_receipt": "9531b52e3fa509157c57bf5025c7ba6f9435fb76b6fc51490b9ef3f6e74a6dcd"
+      }
+    },
+    {
+      "id": "daytime-truck-stream-pairfield",
+      "case": "Truck stream",
+      "case_id": "v8.pilot.D-T.000009.seed20261111",
+      "backend": "R2",
+      "method": "PAIRFIELD",
+      "arm": "L",
+      "original_run_id": "v8.pilot.D-T.000009.seed20261111.R2.L",
+      "original_outcome": "goal reached",
+      "native_contacts": 0,
+      "source_ticks_inclusive": [
+        508,
+        624
+      ],
+      "poster_source_tick": 568,
+      "frame_count": 117,
+      "fps": 20,
+      "duration_s": 5.85,
+      "camera_revision": "fixed-raised-chase-daylight.v9.6r3-weather-ack",
+      "mp4": "static/media/daytime-truck-stream-pairfield.mp4",
+      "poster": "static/images/daytime-truck-stream-pairfield-poster.jpg",
+      "bytes": {
+        "mp4": 7387211,
+        "poster": 405456
+      },
+      "sha256": {
+        "mp4": "4ddbc85b91cdce64f50af0294b6146681bcb666901dece4ee481fd4691eb36f2",
+        "poster": "24e830ce4d550846e454edc6a216129635930557fae78eee4ad5fe239f34b191"
+      },
+      "source_sha256": {
+        "rendered_replay": "212a67f6a38c3567eb02184df111756b01406749964e775443357b0cfe72700c",
+        "run": "a1bd90a40c4ce975f504b51dd6553d600909c0fbb2d863a7cdab22d19895f42e",
+        "states": "e1ddef1f744b03ddf65ffe1672747ae811da02292847a596109946ac94141c74",
+        "controls": "c4a119b04974d0960153494e4ab463daa0be5cd87d3954224859ad609828f323",
+        "poster_frame": "136a3a368ab33d0891de30c18300c284179fb796c42a80e2f88e66117296bdd2",
+        "replay_receipt": "68038db2d68ed374455c15cac1b04c0bd52aefacc0fdf9f081c88b60b76b537a"
+      }
+    },
+    {
+      "id": "daytime-cyclist-following-car-shared",
+      "case": "Cyclist with following car",
+      "case_id": "v8.pilot.E-B.000011.seed20261111",
+      "backend": "R1",
+      "method": "Shared potentials",
+      "arm": "S",
+      "original_run_id": "v8.pilot.E-B.000011.seed20261111.R1.S",
+      "original_outcome": "goal reached",
+      "native_contacts": 0,
+      "source_ticks_inclusive": [
+        412,
+        532
+      ],
+      "poster_source_tick": 472,
+      "frame_count": 121,
+      "fps": 20,
+      "duration_s": 6.05,
+      "camera_revision": "fixed-raised-chase-daylight.v9.6r3-weather-ack",
+      "mp4": "static/media/daytime-cyclist-following-car-shared.mp4",
+      "poster": "static/images/daytime-cyclist-following-car-shared-poster.jpg",
+      "bytes": {
+        "mp4": 5956599,
+        "poster": 406255
+      },
+      "sha256": {
+        "mp4": "af75c811963f32d716528a74c135c04cc0416aaf0eee6f78ea0036140a4c10ac",
+        "poster": "130570e805c8a0359ecef776f096aa3e62fae1c8b71964273a1fb1c36faf5186"
+      },
+      "source_sha256": {
+        "rendered_replay": "0203706c6140b9d30a2c83c6ac4f0eb628838fa9ace2dc3a2d950004047ce8df",
+        "run": "910181de5a07f29be6472e782cd994ccb37b887d7651ba95ecfa185ed97af974",
+        "states": "66b7246e3c2f5176eeebbfdd26f79cee9806b6401ca8166c7c5598cf5bcf580b",
+        "controls": "45dff5c7d04089c8934c6f2978ec92d849159ae9a5f32b71941fd50f165a39ea",
+        "poster_frame": "c367a5506dc8a659719b8b76fd4271bc740217c697d317043a351e216af2e3f2",
+        "replay_receipt": "96a332b4bdf8ca8a3cd1471ba6d6b46a981066c9c854ce5bc3214dc0520c32c0"
+      }
+    },
+    {
+      "id": "daytime-cyclist-following-car-pairfield",
+      "case": "Cyclist with following car",
+      "case_id": "v8.pilot.E-B.000011.seed20261111",
+      "backend": "R1",
+      "method": "PAIRFIELD",
+      "arm": "L",
+      "original_run_id": "v8.pilot.E-B.000011.seed20261111.R1.L",
+      "original_outcome": "goal reached",
+      "native_contacts": 0,
+      "source_ticks_inclusive": [
+        412,
+        532
+      ],
+      "poster_source_tick": 472,
+      "frame_count": 121,
+      "fps": 20,
+      "duration_s": 6.05,
+      "camera_revision": "fixed-raised-chase-daylight.v9.6r3-weather-ack",
+      "mp4": "static/media/daytime-cyclist-following-car-pairfield.mp4",
+      "poster": "static/images/daytime-cyclist-following-car-pairfield-poster.jpg",
+      "bytes": {
+        "mp4": 6982236,
+        "poster": 419390
+      },
+      "sha256": {
+        "mp4": "f064d6a5eb98253101b9dab1e7866a9435f1abf624195fc6086642c36f255f8f",
+        "poster": "91516fc4bf43564113e162fc5ab1252d2205d5a8a4c04a2bcd5c031e20416583"
+      },
+      "source_sha256": {
+        "rendered_replay": "28e312fdc1c8c493200a00077c32cd19ca2c322aff7e5f16f6e62ec729d58119",
+        "run": "14647c422474ce9f8b8895ee0c41f88631433cbbb344de4fa218188be1511e5a",
+        "states": "86c05483120aec71b9e9d1346e061231889595e9416b0165bd9817406fd50408",
+        "controls": "51b652c5e7a5d4d838e49595c35415850f807f36fb2ffdf5ca345149ccf14639",
+        "poster_frame": "f6ff013b8d75033bdd4e8b9246912e065385b57f9e93ec4f223669a04fc4fc6e",
+        "replay_receipt": "8167e9936d5208701a793e7a0c5ada1ac084a95091d6e090a9f95dc0c36974be"
+      }
+    }
+  ]
+}
