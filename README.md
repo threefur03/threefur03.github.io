@@ -22,9 +22,12 @@ Videos are the primary player. CARLA GIF links contain the same ordered frames a
 physics frames are added. The APF video ends after the recorded contact event;
 its last camera frame is one simulation tick before the native callback.
 
-The current gallery has nine source-body system/scene recordings. Every current BEV uses
-the same fixed64×36m crop,16:9 panel ratio and no adaptive zoom. Display-cropped
-actors remain in the recorded controller inputs. Two separate historical
+The earlier source-body recordings use a fixed64×36m crop and16:9 panel ratio.
+Four v9.4 daylight pose replays use a fixed60×33.75m BEV with equal1280×720
+camera and BEV panels. Their H.264 MP4 files, JPEG posters and anonymous
+source/output hashes are documented in `pairfield/static/data/daytime-media.json`.
+Neither set uses adaptive zoom. Display-cropped actors remain in the recorded
+controller inputs. Two separate historical
 V5.1 comparisons retain native20Hz video; their GIF downloads are explicitly
 12-second excerpts. A collapsed ORCA contact comparison is a complete-run
 2Hz sampled derivative of older5Hz camera capture, not20Hz video.
