@@ -72,7 +72,15 @@ function bindMatchedPlayback({root, play, pause, status, encounter}) {
 }
 
 bindMatchedPlayback({root:'matched-videos',play:'play-pair',pause:'pause-pair',status:'pair-status'});
-bindMatchedPlayback({root:'social-trio',play:'play-social-trio',pause:'pause-social-trio',status:'social-trio-status',encounter:'encounter-social-trio'});
+
+bindMatchedPlayback({root:'l2-p02',play:'play-l2-p02',pause:'pause-l2-p02',status:'l2-p02-status'});
+bindMatchedPlayback({root:'l2-f6',play:'play-l2-f6',pause:'pause-l2-f6',status:'l2-f6-status'});
+bindMatchedPlayback({root:'l2-p03',play:'play-l2-p03',pause:'pause-l2-p03',status:'l2-p03-status'});
+bindMatchedPlayback({root:'sc-s1',play:'play-sc-s1',pause:'pause-sc-s1',status:'sc-s1-status'});
+bindMatchedPlayback({root:'sc-s2',play:'play-sc-s2',pause:'pause-sc-s2',status:'sc-s2-status'});
+bindMatchedPlayback({root:'sc-s3',play:'play-sc-s3',pause:'pause-sc-s3',status:'sc-s3-status'});
+bindMatchedPlayback({root:'sc-s4',play:'play-sc-s4',pause:'pause-sc-s4',status:'sc-s4-status'});
+bindMatchedPlayback({root:'sc-s5',play:'play-sc-s5',pause:'pause-sc-s5',status:'sc-s5-status'});
 
 // Attribution and casual-saving deterrents. Public browser media remain
 // retrievable; these controls are deliberately not represented as DRM.

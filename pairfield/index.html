@@ -17,14 +17,14 @@
   <link rel="stylesheet" href="static/css/template.css">
   <link rel="stylesheet" href="static/css/pairfield.css?v=20261027-crowds">
   <link rel="stylesheet" href="static/css/paper.css?v=20261104-contributions">
-  <script src="static/js/pairfield.js?v=20261102-hardware" defer></script>
+  <script src="static/js/pairfield.js?v=20261124-mapless" defer></script>
   <title>PAIRFIELD: Edge-Attributed Class-Pair Potentials for Predictive Heterogeneous Navigation</title>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="topbar" aria-label="Page navigation">
     <a class="wordmark" href="#">PAIRFIELD<span class="wordmark-dot" aria-hidden="true"></span></a>
-    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#carla">CARLA</a><a href="#evidence">CARLA results</a><a href="#hardware">LIMO</a></div>
+    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#mapless">Mapless CARLA</a><a href="#safety">Safety-critical</a><a href="#carla">Field baselines</a><a href="#evidence">CARLA results</a><a href="#hardware">LIMO</a></div>
   </nav>
   <main id="main">
     <header class="hero project-hero">
@@ -35,7 +35,7 @@
         <p class="publication-authors">Anonymous Authors</p>
         <p class="hero-summary">Class-pair potential gradients attribute directed interaction edges, linking prediction to route-constrained control.</p>
         <div class="publication-links">
-          <a class="button is-dark" href="#carla">Watch CARLA replays <span aria-hidden="true">↗</span></a>
+          <a class="button is-dark" href="#mapless">Watch CARLA replays <span aria-hidden="true">↗</span></a>
           <a class="button is-light" href="#method">Explore the mechanism</a>
           <span class="status-badge" aria-label="Full code release coming soon">Code coming soon</span>
         </div>
@@ -60,13 +60,13 @@
 
     <section class="section lead-section" aria-labelledby="lead-heading">
       <div class="wide-container">
-        <div class="section-heading"><p class="eyebrow">Closed-loop CARLA</p><h2 id="lead-heading">Interaction, seen from two views</h2><p>Replays pair the recorded camera with a fixed-scale map, logged interaction fields and graph edges.</p></div>
+        <div class="section-heading"><p class="eyebrow">Closed-loop CARLA</p><h2 id="lead-heading">Interaction, seen from four views</h2><p>Pose replays of logged episodes: a top-down render with the interaction graph and the conflict potential, the front camera, a chase camera and the roof LiDAR.</p></div>
         <figure class="lead-media">
-          <video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline loop preload="metadata" poster="static/images/dense-pairfield-poster.jpg" aria-label="PAIRFIELD navigating a left turn across moving cars and heavy trucks">
-            <source src="static/media/dense-pairfield.mp4" type="video/mp4">
+          <video controls muted playsinline loop preload="metadata" poster="static/images/l2-p02-pairfield-poster.jpg" aria-label="PAIRFIELD on a narrow street parked at both kerbs">
+            <source src="static/media/l2-p02-pairfield.mp4" type="video/mp4">
             Embedded playback requires an HTML5 video-compatible browser.
           </video>
-          <figcaption>Town10HD: a left turn across four moving cars and two heavy trucks. Camera and BEV share the same CARLA frame.</figcaption>
+          <figcaption>Town02, a narrow street parked at both kerbs with 14 crossing road users. The reference path is the only route input; no HD map is used.</figcaption>
         </figure>
       </div>
     </section>
@@ -159,9 +159,106 @@
       <p class="validation-bridge">The planar tests isolate mechanism and topology. CARLA evaluates the field-and-control framework with learned graph forecasts, sensor-gated tracks, responsive road users and physical tracking. The ROS 2/LIMO adaptation connects exported fields to onboard sensing and base commands.</p>
     </div></section>
 
+
+    <section class="section pale" id="mapless" aria-labelledby="mapless-heading">
+      <div class="wide-container">
+        <div class="section-heading"><p class="eyebrow">Mapless CARLA evaluation</p><h2 id="mapless-heading">Hard braking imposed on surrounding road users</h2><p>The ego receives a reference path and its own perception; no HD map or prior static map is provided. Each road user responds to the ego through a yield-or-go decision with class-specific deceleration. The primary endpoint is the number of road users the ego forces to brake hard, at least twice their class reference deceleration.</p></div>
+        <p class="pair-note">Replays re-render logged episodes in CARLA from four views: a top-down render with the interaction graph and the method's field on a blue-to-red scale, the front camera, a chase camera and the roof LiDAR. Edges connect the ego to road users whose paths cross its corridor ahead within 6 s; red edges indicate that the ego is expected to pass first. Rings mark road users forced to brake hard. APF is shown with its potential field and PAIRFIELD with its conflict potential along the route; CBF-Only has no field.</p>
+
+        <div class="section-heading gallery-heading"><p class="eyebrow">Narrow street parked at both kerbs</p><h2>Town02 · kerbside crossings · 14 road users</h2><p>Parked vehicles leave 0.6–1.0 m on each side of the ego; pedestrians step out between them.</p></div>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-l2-p02">Play all three</button><button class="button is-light" type="button" id="pause-l2-p02">Pause</button><span id="l2-p02-status" role="status" aria-live="polite">Matched clock · four views · 10 Hz log</span></div>
+        <div class="replay-grid matched-trio" id="l2-p02">
+          <article class="replay-card"><div class="card-label"><h3>CBF-Only</h3><span class="outcome adverse">6 forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/l2-p02-cbf-poster.jpg"><source src="static/media/l2-p02-cbf.mp4" type="video/mp4"></video><p>Goal at 29.4 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>APF</h3><span class="outcome adverse">1 forced hard brake</span></div><video controls muted playsinline preload="none" poster="static/images/l2-p02-apf-poster.jpg"><source src="static/media/l2-p02-apf.mp4" type="video/mp4"></video><p>Goal at 35.6 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome">No forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/l2-p02-pairfield-poster.jpg"><source src="static/media/l2-p02-pairfield.mp4" type="video/mp4"></video><p>Goal at 31.6 s.</p></article>
+        </div>
+        <figure class="image-plate"><video controls muted playsinline loop preload="none" poster="static/images/l2-p02-compare-poster.jpg"><source src="static/media/l2-p02-compare.mp4" type="video/mp4"></video><figcaption>Top-down views on a shared clock: CBF-Only (top), APF (middle), PAIRFIELD (bottom).</figcaption></figure>
+
+        <div class="section-heading gallery-heading"><p class="eyebrow">Dense shared space</p><h2>Town10HD · shared space · 32 road users</h2><p>Pedestrians and cyclists cross the ego's path from both sides.</p></div>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-l2-f6">Play all three</button><button class="button is-light" type="button" id="pause-l2-f6">Pause</button><span id="l2-f6-status" role="status" aria-live="polite">Matched clock · four views · 10 Hz log</span></div>
+        <div class="replay-grid matched-trio" id="l2-f6">
+          <article class="replay-card"><div class="card-label"><h3>CBF-Only</h3><span class="outcome adverse">4 forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/l2-f6-cbf-poster.jpg"><source src="static/media/l2-f6-cbf.mp4" type="video/mp4"></video><p>Goal at 44.0 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>APF</h3><span class="outcome">No forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/l2-f6-apf-poster.jpg"><source src="static/media/l2-f6-apf.mp4" type="video/mp4"></video><p>Goal at 44.7 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome">No forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/l2-f6-pairfield-poster.jpg"><source src="static/media/l2-f6-pairfield.mp4" type="video/mp4"></video><p>Goal at 40.0 s.</p></article>
+        </div>
+
+        <div class="section-heading gallery-heading"><p class="eyebrow">Busy street with parked cars</p><h2>Town03 · busy street · 28 road users</h2><p>A continuous stream of pedestrians and cyclists crossing at random points.</p></div>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-l2-p03">Play all three</button><button class="button is-light" type="button" id="pause-l2-p03">Pause</button><span id="l2-p03-status" role="status" aria-live="polite">Matched clock · four views · 10 Hz log</span></div>
+        <div class="replay-grid matched-trio" id="l2-p03">
+          <article class="replay-card"><div class="card-label"><h3>CBF-Only</h3><span class="outcome adverse">3 forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/l2-p03-cbf-poster.jpg"><source src="static/media/l2-p03-cbf.mp4" type="video/mp4"></video><p>Goal at 48.3 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>APF</h3><span class="outcome">No forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/l2-p03-apf-poster.jpg"><source src="static/media/l2-p03-apf.mp4" type="video/mp4"></video><p>Goal at 49.2 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome">No forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/l2-p03-pairfield-poster.jpg"><source src="static/media/l2-p03-pairfield.mp4" type="video/mp4"></video><p>Goal at 45.9 s.</p></article>
+        </div>
+
+        <div class="section-heading gallery-heading"><p class="eyebrow">All scenes</p><h2>5,490 ground-truth episodes and 1,380 camera+LiDAR episodes</h2><p>Main roads (Town10HD, Town05) and narrow streets (Town01, Town02, Town03; two of them parked at both kerbs), nine planners on identical scenes.</p></div>
+        <figure class="image-plate"><img src="static/images/l2-stats.png" loading="lazy" alt="Forced hard brakes per episode, completion, paired differences, ground truth versus camera+LiDAR, and density for nine planners"><figcaption>With ground-truth road users, PAIRFIELD forces 0.46 hard brakes per episode on main roads and 0.32 on narrow streets, against 0.61–1.15 and 0.49–1.32 for the baselines (paired by scene, Holm-adjusted Wilcoxon p ≤ 0.003 against each baseline), records no collisions and takes about 2 s longer than CBF-Only. Against CBF-Only it forces fewer hard brakes in 43% of main-road scenes and 55% of narrow-street scenes, as many in 52% and 42%, and more in 6% and 3%. With onboard camera+LiDAR it remains collision-free and forces fewer hard brakes than CBF-Only (p &lt; 0.001); differences to PDM-Lite† and CV-Predict are not significant. Among the ablations, removing the temporal-variation terms of the potential increases forced braking; removing the class model or the ego-strength term has no measurable effect.</figcaption></figure>
+      </div>
+    </section>
+
+    <section class="section" id="safety" aria-labelledby="safety-heading">
+      <div class="wide-container">
+        <div class="section-heading"><p class="eyebrow">Safety-critical events</p><h2 id="safety-heading">Occlusion, cut-in and abrupt manoeuvres in crowded streets</h2><p>Closed-loop counterparts of a SOTIF logical-test catalogue. Each hazard starts at a set time-to-arrival of the ego and then reacts to the ego once it is in sight, after a perception-reaction delay: it brakes, steers away, stops, steps back or turns back. Planners receive a road user only once it is visible: vans and trucks occlude all road users, cars occlude children.</p></div>
+        <div class="table-scroll" role="region" aria-label="Safety-critical families" tabindex="0"><table class="results-table compact"><caption>Five families, 96 scenes with a background crowd, nine planners (864 ground-truth episodes)</caption><thead><tr><th scope="col">Family</th><th scope="col">Hazard</th><th scope="col">Reaction to the ego</th></tr></thead><tbody>
+          <tr><th scope="row">S1</th><td>A pedestrian, in half the scenes a child, emerges from the gap in front of a parked van</td><td>Stops outside the ego corridor, steps back inside it, or crosses beyond its centre</td></tr>
+          <tr><th scope="row">S2</th><td>A parked car pulls out into the ego path with a 1.5 s lateral transition</td><td>While still pulling out with the ego closing: brakes and steers back to the kerb</td></tr>
+          <tr><th scope="row">S3</th><td>A cyclist enters the lane from between parked cars</td><td>Brakes and swerves back to the kerb</td></tr>
+          <tr><th scope="row">S4</th><td>A lead car brakes hard to a stop; a second car follows the ego</td><td>The follower brakes for the ego; this braking counts as imposed by the ego</td></tr>
+          <tr><th scope="row">S5</th><td>A pedestrian in the ego's lane as the ego approaches</td><td>Turns back to the kerb it came from</td></tr>
+        </tbody></table></div>
+        <p class="pair-note">One scene per family, replayed from four views. The shaded wedge marks the region hidden from the ego by vans; labels name the hazard's reaction while it occurs. Across all scenes of a family, the count of forced hard brakes for PAIRFIELD relative to CBF-Only and APF is given as fewer / equal / more.</p>
+
+        <h3 class="gallery-heading">S1 · Pedestrian emerging from behind a parked van</h3>
+        <p class="pair-note">Town03 with parked cars, 11 road users. Across the 16 S1 scenes PAIRFIELD forces fewer / equal / more hard brakes than CBF-Only in 5 / 9 / 2 and than APF in 4 / 7 / 5; it is the only planner without collisions or near misses in this family.</p>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-sc-s1">Play all three</button><button class="button is-light" type="button" id="pause-sc-s1">Pause</button><span id="sc-s1-status" role="status" aria-live="polite">Matched clock · four views · 10 Hz log</span></div>
+        <div class="replay-grid matched-trio" id="sc-s1">
+          <article class="replay-card"><div class="card-label"><h3>CBF-Only</h3><span class="outcome adverse">Pedestrian steps back</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s1-cbf-poster.jpg"><source src="static/media/sc-s1-cbf.mp4" type="video/mp4"></video><p>1 forced hard brake; goal at 30.9 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>APF</h3><span class="outcome adverse">Pedestrian steps back</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s1-apf-poster.jpg"><source src="static/media/sc-s1-apf.mp4" type="video/mp4"></video><p>1 forced hard brake; goal at 37.6 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome">Pedestrian crosses ahead</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s1-pairfield-poster.jpg"><source src="static/media/sc-s1-pairfield.mp4" type="video/mp4"></video><p>No forced hard brakes; goal at 31.0 s.</p></article>
+        </div>
+
+        <h3 class="gallery-heading">S2 · Sudden cut-in from the kerb</h3>
+        <p class="pair-note">Town02 parked at both kerbs, 11 road users. Across the 16 S2 scenes: 7 / 9 / 0 against CBF-Only and 2 / 13 / 1 against APF.</p>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-sc-s2">Play all three</button><button class="button is-light" type="button" id="pause-sc-s2">Pause</button><span id="sc-s2-status" role="status" aria-live="polite">Matched clock · four views · 10 Hz log</span></div>
+        <div class="replay-grid matched-trio" id="sc-s2">
+          <article class="replay-card"><div class="card-label"><h3>CBF-Only</h3><span class="outcome adverse">Cut-in aborted</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s2-cbf-poster.jpg"><source src="static/media/sc-s2-cbf.mp4" type="video/mp4"></video><p>The car brakes and steers back to the kerb; goal at 27.3 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>APF</h3><span class="outcome adverse">Cut-in aborted</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s2-apf-poster.jpg"><source src="static/media/sc-s2-apf.mp4" type="video/mp4"></video><p>1 forced hard brake; goal at 42.1 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome">Cut-in completes</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s2-pairfield-poster.jpg"><source src="static/media/sc-s2-pairfield.mp4" type="video/mp4"></video><p>No forced hard brakes; goal at 36.3 s.</p></article>
+        </div>
+
+        <h3 class="gallery-heading">S3 · Cyclist entering the lane</h3>
+        <p class="pair-note">Town02 parked at both kerbs, 11 road users. Across the 16 S3 scenes: 7 / 7 / 2 against CBF-Only and 6 / 5 / 5 against APF.</p>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-sc-s3">Play all three</button><button class="button is-light" type="button" id="pause-sc-s3">Pause</button><span id="sc-s3-status" role="status" aria-live="polite">Matched clock · four views · 10 Hz log</span></div>
+        <div class="replay-grid matched-trio" id="sc-s3">
+          <article class="replay-card"><div class="card-label"><h3>CBF-Only</h3><span class="outcome adverse">Cyclist brakes and swerves</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s3-cbf-poster.jpg"><source src="static/media/sc-s3-cbf.mp4" type="video/mp4"></video><p>3 forced hard brakes; goal at 35.6 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>APF</h3><span class="outcome adverse">1 forced hard brake</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s3-apf-poster.jpg"><source src="static/media/sc-s3-apf.mp4" type="video/mp4"></video><p>Goal at 37.4 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome">No forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s3-pairfield-poster.jpg"><source src="static/media/sc-s3-pairfield.mp4" type="video/mp4"></video><p>Goal at 31.9 s.</p></article>
+        </div>
+
+        <h3 class="gallery-heading">S4 · Lead vehicle emergency stop with a follower</h3>
+        <p class="pair-note">Town10HD main road. The count includes the follower's braking for the ego. Across the 24 S4 scenes: 6 / 15 / 3 against CBF-Only and 3 / 17 / 4 against APF.</p>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-sc-s4">Play all three</button><button class="button is-light" type="button" id="pause-sc-s4">Pause</button><span id="sc-s4-status" role="status" aria-live="polite">Matched clock · four views · 10 Hz log</span></div>
+        <div class="replay-grid matched-trio" id="sc-s4">
+          <article class="replay-card"><div class="card-label"><h3>CBF-Only</h3><span class="outcome adverse">3 forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s4-cbf-poster.jpg"><source src="static/media/sc-s4-cbf.mp4" type="video/mp4"></video><p>Goal at 21.1 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>APF</h3><span class="outcome adverse">2 forced hard brakes</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s4-apf-poster.jpg"><source src="static/media/sc-s4-apf.mp4" type="video/mp4"></video><p>Goal at 25.6 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome adverse">1 forced hard brake</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s4-pairfield-poster.jpg"><source src="static/media/sc-s4-pairfield.mp4" type="video/mp4"></video><p>The follower brakes once; goal at 21.0 s.</p></article>
+        </div>
+
+        <h3 class="gallery-heading">S5 · Pedestrian turning back mid-crossing</h3>
+        <p class="pair-note">Town10HD main road, 5 road users. Across the 24 S5 scenes: 19 / 2 / 3 against CBF-Only and 10 / 11 / 3 against APF.</p>
+        <div class="pair-controls"><button class="button is-dark" type="button" id="play-sc-s5">Play all three</button><button class="button is-light" type="button" id="pause-sc-s5">Pause</button><span id="sc-s5-status" role="status" aria-live="polite">Matched clock · four views · 10 Hz log</span></div>
+        <div class="replay-grid matched-trio" id="sc-s5">
+          <article class="replay-card"><div class="card-label"><h3>CBF-Only</h3><span class="outcome adverse">Pedestrian turns back</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s5-cbf-poster.jpg"><source src="static/media/sc-s5-cbf.mp4" type="video/mp4"></video><p>2 forced hard brakes; goal at 21.1 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>APF</h3><span class="outcome adverse">Pedestrian turns back</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s5-apf-poster.jpg"><source src="static/media/sc-s5-apf.mp4" type="video/mp4"></video><p>1 forced hard brake; goal at 24.0 s.</p></article>
+          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span class="outcome">Pedestrian completes the crossing</span></div><video controls muted playsinline preload="none" poster="static/images/sc-s5-pairfield-poster.jpg"><source src="static/media/sc-s5-pairfield.mp4" type="video/mp4"></video><p>No forced hard brakes; goal at 20.8 s.</p></article>
+        </div>
+
+        <figure class="image-plate"><img src="static/images/sc-stats.png" loading="lazy" alt="Forced hard brakes, defensive reactions, collisions and near misses, and time for six planners in five safety-critical families"><figcaption>Forced hard brakes per episode, share of episodes in which the hazard road user reacted defensively, collisions and near misses (closest gap below 0.5 m), and median time, per family. Across the 96 scenes PAIRFIELD forces 0.74 hard brakes per episode, as PDM-Lite† does, against 0.79–0.80 for CV-Predict and APF, 1.04 for Courtesy-Cost and 1.27 for CBF-Only (Holm-adjusted p &lt; 0.001 and 0.005 against the last two). It shares the lowest near-miss rate with PDM-Lite† (2.1%) and, in the occluded-emergence family, neither collisions nor near misses, where APF and Courtesy-Cost collide in 2 of 16 scenes. It completes 95.8% of routes (PDM-Lite† 99.0%), and in the lead-stop family the follower brakes more behind PAIRFIELD (0.38 forced hard brakes per episode) than behind PDM-Lite†, APF or CV-Predict (0.29). With onboard camera+LiDAR (576 episodes, six planners) PAIRFIELD forces 0.87 hard brakes per episode against 1.23 for CBF-Only (Holm-adjusted p = 0.003); differences to PDM-Lite† and CV-Predict are not significant. Collision rates rise to 6–15% for all planners, concentrated in the occluded-emergence family, where every planner collides in 38–56% of scenes. The perception stack confirms a track as moving only after 0.9 m of consistent displacement; the contribution of this delay has not been isolated.</figcaption></figure>
+      </div>
+    </section>
+
     <section class="section" id="carla" aria-labelledby="carla-heading">
       <div class="wide-container">
-        <div class="section-heading"><p class="eyebrow">Matched comparison</p><h2 id="carla-heading">Crossing moving cars and heavy trucks</h2><p>Same fixture, source-body predictor, sensing interface and current/future QP. APF replaces the nominal interaction field.</p></div>
+        <div class="section-heading"><p class="eyebrow">Field-overlay baseline</p><h2 id="carla-heading">Crossing moving cars and heavy trucks</h2><p>Same fixture, source-body predictor, sensing interface and current/future QP. APF replaces the nominal interaction field.</p></div>
         <p class="pair-note">Semantic LiDAR gates privileged simulator tracks. Camera boxes use native instance-mask annotations.</p>
         <div class="pair-controls"><button class="button is-dark" type="button" id="play-pair">Play both from the start</button><button class="button is-light" type="button" id="pause-pair">Pause both</button><span id="pair-status" role="status" aria-live="polite">20 recorded frames per simulated second</span></div>
         <div class="comparison-grid" id="matched-videos">
@@ -171,26 +268,7 @@
         <p class="pair-note">Paired playback starts at the same elapsed time and retains each recording's native duration. DREAM APF uses its released 15 m radial influence region. Field colours represent method-specific potential units.</p>
         <figure class="image-plate"><img draggable="false" src="static/images/dense-pairs.jpg" width="2300" height="888" loading="lazy" alt="APF and PAIRFIELD camera and field panels at matched approach and HGV crossing times"><figcaption>Matched snapshots at 10.35 and 12.05 s. Snapshot times follow APF class-wise SAT minima within the geometric crossing window, with the same logical actor in the paired PAIRFIELD frame.</figcaption></figure>
 
-        <div class="section-heading gallery-heading"><p class="eyebrow">More interactions</p><h2>Different class mixtures and crowd loads</h2><p>Illustrative recordings vary prescribed traffic count and class mixture. Rosters describe the scenario's moving agents.</p></div>
-        <p class="pair-note">The following gallery uses a fixed 64 × 36 m BEV crop with no per-frame zoom. Distant actors can leave the display without leaving the controller's inputs.</p>
-        <div class="replay-grid">
-          <article class="replay-card"><div class="card-label"><h3>Four-class crossing</h3><span>Town10HD · 6 agents · 4 classes</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/fourclass-poster.jpg"><source src="static/media/fourclass.mp4" type="video/mp4"></video><p>Three pedestrians, one bicycle, one car and one truck. Contact-free goal at 31.90 s. The matched shared-class and no-field runs also finish without contact.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>Crowded crossing</h3><span>Town10HD · 11 agents · 3 classes</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/crowded-fixed-poster.jpg"><source src="static/media/crowded-fixed.mp4" type="video/mp4"></video><p>Six pedestrians, two bicycles and three cars. Contact-free goal at 33.25 s, with source-body fields and logged graph connections.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>Second crowded crossing</h3><span>Town10HD · 11 agents · 3 classes</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/crowd-second-poster.jpg"><source src="static/media/crowd-second.mp4" type="video/mp4"></video><p>A numerical-development recording with a different seed and the same 6 / 2 / 3 roster; contact-free goal at 34.00 s.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>Source-car turn</h3><span>Town05</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/turning-fixed-poster.jpg"><source src="static/media/turning-fixed.mp4" type="video/mp4"></video><p>A turning source car changes its body heading. The current field follows that measured orientation; the run reaches its goal without contact.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>Mixed left turn</h3><span>Town10HD</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/mixed-poster.jpg"><source src="static/media/mixed.mp4" type="video/mp4"></video><p>A contact-free 30.55 s goal with mixed road users; the closest interactions involve vehicles and a cyclist.</p></article>
-        </div>
-
-        <h3 class="gallery-heading">Matched pedestrian encounter: progress versus waiting</h3>
-        <p class="pair-note">Three separately fitted systems share one fixture and seed. All reach contact-free goals. In the 9–20 s pedestrian encounter, Shared-class waits longer and leaves a larger gap; PAIRFIELD and No field record the same additional NPC stopping. Cars and the truck remain distant in this pilot.</p>
-        <div class="pair-controls"><button class="button is-dark" type="button" id="play-social-trio">Play all three</button><button class="button is-light" type="button" id="encounter-social-trio">Inspect 9–20 s</button><button class="button is-light" type="button" id="pause-social-trio">Pause</button><span id="social-trio-status" role="status" aria-live="polite">Matched clock · fixed 64 × 36 m BEV · native 20 Hz</span></div>
-        <div class="replay-grid matched-trio" id="social-trio">
-          <article class="replay-card"><div class="card-label"><h3>PAIRFIELD</h3><span>Goal 31.90 s · no contact</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/fourclass-poster.jpg"><source src="static/media/fourclass.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.242 m. Additional NPC stopping over 0–20 s: 0.55 actor-s.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>Shared-class</h3><span>Goal 34.10 s · no contact</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/fourclass-shared-poster.jpg"><source src="static/media/fourclass-shared.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.866 m, with 3.35 s ego stopping. Additional NPC stopping: 2.70 actor-s.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>No field</h3><span>Goal 31.75 s · no contact</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/fourclass-no-field-poster.jpg"><source src="static/media/fourclass-no-field.mp4" type="video/mp4"></video><p>Pedestrian encounter: minimum SAT margin 1.362 m. Additional NPC stopping is also 0.55 actor-s; the logged interaction field is zero.</p></article>
-        </div>
-
-        <details class="supporting-results"><summary>Earlier field-adapter replays</summary>
+        <details class="supporting-results"><summary>Further field-overlay baselines</summary>
         <p class="pair-note">Dynamic APF adds measured source-body dimensions, heading and velocity to a compact potential. ADA and Gaussian substitute their own nominal fields within the shared prediction/control host. MA-DV2F supplies its analytical vector policy with a route/QP adapter. All views keep a fixed 64 × 36 m scale and native 20 Hz cadence.</p>
         <div class="replay-grid field-replays">
           <article class="replay-card"><div class="card-label"><h3>Dynamic APF · body / velocity</h3><span>Town10HD · four-class fixture</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dynamic-apf-poster.jpg"><source src="static/media/dynamic-apf.mp4" type="video/mp4"></video><p>Contact-free goal at 31.75 s. Additional NPC stopping ties PAIRFIELD at 0.55 actor-s. Compact fields follow source headings; the graph belongs to the shared predictor.</p></article>
@@ -201,16 +279,9 @@
         <p class="pair-note">Potential ranges are fixed per method: Dynamic APF 0–2; ADA/Gaussian 0–6. Settings are fixed development configurations. <a href="static/data/dynamic-apf-comparison.json">Dynamic APF matched readout</a> · <a href="https://github.com/yininghase/MA-DV2F">MA-DV2F source</a>.</p>
         </details>
 
-        <h3 class="gallery-heading">Earlier crowded comparisons</h3>
-        <p class="pair-note">Earlier receiver-axis V5.1 recordings retain native 20 Hz capture and fixed-scale BEV. Gray tiles mark completed recordings. These capture-only examples form a separate set from the 72-episode study.</p>
-        <div class="comparison-grid historical-comparisons">
-          <article class="replay-card"><div class="card-label"><h3>ORCA: close cyclist passage</h3><span>Town05 · 11 agents</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" class="archive-video" controls muted playsinline preload="none" poster="static/images/historical-orca-near-poster.jpg"><source src="static/media/historical-orca-near.mp4" type="video/mp4"></video><p>Both finish without contact. ORCA's closest corrected body margin to the cyclist is 0.23 m; PAIRFIELD's is 2.41 m. Goal times: 36.10 / 38.95 s.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>SFM: incomplete crowded crossing</h3><span>Town10HD · 11 agents</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" class="archive-video" controls muted playsinline preload="none" poster="static/images/historical-sfm-poster.jpg"><source src="static/media/historical-sfm.mp4" type="video/mp4"></video><p>SFM completes 29.36% of the route within 75 s; PAIRFIELD reaches its goal at 36.00 s. Both recordings have zero native contacts.</p></article>
         </div>
-        <details class="historical"><summary>Archived ORCA contact versus contact-free PAIRFIELD (sampled 2 Hz)</summary><p>Town10HD, seven agents: four pedestrians, one bicycle and two cars. ORCA records pedestrian contact and does not finish within 75 s; the matched historical PAIRFIELD run finishes at 37.70 s without contact. Complete-run replays sample native 5 Hz camera captures at 2 Hz.</p><div class="comparison-grid"><figure class="replay-card"><img draggable="false" src="static/media/historical-contact-orca.gif" width="1038" height="529" loading="lazy" alt="Historical ORCA complete-run sampled replay with recorded pedestrian contact"><figcaption>ORCA + common QP · contact and noncompletion</figcaption></figure><figure class="replay-card"><img draggable="false" src="static/media/historical-contact-pairfield.gif" width="1038" height="529" loading="lazy" alt="Matched historical PAIRFIELD complete-run sampled replay without native contact"><figcaption>Historical PAIRFIELD · contact-free goal</figcaption></figure></div></details>
-        <details class="historical"><summary>Earlier controller: additional ORCA contact snapshots</summary><p>This still illustration uses a different earlier receiver-axis controller. It is separate from the source-body comparisons and the 72-episode density cohort.</p><img draggable="false" src="static/images/legacy-orca-contact.jpg" width="2100" height="1023" loading="lazy" alt="Earlier ORCA approaches a crossing car and records native contact while the paired earlier PAIRFIELD controller yields"></details>
-      </div>
     </section>
+
 
     <section class="section pale" id="evidence" aria-labelledby="evidence-heading">
       <div class="wide-container">
