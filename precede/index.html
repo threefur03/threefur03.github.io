@@ -9,9 +9,9 @@
   <meta property="og:title" content="PRECEDE: Precedence-Aware Conflict Potentials with Decision Commitment for Mapless Navigation among Heterogeneous Road Users">
   <meta property="og:description" content="Inspect closed-loop CARLA interactions through camera, field and graph replays.">
   <meta property="og:type" content="website">
-  <meta property="og:url" content="https://threefur03.github.io/pairfield/">
-  <meta property="og:image" content="https://threefur03.github.io/pairfield/static/images/dense-pairs.jpg">
-  <link rel="canonical" href="https://threefur03.github.io/pairfield/">
+  <meta property="og:url" content="https://threefur03.github.io/precede/">
+  <meta property="og:image" content="https://threefur03.github.io/precede/static/images/l2-f6-parallel-poster.jpg">
+  <link rel="canonical" href="https://threefur03.github.io/precede/">
   <link rel="icon" type="image/svg+xml" href="static/images/favicon.svg">
   <link rel="stylesheet" href="static/css/bulma.min.css">
   <link rel="stylesheet" href="static/css/template.css">
@@ -258,8 +258,6 @@
           <article class="replay-card"><div class="card-label"><h3>DREAM APF + common QP <span class="cite">[13]</span></h3><span class="outcome adverse">HGV contact recorded</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dense-apf-poster.jpg"><source src="static/media/dense-apf.mp4" type="video/mp4"></video><p>Contact near 12.1 s, at 21.7% route completion. The last recorded camera precedes the callback by one tick.</p></article>
           <article class="replay-card"><div class="card-label"><h3>PRECEDE</h3><span class="outcome">Contact-free goal</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dense-pairfield-poster.jpg"><source src="static/media/dense-pairfield.mp4" type="video/mp4"></video><p>Goal at 40.60 s on the assigned route. The minimum actual-body SAT margin is 0.40 m.</p></article>
         </div>
-        <p class="pair-note">Paired playback starts at the same elapsed time and retains each recording's native duration. DREAM is the defensive risk-aware planner of Wang et al. (TR-C 2027) [13]; DREAM APF, its potential-field component, uses its released 15 m radial influence region. Field colours represent method-specific potential units.</p>
-        <figure class="image-plate"><img draggable="false" src="static/images/dense-pairs.jpg" width="2300" height="888" loading="lazy" alt="APF and PRECEDE camera and field panels at matched approach and HGV crossing times"><figcaption>Matched snapshots at 10.35 and 12.05 s. Snapshot times follow APF class-wise SAT minima within the geometric crossing window, with the same logical actor in the paired PRECEDE frame.</figcaption></figure>
 
         <details class="supporting-results"><summary>Further field-overlay baselines</summary>
         <p class="pair-note">Dynamic APF adds measured source-body dimensions, heading and velocity to a compact potential. ADA and Gaussian substitute their own nominal fields within the shared prediction/control host. MA-DV2F supplies its analytical vector policy with a route/QP adapter. All views keep a fixed 64 × 36 m scale and native 20 Hz cadence.</p>
@@ -282,8 +280,8 @@
 
         <h3>Matched vehicle crossing</h3>
         <div class="table-scroll" role="region" aria-label="Key matched vehicle-crossing results" tabindex="0"><table class="results-table dense-key-results" data-evidence-table="dense-key"><caption>Four cars + two trucks · same traffic fixture, route and QP host · one episode per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Goal / contacts</th><th scope="col">Min. truck SAT<br>(m)</th><th scope="col">Raw jerk RMS<br>(m/s³)</th><th scope="col">Command p95<br>(ms)</th></tr></thead><tbody>
-          <tr><th scope="row">APF + common QP</th><td>No / 1</td><td>−0.30</td><td class="best">21.26</td><td class="best">24.10</td></tr>
-          <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td>0.25</td><td>26.42</td><td class="best">23.46</td></tr>
+          <tr><th scope="row">APF + common QP</th><td>No / 1</td><td class="best">−0.30</td><td class="best">21.26</td><td class="best">24.10</td></tr>
+          <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td class="best">0.25</td><td class="best">26.42</td><td class="best">23.46</td></tr>
           <tr><th scope="row">No field</th><td>Yes / 0</td><td class="best">0.40</td><td class="best">20.97</td><td class="best">25.76</td></tr>
           <tr><th scope="row">PRECEDE</th><td>Yes / 0</td><td class="best">0.40</td><td class="best">19.47</td><td class="best">24.68</td></tr>
         </tbody></table></div>
@@ -291,10 +289,10 @@
 
         <details class="supporting-results" id="responsive40"><summary>Manuscript responsive cohort: 40 episodes</summary>
         <div class="table-scroll" role="region" aria-label="Forty-episode responsive CARLA cohort" tabindex="0"><table class="results-table responsive40-table" data-evidence-table="responsive40"><caption>Receiver-aligned integration · five controllers × eight matched cases · all native contact counts zero</caption><thead><tr><th scope="col">Controller</th><th scope="col">Contact-free goals / 8</th><th scope="col">Median support margin (m)</th><th scope="col">Proximity exposure (s)</th><th scope="col">Smoothed jerk RMS (m/s³)</th><th scope="col">Median episode p95 (ms)</th></tr></thead><tbody>
-          <tr><th scope="row">ORCA + common QP</th><td class="best">8 / 8</td><td>0.430</td><td class="best">11.29</td><td>11.59</td><td class="best">4.35</td></tr>
-          <tr><th scope="row">SFM + common QP</th><td class="best">8 / 8</td><td>0.517</td><td>3.94</td><td class="best">6.95</td><td class="best">3.75</td></tr>
+          <tr><th scope="row">ORCA + common QP</th><td class="best">8 / 8</td><td>0.430</td><td class="best">11.29</td><td class="best">11.59</td><td class="best">4.35</td></tr>
+          <tr><th scope="row">SFM + common QP</th><td class="best">8 / 8</td><td>0.517</td><td class="best">3.94</td><td class="best">6.95</td><td class="best">3.75</td></tr>
           <tr><th scope="row">Reactive stack</th><td class="best">6 / 8</td><td>0.533</td><td class="best">9.13</td><td class="best">6.31</td><td class="best">3.89</td></tr>
-          <tr><th scope="row">Class-label collapse</th><td class="best">8 / 8</td><td>0.884</td><td>3.08</td><td>11.61</td><td>17.99</td></tr>
+          <tr><th scope="row">Class-label collapse</th><td class="best">8 / 8</td><td class="best">0.884</td><td class="best">3.08</td><td class="best">11.61</td><td class="best">17.99</td></tr>
           <tr><th scope="row">PRECEDE</th><td class="best">8 / 8</td><td class="best">1.525</td><td class="best">1.17</td><td class="best">14.09</td><td class="best">18.00</td></tr>
         </tbody></table></div>
         <p class="table-note">Town10HD and Town05, two actor loads and two traffic evolutions, retrospectively assembled from separately frozen cohorts without outcome-based filtering. This configuration uses oracle states, green-frozen signals and a learned forecast adapter. PRECEDE has larger support margins and lower proximity exposure than ORCA and SFM in all eight matched cases, with higher measured jerk and computation. Runtime includes prediction where used, cache, planning/QP and tracking; PRECEDE records 1/6224 calls above 50 ms, maximum 56.42 ms. All 40 navigation traces are complete; 16 abnormal cleanup/process exits remain documented. <a href="static/data/responsive40-summary.json">Protocol, definitions and reported values</a>.</p>
