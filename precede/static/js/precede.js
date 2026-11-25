@@ -95,7 +95,7 @@ document.querySelectorAll('main img, main video').forEach(media => {
   const credit = document.createElement('span');
   credit.className = 'media-credit';
   credit.textContent = media.matches('#hardware img[src$="limo-platform.png"]')
-    ? 'AgileX LIMO · supplied platform image'
+    ? 'Manufacturer-supplied platform image'
     : 'PRECEDE · © Anonymous Authors';
   credit.setAttribute('aria-hidden', 'true');
   media.before(frame);

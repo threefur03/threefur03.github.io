@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="author" content="Anonymous Authors">
-  <meta name="description" content="PRECEDE: Precedence-Aware Conflict Potentials with Decision Commitment for Mapless Navigation among Heterogeneous Road Users. Mapless closed-loop CARLA evaluation against eleven cited planners, safety-critical events and ROS 2/LIMO deployment.">
+  <meta name="description" content="PRECEDE: Precedence-Aware Conflict Potentials with Decision Commitment for Mapless Navigation among Heterogeneous Road Users. Mapless closed-loop CARLA evaluation against eleven cited planners, safety-critical events and real-world ROS 2 deployment on a wheeled platform.">
   <meta name="robots" content="noindex,nofollow">
   <meta property="og:title" content="PRECEDE: Precedence-Aware Conflict Potentials with Decision Commitment for Mapless Navigation among Heterogeneous Road Users">
   <meta property="og:description" content="Inspect closed-loop CARLA interactions through camera, field and graph replays.">
@@ -19,15 +19,6 @@
   <link rel="stylesheet" href="static/css/paper.css?v=20261104-contributions">
   <script src="static/js/precede.js?v=20261125-v6" defer></script>
   <title>PRECEDE: Precedence-Aware Conflict Potentials with Decision Commitment for Mapless Navigation among Heterogeneous Road Users</title>
-    <style>
-      .combined-table { min-width: 860px; }
-      .combined-table th[scope="col"] { font-size: 12px; line-height: 1.3; }
-      .combined-table td, .combined-table th[scope="row"] { font-size: 13px; }
-      .combined-table tr.ours th, .combined-table tr.ours td { background: #f3f6f8; }
-      .combined-table td.best { font-weight: 700; color: #182b36; }
-      .combined-table .grp { text-align: center; border-bottom: 1px solid #c9d3d8; }
-      .results-table td.best { font-weight: 700; }
-    </style>
     <style>
       .decision-embed iframe { display: block; width: 100%; min-height: 760px; border: 0; background: transparent; }
     </style>
@@ -45,12 +36,28 @@
       .reference-list { font-size: 13px; line-height: 1.7; color: #4d606a; padding-left: 22px; }
       @media (max-width: 800px) { .results-table.baselines-table { min-width: 720px; } .outcome-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     </style>
+    <style>
+      .combined-table { min-width: 860px; }
+      .combined-table th[scope="col"] { font-size: 12px; line-height: 1.3; }
+      .combined-table td, .combined-table th[scope="row"] { font-size: 13px; }
+      .combined-table tr.ours th, .combined-table tr.ours td { background: #f3f6f8; }
+      .combined-table td.best { font-weight: 700; color: #182b36; }
+      .combined-table .grp { text-align: center; border-bottom: 1px solid #c9d3d8; }
+      .results-table td.best { font-weight: 700; }
+      .contrib-lead { font-size: 18px; line-height: 1.6; color: #182b36; max-width: 960px; }
+      .contrib-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 18px 0 26px; }
+      .contrib-card { background: #fff; border: 1px solid #dbe3e7; border-radius: 10px; padding: 16px 18px; }
+      .contrib-card h3 { font-size: 17px; line-height: 1.35; margin: 2px 0 8px; color: #182b36; }
+      .contrib-card p { font-size: 14.5px; line-height: 1.6; color: #3f525b; margin: 0; }
+      .contrib-card p.contrib-tag { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: #8a4b2a; margin-bottom: 4px; }
+      @media (max-width: 860px) { .contrib-grid { grid-template-columns: minmax(0, 1fr); } }
+    </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="topbar" aria-label="Page navigation">
     <a class="wordmark" href="#">PRECEDE<span class="wordmark-dot" aria-hidden="true"></span></a>
-    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#baselines">Methods</a><a href="#mapless">Mapless CARLA</a><a href="#decision">Decision</a><a href="#safety">Safety-critical</a><a href="#carla">Field baselines</a><a href="#evidence">CARLA results</a><a href="#hardware">LIMO</a></div>
+    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#mapless">Mapless CARLA</a><a href="#decision">Decision</a><a href="#safety">Safety-critical</a><a href="#evidence">CARLA results</a><a href="#hardware">Deployment</a></div>
   </nav>
   <main id="main">
     <header class="hero project-hero">
@@ -62,7 +69,7 @@
         <p class="hero-summary">A sparse precedence graph estimates who passes each conflict first. A conflict potential with temporal commitment then sets the ego's speed behind an unchanged safety filter, reducing the hard braking imposed on pedestrians, cyclists and drivers.</p>
         <div class="publication-links">
           <a class="button is-dark" href="#mapless">Watch CARLA replays <span aria-hidden="true">↗</span></a>
-          <a class="button is-light" href="#baselines">Compared methods</a>
+          <a class="button is-light" href="#decision">Inside the decision</a>
           <span class="status-badge" aria-label="Full code release coming soon">Code coming soon</span>
         </div>
       </div>
@@ -71,8 +78,12 @@
     <section class="section abstract-section" id="abstract" aria-labelledby="abstract-heading">
       <div class="wide-container">
         <h2 id="abstract-heading">Core contributions</h2>
-        <div class="abstract-content"><p>PRECEDE treats precedence, i.e. which road user passes a conflict point first, as an explicit and calibrated variable on a sparse conflict graph. The graph is learned from 2,432 recorded crossing conflicts in German and Chinese drone datasets. In those recordings, vehicles that pass first make vulnerable road users brake hard in 14.0% of conflicts; in the reverse direction the figure is 1.0%.</p>
-        <p>The planner selects a speed along a coarse reference path, without an HD map. It minimises a conflict potential made of three terms: precedence uncertainty, the discomfort its choice imposes on others, and its own braking. Total-variation and decrease terms make it commit to a precedence decision instead of hesitating. An unchanged barrier filter keeps safety separate from the social model. In closed-loop CARLA, the method is compared under one contract with eleven cited planners, including CARLA's own agents and the DREAM risk-field planner. Evaluation covers ground-truth perception with occlusion, onboard camera and LiDAR, and safety-critical events. The same code runs on a LIMO robot.</p></div>
+        <div class="abstract-content"><p class="contrib-lead">Moving among pedestrians, cyclists and vehicles without a map is a sequence of small negotiations over who passes each conflict point first. PRECEDE makes that negotiation the object of the model.</p></div>
+        <div class="contrib-grid">
+          <div class="contrib-card"><p class="contrib-tag">1 · Graph</p><h3>Why precedence lives on a graph</h3><p>Precedence is a relation between two road users at one conflict point, and it is not symmetric: in 2,432 recorded crossings, a vehicle passing first makes the vulnerable road user brake hard in 14.0% of conflicts, the reverse in 1.0%. A sparse graph keeps one edge for each road user whose path crosses the ego's route and estimates on it the probability that the ego passes first.</p></div>
+          <div class="contrib-card"><p class="contrib-tag">2 · Field</p><h3>How the field turns the graph into speed</h3><p>Each edge becomes a conflict potential over the ego's candidate speeds: high where precedence is uncertain, where going first would make the other road user brake, and where yielding would make the ego brake hard. Summed along the reference path, the edges form one field, and the planner picks the speed that descends it, without an HD map.</p></div>
+          <div class="contrib-card"><p class="contrib-tag">3 · Commitment</p><h3>Deciding once, behind a fixed safety filter</h3><p>Commitment terms keep the ego on the precedence decision it has made instead of hesitating between yielding and going; in the ablations they matter most. An unchanged barrier filter keeps collision avoidance separate from the social model.</p></div>
+        </div>
         <div class="contribution-stats" aria-label="Representative results">
           <div><strong>0.45 vs 0.85</strong><span>Forced hard brakes per episode</span><small>Main roads · PRECEDE vs best baseline (PDM-Lite† and DREAM†)</small></div>
           <div><strong>0.39 vs 0.68</strong><span>Forced hard brakes per episode</span><small>Narrow heterogeneous streets · vs PDM-Lite†</small></div>
@@ -80,7 +91,7 @@
           <div><strong>14.0% vs 1.0%</strong><span>Directional discomfort in recorded traffic</span><small>Vehicle → VRU vs VRU → vehicle hard braking</small></div>
           <div><strong>2.2 ms</strong><span>Planning step, ground-truth perception</span><small>median planning step; p95 ≤ 10.9 ms</small></div>
         </div>
-        <p class="contribution-scope">CARLA statistics are paired by instance with Holm-corrected Wilcoxon tests; a forced hard brake is braking at least twice a road user's own class reference, caused by the ego, and not after the ego has passed. <a href="#baselines">Compared methods and citations</a>.</p>
+        <p class="contribution-scope">CARLA statistics are paired by instance with Holm-corrected Wilcoxon tests; a forced hard brake is braking at least twice a road user's own class reference, caused by the ego, and not after the ego has passed. Compared methods, citations and full results are in the paper.</p>
       </div>
     </section>
 
@@ -133,57 +144,8 @@
         <figure class="replay-card"><div class="planar-media"><img draggable="false" src="static/media/planar-field.gif" width="919" height="560" loading="lazy" alt="Illustrative planar navigation with potential contours and graph connections"></div><figcaption>Illustrative field and graph replay</figcaption></figure>
         <figure class="replay-card"><div class="planar-media"><img draggable="false" src="static/media/planar-navigation.gif" width="2080" height="540" loading="lazy" alt="Illustrative planar navigation through moving heterogeneous agents"></div><figcaption>Illustrative navigation replay</figcaption></figure>
       </div>
-      <p class="validation-bridge">The planar tests isolate mechanism and topology. CARLA evaluates the field-and-control framework with learned graph forecasts, sensor-gated tracks, responsive road users and physical tracking. The ROS 2/LIMO adaptation connects exported fields to onboard sensing and base commands.</p>
+      <p class="validation-bridge">The planar tests isolate mechanism and topology. CARLA evaluates the field-and-control framework with learned graph forecasts, sensor-gated tracks, responsive road users and physical tracking. The ROS 2 deployment on a wheeled platform connects the same fields to onboard sensing and base commands.</p>
     </div></section>
-
-
-    
-
-    
-
-    
-
-    
-
-    <section class="section" id="baselines" aria-labelledby="baselines-heading">
-      <div class="wide-container">
-        <div class="section-heading"><p class="eyebrow">Closed-loop CARLA</p><h2 id="baselines-heading">Compared methods</h2><p>Eleven published planners, PRECEDE and three ablations of its claimed terms run under one contract in CARLA. Each method controls speed along a reference path, without an HD map. All methods receive the same perceived road users and use the same plant model. All pass through the same safety filter (stopping-distance barrier and AEB), so each comparison isolates the nominal decision of who goes first. A dagger (†) marks an adapted re-implementation: the cited method is rebuilt from its publication or source code and reformulated for a speed-only, path-following ego.</p></div>
-        <div class="table-scroll" role="region" aria-label="Compared methods" tabindex="0"><table class="results-table baselines-table"><caption>Methods, families and adaptations · parameters are published defaults or CARLA's own values</caption><thead><tr><th scope="col">Method</th><th scope="col">Family</th><th scope="col">Decision rule</th><th scope="col">Adaptation</th></tr></thead><tbody>
-          <tr><th scope="row">CBF-QP <span class="cite">[1]</span></th><td>Safety filter</td><td>Reference speed through the barrier filter; closed-form solution of the single-input QP</td><td>None (the shared safety layer itself)</td></tr>
-          <tr><th scope="row">BasicAgent† <span class="cite">[2]</span></th><td>CARLA agent</td><td>Emergency stop for a vehicle in the lane within 5 m + 1 s × speed; walkers not checked</td><td>Lane test by the object's centre offset</td></tr>
-          <tr><th scope="row">BehaviorAgent† <span class="cite">[2]</span></th><td>CARLA agent</td><td>Normal profile: walker and vehicle managers, 5 m braking distance, TTC car following</td><td>Speed-only: no lane changes or tailgating</td></tr>
-          <tr><th scope="row">PDM-Lite† <span class="cite">[3, 4]</span></th><td>Rule-based expert</td><td>Intelligent driver model toward the first forecast overlap with the ego's footprint</td><td>Conflict zone from perceived crossing paths instead of map junctions</td></tr>
-          <tr><th scope="row">APF <span class="cite">[5–7]</span></th><td>Potential field</td><td>Speed scaled by exp(−U); U sums velocity-stretched Gaussian kernels of the road users</td><td>The potential sets speed instead of a planar force</td></tr>
-          <tr><th scope="row">ORCA† <span class="cite">[8]</span></th><td>Velocity obstacles</td><td>Highest speed satisfying every reciprocal half-plane (3 s horizon); least violation otherwise</td><td>Velocities restricted to the path direction</td></tr>
-          <tr><th scope="row">SFM† <span class="cite">[9]</span></th><td>Social force</td><td>Driving term plus anisotropic exponential repulsion, projected on the path</td><td>Vehicle-scale parameters</td></tr>
-          <tr><th scope="row">CVM-PtP <span class="cite">[10]</span></th><td>Predict-then-plan</td><td>Fastest speed whose constant-velocity forecast passes PRECEDE's own clearance test</td><td>None; isolates PRECEDE's conflict potential</td></tr>
-          <tr><th scope="row">Courteous† <span class="cite">[11]</span></th><td>Courtesy-aware</td><td>Progress plus a cost on the deceleration the ego imposes when it goes first</td><td>Kinematic courtesy term instead of a learned reward; class-blind</td></tr>
-          <tr><th scope="row">OA-RF† <span class="cite">[12]</span></th><td>Occlusion-aware risk field</td><td>Progress plus a risk field with phantom pedestrians at occluder edges</td><td>Sampled speeds instead of MPC; phantom pedestrians only</td></tr>
-          <tr><th scope="row">DREAM† <span class="cite">[13]</span></th><td>Risk-field PDE</td><td>Progress plus the DRIFT risk field (advection–diffusion–telegrapher, with occlusion sources) along the predicted footprint</td><td>Risk-aware speed selection instead of MPC; no road mask</td></tr>
-          <tr class="ours"><th scope="row">PRECEDE</th><td>Conflict potential</td><td>Precedence entropy, imposed discomfort and ego braking on a sparse precedence graph, with temporal commitment</td><td>—</td></tr>
-          <tr><th scope="row">w/o precedence uncertainty</th><td>Ablation</td><td>Precedence-entropy term removed</td><td>—</td></tr>
-          <tr><th scope="row">w/o imposed discomfort</th><td>Ablation</td><td>Discomfort imposed on road users removed</td><td>—</td></tr>
-          <tr><th scope="row">w/o commitment</th><td>Ablation</td><td>Total-variation and decrease terms removed (no temporal commitment)</td><td>—</td></tr>
-        </tbody></table></div>
-        <details class="supporting-results"><summary>References</summary>
-          <ol class="reference-list">
-            <li>A. D. Ames, X. Xu, J. W. Grizzle, P. Tabuada. Control barrier function based quadratic programs for safety critical systems. <i>IEEE Trans. Automatic Control</i> 62(8), 2017.</li>
-            <li>A. Dosovitskiy, G. Ros, F. Codevilla, A. López, V. Koltun. CARLA: An open urban driving simulator. <i>CoRL</i>, 2017 (PythonAPI agents, version 0.9.14).</li>
-            <li>C. Sima, K. Renz, K. Chitta, et al. DriveLM: Driving with graph visual question answering. <i>ECCV</i>, 2024.</li>
-            <li>D. Dauner, M. Hallgarten, A. Geiger, K. Chitta. Parting with misconceptions about learning-based vehicle motion planning. <i>CoRL</i>, 2023.</li>
-            <li>O. Khatib. Real-time obstacle avoidance for manipulators and mobile robots. <i>Int. J. Robotics Research</i> 5(1), 1986.</li>
-            <li>M. T. Wolf, J. W. Burdick. Artificial potential functions for highway driving with collision avoidance. <i>ICRA</i>, 2008.</li>
-            <li>S. Xie, J. Hu, P. Bhowmick, Z. Ding, F. Arvin. Distributed motion planning for safe autonomous vehicle overtaking via artificial potential field. <i>IEEE Trans. ITS</i> 23(11), 2022.</li>
-            <li>J. van den Berg, S. J. Guy, M. Lin, D. Manocha. Reciprocal n-body collision avoidance. <i>Robotics Research (ISRR)</i>, Springer, 2011.</li>
-            <li>D. Helbing, P. Molnár. Social force model for pedestrian dynamics. <i>Physical Review E</i> 51(5), 1995.</li>
-            <li>C. Schöller, V. Aravantinos, F. Lay, A. Knoll. What the constant velocity model can teach us about pedestrian motion prediction. <i>IEEE RA-L</i> 5(2), 2020.</li>
-            <li>L. Sun, W. Zhan, M. Tomizuka, A. D. Dragan. Courteous autonomous cars. <i>IROS</i>, 2018.</li>
-            <li>C. van der Ploeg, T. Nyberg, J. M. Gaspar Sánchez, E. Silvas, N. van de Wouw. Overcoming fear of the unknown: occlusion-aware model-predictive planning for automated vehicles using risk fields. <i>IEEE Trans. ITS</i> 25(9), 2024.</li>
-            <li>Z. Wang, Y. Shu, Z. Deng, G. Cai, J. Xu, J. Tang, D. Cao, C. Sun. DREAM: Defensive risk-aware enhanced maneuver planning for autonomous vehicles in heterogeneous traffic. <i>Transportation Research Part C: Emerging Technologies</i> 194, 106062, 2027.</li>
-          </ol>
-        </details>
-      </div>
-    </section>
 
     <section class="section pale" id="mapless" aria-labelledby="mapless-heading">
       <div class="wide-container">
@@ -204,7 +166,7 @@
 
 
         <h3 class="gallery-heading">Aggregate results</h3>
-        <p class="pair-note">PRECEDE forces 0.45 hard brakes per episode on main roads and 0.39 on narrow streets, the fewest of all methods; every paired difference against a baseline is significant (Wilcoxon, Holm <i>p</i> ≤ 2.5 × 10<sup>-8</sup>). It records no collisions and keeps 99.4–99.6% completion. Baselines lead elsewhere: some are faster, and PDM-Lite† has fewer near misses on narrow streets. Bold marks the best value in each column, whichever method it belongs to.</p>
+        <p class="pair-note">PRECEDE forces 0.45 hard brakes per episode on main roads and 0.39 on narrow streets, the fewest of all methods; every paired difference against a baseline is significant (Wilcoxon, Holm <i>p</i> ≤ 2.5 × 10<sup>-8</sup>). It records no collisions and keeps 99.4–99.6% completion. Baselines lead elsewhere: some are faster, and PDM-Lite† has fewer near misses on narrow streets. Bold marks the best value in each column, whichever method it belongs to; † marks an adapted re-implementation of the cited method (methods and citations are listed in the paper).</p>
         <div class="table-scroll" role="region" aria-label="Combined ground-truth results" tabindex="0"><table class="results-table combined-table"><caption>Ground truth with line-of-sight occlusion · every method on every scene · bold: best in the column</caption><thead><tr><th scope="col" rowspan="2">Method</th><th scope="colgroup" colspan="5" class="grp">Main roads (330 scenes)</th><th scope="colgroup" colspan="5" class="grp">Narrow streets (268 scenes)</th></tr><tr><th scope="col">Forced hard brakes / ep. ↓</th><th scope="col">Collision % ↓</th><th scope="col">Near miss % ↓</th><th scope="col">Completion % ↑</th><th scope="col">Median time (s) ↓</th><th scope="col">Forced hard brakes / ep. ↓</th><th scope="col">Collision % ↓</th><th scope="col">Near miss % ↓</th><th scope="col">Completion % ↑</th><th scope="col">Median time (s) ↓</th></tr></thead><tbody><tr><th scope="row">CBF-QP</th><td>1.12</td><td>0.9</td><td>28.2</td><td>97.6</td><td>22.6</td><td>1.47</td><td>0.4</td><td>31.3</td><td>99.3</td><td class="best">31.7</td></tr><tr><th scope="row">BasicAgent†</th><td>1.06</td><td>0.6</td><td>27.6</td><td>98.5</td><td>23.5</td><td>1.40</td><td>0.7</td><td>31.0</td><td>98.9</td><td class="best">31.7</td></tr><tr><th scope="row">BehaviorAgent†</th><td>1.04</td><td>0.6</td><td>25.5</td><td>98.5</td><td>25.9</td><td>1.16</td><td>1.1</td><td>19.8</td><td>98.5</td><td>35.2</td></tr><tr><th scope="row">PDM-Lite†</th><td>0.85</td><td>0.6</td><td>14.2</td><td>91.8</td><td>35.9</td><td>0.68</td><td class="best">0.0</td><td class="best">6.3</td><td>99.3</td><td>38.3</td></tr><tr><th scope="row">APF</th><td>1.15</td><td>0.3</td><td>29.1</td><td>99.1</td><td class="best">22.4</td><td>1.24</td><td>0.7</td><td>26.5</td><td>98.9</td><td>32.3</td></tr><tr><th scope="row">ORCA†</th><td>1.22</td><td>0.6</td><td>47.9</td><td>99.1</td><td>33.8</td><td>1.06</td><td>0.4</td><td>45.5</td><td>98.5</td><td>41.3</td></tr><tr><th scope="row">SFM†</th><td>1.06</td><td>0.9</td><td>25.8</td><td>98.2</td><td>22.7</td><td>1.32</td><td>0.4</td><td>27.6</td><td>99.3</td><td>31.8</td></tr><tr><th scope="row">CVM-PtP</th><td>0.97</td><td>0.6</td><td>20.0</td><td class="best">99.4</td><td>23.4</td><td>1.00</td><td>0.7</td><td>17.5</td><td>99.3</td><td>33.4</td></tr><tr><th scope="row">Courteous†</th><td>0.94</td><td>1.5</td><td>23.9</td><td>97.0</td><td>25.9</td><td>0.99</td><td>0.7</td><td>14.2</td><td>99.3</td><td>34.0</td></tr><tr><th scope="row">OA-RF†</th><td>0.91</td><td>0.3</td><td>20.9</td><td>96.1</td><td>30.5</td><td>0.88</td><td>0.4</td><td>20.1</td><td>98.1</td><td>35.5</td></tr><tr><th scope="row">DREAM†</th><td>0.85</td><td>0.6</td><td>20.6</td><td>97.9</td><td>29.6</td><td>0.85</td><td class="best">0.0</td><td>16.4</td><td class="best">99.6</td><td>33.9</td></tr><tr class="ours"><th scope="row">PRECEDE (ours)</th><td class="best">0.45</td><td class="best">0.0</td><td class="best">13.6</td><td class="best">99.4</td><td>26.0</td><td class="best">0.39</td><td class="best">0.0</td><td>7.8</td><td class="best">99.6</td><td>34.3</td></tr></tbody></table></div>
         <p class="pair-note">With onboard camera and LiDAR on main roads, PRECEDE again forces the fewest hard brakes (0.68 per episode); the difference is significant against CBF-QP, BehaviorAgent†, ORCA†, CVM-PtP and DREAM†.</p>
         <div class="table-scroll" role="region" aria-label="Combined camera and LiDAR results" tabindex="0"><table class="results-table combined-table"><caption>Onboard camera and LiDAR, main roads · eight methods on the same scenes · bold: best in the column</caption><thead><tr><th scope="col" rowspan="2">Method</th><th scope="colgroup" colspan="5" class="grp">Main roads (90 scenes)</th></tr><tr><th scope="col">Forced hard brakes / ep. ↓</th><th scope="col">Collision % ↓</th><th scope="col">Near miss % ↓</th><th scope="col">Completion % ↑</th><th scope="col">Median time (s) ↓</th></tr></thead><tbody><tr><th scope="row">CBF-QP</th><td>1.31</td><td>1.1</td><td>33.3</td><td>98.9</td><td>26.2</td></tr><tr><th scope="row">BehaviorAgent†</th><td>1.20</td><td class="best">0.0</td><td>23.3</td><td class="best">100.0</td><td>27.3</td></tr><tr><th scope="row">PDM-Lite†</th><td>1.04</td><td>2.2</td><td>24.4</td><td>97.8</td><td>32.3</td></tr><tr><th scope="row">ORCA†</th><td>1.26</td><td>4.4</td><td>26.7</td><td>94.4</td><td>27.4</td></tr><tr><th scope="row">CVM-PtP</th><td>1.08</td><td class="best">0.0</td><td>25.6</td><td class="best">100.0</td><td class="best">23.9</td></tr><tr><th scope="row">OA-RF†</th><td>0.92</td><td>2.2</td><td>24.4</td><td>96.7</td><td>27.7</td></tr><tr><th scope="row">DREAM†</th><td>0.97</td><td>1.1</td><td>22.2</td><td>98.9</td><td>27.1</td></tr><tr class="ours"><th scope="row">PRECEDE (ours)</th><td class="best">0.68</td><td>1.1</td><td class="best">15.6</td><td>98.9</td><td>26.2</td></tr></tbody></table></div>
@@ -249,31 +211,6 @@
       </div>
     </section>
 
-    <section class="section" id="carla" aria-labelledby="carla-heading">
-      <div class="wide-container">
-        <div class="section-heading"><p class="eyebrow">Field-overlay baseline</p><h2 id="carla-heading">Crossing moving cars and heavy trucks</h2><p>Same fixture, source-body predictor, sensing interface and current/future QP. APF replaces the nominal interaction field.</p></div>
-        <p class="pair-note">Semantic LiDAR gates privileged simulator tracks. Camera boxes use native instance-mask annotations.</p>
-        <div class="pair-controls"><button class="button is-dark" type="button" id="play-pair">Play both from the start</button><button class="button is-light" type="button" id="pause-pair">Pause both</button><span id="pair-status" role="status" aria-live="polite">20 recorded frames per simulated second</span></div>
-        <div class="comparison-grid" id="matched-videos">
-          <article class="replay-card"><div class="card-label"><h3>DREAM APF + common QP <span class="cite">[13]</span></h3><span class="outcome adverse">HGV contact recorded</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dense-apf-poster.jpg"><source src="static/media/dense-apf.mp4" type="video/mp4"></video><p>Contact near 12.1 s, at 21.7% route completion. The last recorded camera precedes the callback by one tick.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>PRECEDE</h3><span class="outcome">Contact-free goal</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dense-pairfield-poster.jpg"><source src="static/media/dense-pairfield.mp4" type="video/mp4"></video><p>Goal at 40.60 s on the assigned route. The minimum actual-body SAT margin is 0.40 m.</p></article>
-        </div>
-
-        <details class="supporting-results"><summary>Further field-overlay baselines</summary>
-        <p class="pair-note">Dynamic APF adds measured source-body dimensions, heading and velocity to a compact potential. ADA and Gaussian substitute their own nominal fields within the shared prediction/control host. MA-DV2F supplies its analytical vector policy with a route/QP adapter. All views keep a fixed 64 × 36 m scale and native 20 Hz cadence.</p>
-        <div class="replay-grid field-replays">
-          <article class="replay-card"><div class="card-label"><h3>Dynamic APF · body / velocity</h3><span>Town10HD · four-class fixture</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/dynamic-apf-poster.jpg"><source src="static/media/dynamic-apf.mp4" type="video/mp4"></video><p>Contact-free goal at 31.75 s. Additional NPC stopping ties PRECEDE at 0.55 actor-s. Compact fields follow source headings; the graph belongs to the shared predictor.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>DREAM ADA scalar-gradient <span class="cite">[13]</span></h3><span>Town10HD · vehicle left turn</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/ada-field-poster.jpg"><source src="static/media/ada-field.mp4" type="video/mp4"></video><p>Contact-free goal at 31.35 s. The display uses ADA's recorded nominal risk field and the common predictor's logged graph.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>Source-body Gaussian</h3><span>Town10HD · vehicle left turn</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/gaussian-field-poster.jpg"><source src="static/media/gaussian-field.mp4" type="video/mp4"></video><p>Contact-free goal at 31.65 s. This declared source-frame adaptation rotates the Gaussian field with measured source headings.</p></article>
-          <article class="replay-card"><div class="card-label"><h3>MA-DV2F analytical policy</h3><span>Town10HD · vehicle left turn</span></div><video controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/ma-vector-poster.jpg"><source src="static/media/ma-vector.mp4" type="video/mp4"></video><p>Contact-free goal at 32.60 s. BEV shows the policy's native analytical direction components and interaction edges.</p></article>
-        </div>
-        <p class="pair-note">Potential ranges are fixed per method: Dynamic APF 0–2; ADA/Gaussian 0–6. Settings are fixed development configurations. <a href="static/data/dynamic-apf-comparison.json">Dynamic APF matched readout</a> · <a href="https://github.com/yininghase/MA-DV2F">MA-DV2F source</a>.</p>
-        </details>
-
-        </div>
-    </section>
-
-
     <section class="section pale" id="evidence" aria-labelledby="evidence-heading">
       <div class="wide-container">
         <div class="section-heading"><p class="eyebrow">Results</p><h2 id="evidence-heading">From interaction modeling to closed-loop behavior</h2><p>The planar tests isolate passing geometry and bottleneck execution. The CARLA comparisons examine contact, body spacing, motion and surrounding traffic response under sensing feedback.</p></div>
@@ -289,9 +226,9 @@
 
         <details class="supporting-results" id="responsive40"><summary>Manuscript responsive cohort: 40 episodes</summary>
         <div class="table-scroll" role="region" aria-label="Forty-episode responsive CARLA cohort" tabindex="0"><table class="results-table responsive40-table" data-evidence-table="responsive40"><caption>Receiver-aligned integration · five controllers × eight matched cases · all native contact counts zero</caption><thead><tr><th scope="col">Controller</th><th scope="col">Contact-free goals / 8</th><th scope="col">Median support margin (m)</th><th scope="col">Proximity exposure (s)</th><th scope="col">Smoothed jerk RMS (m/s³)</th><th scope="col">Median episode p95 (ms)</th></tr></thead><tbody>
-          <tr><th scope="row">ORCA + common QP</th><td class="best">8 / 8</td><td>0.430</td><td class="best">11.29</td><td class="best">11.59</td><td class="best">4.35</td></tr>
-          <tr><th scope="row">SFM + common QP</th><td class="best">8 / 8</td><td>0.517</td><td class="best">3.94</td><td class="best">6.95</td><td class="best">3.75</td></tr>
-          <tr><th scope="row">Reactive stack</th><td class="best">6 / 8</td><td>0.533</td><td class="best">9.13</td><td class="best">6.31</td><td class="best">3.89</td></tr>
+          <tr><th scope="row">ORCA + common QP</th><td class="best">8 / 8</td><td class="best">0.430</td><td class="best">11.29</td><td class="best">11.59</td><td class="best">4.35</td></tr>
+          <tr><th scope="row">SFM + common QP</th><td class="best">8 / 8</td><td class="best">0.517</td><td class="best">3.94</td><td class="best">6.95</td><td class="best">3.75</td></tr>
+          <tr><th scope="row">Reactive stack</th><td class="best">6 / 8</td><td class="best">0.533</td><td class="best">9.13</td><td class="best">6.31</td><td class="best">3.89</td></tr>
           <tr><th scope="row">Class-label collapse</th><td class="best">8 / 8</td><td class="best">0.884</td><td class="best">3.08</td><td class="best">11.61</td><td class="best">17.99</td></tr>
           <tr><th scope="row">PRECEDE</th><td class="best">8 / 8</td><td class="best">1.525</td><td class="best">1.17</td><td class="best">14.09</td><td class="best">18.00</td></tr>
         </tbody></table></div>
@@ -305,16 +242,12 @@
     </section>
 
     <section class="section" id="hardware" aria-labelledby="hardware-heading"><div class="wide-container">
-      <div class="section-heading"><h2 id="hardware-heading">Mapless ROS 2 / LIMO navigation</h2><p>Following controlled planar tests and closed-loop CARLA evaluation, the LIMO deployment connects onboard sensing, field evaluation and physical motion without a prior map.</p></div>
-      <div class="hardware-layout"><figure><img draggable="false" src="static/images/limo-platform.png" width="554" height="554" loading="lazy" alt="AgileX LIMO wheeled platform supplied for the project"><figcaption>AgileX LIMO platform.</figcaption></figure><div class="hardware-text"><h3>From tracked observations to local control</h3><p>The ROS 2 bridge uses odometry, LaserScan geometry and tracked agents in the local frame. LIMO queries a receiver-aligned class-pair parameter export with optional linear forecasts. A speed governor and soft dynamic-agent / hard static-obstacle QP produce bounded <code>Twist</code> commands through the observed differential-drive interface.</p></div></div>
+      <div class="section-heading"><p class="eyebrow">Real-world deployment</p><h2 id="hardware-heading">Mapless ROS 2 wheeled-platform deployment in real-world scenarios</h2><p>The controller runs on a small differential-drive wheeled robot under ROS 2, indoors and outdoors among people, with onboard sensing and without a prior map.</p></div>
+      <div class="hardware-layout"><figure><img draggable="false" src="static/images/limo-platform.png" width="554" height="554" loading="lazy" alt="Differential-drive wheeled robot used for the deployment"><figcaption>Differential-drive wheeled platform.</figcaption></figure><div class="hardware-text"><h3>From onboard sensing to velocity commands</h3><p>Odometry, laser-scan geometry and tracked pedestrians in the robot's local frame feed the planar form of the controller: the interaction field with optional linear forecasts, a speed governor, and a QP with soft constraints for moving people and hard constraints for static obstacles, which outputs bounded velocity commands for the differential drive.</p></div></div>
       <div class="comparison-grid hardware-replays" aria-label="Indoor and outdoor ROS 2 recordings">
-        <article class="replay-card"><div class="card-label"><h3>Indoor navigation</h3><span>ROS 2 / LIMO · 0:55</span></div><video width="1920" height="1080" controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/limo-indoor-poster.jpg" aria-label="Indoor LIMO recording with robot motion and ROS visualization"><source src="static/media/limo-indoor.mp4?v=20261102-trim15" type="video/mp4"></video><p>Local navigation among fixed furnishings, standing people and moving pedestrians. The paired ROS view shows the observed geometry and tracked agents as the robot adjusts its path.</p></article>
-        <article class="replay-card"><div class="card-label"><h3>Outdoor navigation</h3><span>ROS 2 / LIMO · 0:56</span></div><video width="1920" height="1080" controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/limo-outdoor-poster.jpg" aria-label="Outdoor LIMO recording with robot motion and ROS visualization"><source src="static/media/limo-outdoor.mp4" type="video/mp4"></video><p>The robot progresses along a shared walkway while pedestrians approach and pass. The physical and ROS views document feedback-driven motion through the changing local scene.</p></article>
+        <article class="replay-card"><div class="card-label"><h3>Indoor navigation</h3><span>ROS 2 · indoor · 0:55</span></div><video width="1920" height="1080" controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/limo-indoor-poster.jpg" aria-label="Indoor ROS 2 recording with robot motion and ROS visualization"><source src="static/media/limo-indoor.mp4?v=20261102-trim15" type="video/mp4"></video><p>Local navigation among fixed furnishings, standing people and moving pedestrians. The paired ROS view shows the observed geometry and tracked agents as the robot adjusts its path.</p></article>
+        <article class="replay-card"><div class="card-label"><h3>Outdoor navigation</h3><span>ROS 2 · outdoor · 0:56</span></div><video width="1920" height="1080" controlslist="nodownload noremoteplayback" disablepictureinpicture disableremoteplayback draggable="false" controls muted playsinline preload="none" poster="static/images/limo-outdoor-poster.jpg" aria-label="Outdoor ROS 2 recording with robot motion and ROS visualization"><source src="static/media/limo-outdoor.mp4" type="video/mp4"></video><p>The robot progresses along a shared walkway while pedestrians approach and pass. The physical and ROS views document feedback-driven motion through the changing local scene.</p></article>
       </div>
-      <!-- Quantitative hardware insertion: verified CPU and runtime configuration;
-           episode counts, completion/contact/intervention counts; calibrated clearance;
-           speed/jerk; /sfg/compute_ms median/p95 and fraction above the 50 ms target.
-           Controller callback timings exclude upstream perception and actuator response. -->
     </div></section>
 
   </main>
