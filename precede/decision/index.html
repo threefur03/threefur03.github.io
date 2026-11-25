@@ -1,0 +1,341 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PRECEDE first-person view</title>
+<script>
+  // embedded in the project page: light palette, no own heading, height reported to the parent
+  if (window.self !== window.top) { document.documentElement.classList.add("embedded"); document.documentElement.dataset.theme = "light"; }
+</script>
+<style>
+  :root { --ink:#182b36; --muted:#61747c; --rule:#d7dee2; --bg:#ffffff; --panel:#f6f8f9; --accent:#b2182b; --blue:#2166ac; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) { --ink:#e8eef1; --muted:#9fb0b8; --rule:#34444c; --bg:#11181c; --panel:#182227; } }
+  :root[data-theme="dark"] { --ink:#e8eef1; --muted:#9fb0b8; --rule:#34444c; --bg:#11181c; --panel:#182227; }
+  * { box-sizing: border-box; }
+  body { margin:0; background:var(--bg); color:var(--ink); font:14px/1.5 Inter, "Segoe UI", system-ui, sans-serif; }
+  main { max-width:1320px; margin:0 auto; padding:20px 16px 40px; }
+  .embedded body { background:transparent; }
+  .embedded main { padding:0 0 4px; max-width:none; }
+  .embedded h1, .embedded .sub { display:none; }
+  h1 { font:600 22px/1.25 Georgia, "Times New Roman", serif; margin:0 0 4px; }
+  .sub { color:var(--muted); margin:0 0 14px; max-width:980px; }
+  .grid { display:grid; grid-template-columns: minmax(0, 768fr) minmax(0, 480fr); gap:14px; align-items:start; }
+  .panel { background:var(--panel); border:1px solid var(--rule); border-radius:8px; padding:8px; }
+  .label { font-size:12px; letter-spacing:.04em; text-transform:uppercase; color:var(--muted); margin:0 0 6px; }
+  canvas { display:block; width:100%; height:auto; }
+  #fpvWrap { position:relative; }
+  #tip { position:absolute; pointer-events:none; background:rgba(16,24,28,.88); color:#fff; font-size:12.5px; line-height:1.35;
+         padding:6px 8px; border-radius:6px; max-width:280px; display:none; z-index:2; }
+  .bar { display:flex; gap:10px; align-items:center; margin:10px 0 0; flex-wrap:wrap; }
+  .bar button { font:inherit; border:1px solid var(--rule); background:var(--bg); color:var(--ink); border-radius:6px; padding:4px 12px; cursor:pointer; }
+  .bar input[type=range] { flex:1; min-width:180px; }
+  .readout { font-variant-numeric: tabular-nums; color:var(--muted); font-size:13px; }
+  .readout b { color:var(--ink); font-weight:600; }
+  .key { display:flex; gap:14px; flex-wrap:wrap; font-size:12.5px; color:var(--muted); margin-top:6px; }
+  .sw { display:inline-block; width:22px; height:10px; vertical-align:middle; margin-right:5px; border-radius:2px; }
+  .note { color:var(--muted); font-size:12.5px; margin-top:12px; max-width:1100px; }
+  @media (max-width: 900px) { .grid { grid-template-columns: minmax(0,1fr); } }
+</style>
+</head>
+<body>
+<main>
+  <h1>Inside PRECEDE's decision, from the driver's seat (trial)</h1>
+  <p class="sub">Town02, a narrow street parked at both kerbs, ground-truth perception. The front camera shows the conflict
+    potential PRECEDE assigns to the road ahead, the stopping reach of every candidate speed it scores and the road users in
+    its precedence graph. Hover over the road to query the field there; the point is mirrored on the bird's-eye view. Hover
+    over a curve on the right to find that candidate on the road.</p>
+  <div class="grid">
+    <div class="panel">
+      <p class="label">Front camera · planner's view projected on the road</p>
+      <div id="fpvWrap"><canvas id="fpv" width="768" height="432"></canvas><div id="tip"></div></div>
+      <div class="bar">
+        <button id="play" type="button">Play</button>
+        <button id="prev" type="button" aria-label="Previous frame">‹</button>
+        <button id="next" type="button" aria-label="Next frame">›</button>
+        <input id="slider" type="range" min="0" max="0" value="0" aria-label="Time">
+        <span class="readout" id="clock"></span>
+      </div>
+      <div class="key">
+        <span><span class="sw" style="background:linear-gradient(90deg,#4575b4,#ffffbf,#d73027)"></span>conflict potential (low → high)</span>
+        <span><span class="sw" style="background:#111;height:3px"></span>chosen candidate's stopping reach</span>
+        <span><span class="sw" style="background:#8a99a1;height:2px"></span>other admissible candidates</span>
+        <span><span class="sw" style="background:#d73027;height:2px;opacity:.6"></span>inadmissible</span>
+        <span><span class="sw" style="border:2px solid var(--blue);background:none"></span>road user expected first</span>
+        <span><span class="sw" style="border:2px solid var(--accent);background:none"></span>ego expected first</span>
+      </div>
+    </div>
+    <div>
+      <div class="panel">
+        <p class="label">Bird's-eye view · same moment</p>
+        <canvas id="bev" width="480" height="231"></canvas>
+      </div>
+      <div class="panel" style="margin-top:14px">
+        <p class="label">Conflict potential over imagined time · one curve per candidate speed</p>
+        <canvas id="chart" width="480" height="250"></canvas>
+      </div>
+    </div>
+  </div>
+  <div class="panel" style="margin-top:14px">
+    <p class="label">Speed: logged speed, planner output and command after the safety filter</p>
+    <canvas id="timeline" width="1290" height="150"></canvas>
+  </div>
+  <p class="note" id="note"></p>
+</main>
+<script>
+(async function () {
+  const D = await (await fetch("data.json")).json();
+  const M = D.meta, FR = D.frames, n = M.n;
+  const $ = (id) => document.getElementById(id);
+  const fpv = $("fpv"), bev = $("bev"), chart = $("chart"), tl = $("timeline"), tip = $("tip");
+  const cf = fpv.getContext("2d"), cb = bev.getContext("2d"), cc = chart.getContext("2d"), ct = tl.getContext("2d");
+  const SC = fpv.width / M.W;                       // display px per render px
+  const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  // ---------- route geometry
+  const R = M.route, cum = [0];
+  for (let i = 1; i < R.length; i++) cum.push(cum[i - 1] + Math.hypot(R[i][0] - R[i - 1][0], R[i][1] - R[i - 1][1]));
+  function point(s) {
+    s = Math.max(0, Math.min(s, cum[cum.length - 1]));
+    let i = 1; while (i < cum.length - 1 && cum[i] < s) i++;
+    const a = (s - cum[i - 1]) / Math.max(cum[i] - cum[i - 1], 1e-9);
+    const p = [R[i - 1][0] + a * (R[i][0] - R[i - 1][0]), R[i - 1][1] + a * (R[i][1] - R[i - 1][1])];
+    const h = Math.atan2(R[i][1] - R[i - 1][1], R[i][0] - R[i - 1][0]);
+    return [p, h];
+  }
+  function project(q) {                             // ground point -> [s, signed lateral (right +)]
+    let best = [1e9, 0, 0];
+    for (let i = 1; i < R.length; i++) {
+      const ax = R[i - 1][0], ay = R[i - 1][1], bx = R[i][0], by = R[i][1];
+      const vx = bx - ax, vy = by - ay, L2 = vx * vx + vy * vy || 1e-9;
+      const t = Math.max(0, Math.min(1, ((q[0] - ax) * vx + (q[1] - ay) * vy) / L2));
+      const px = ax + t * vx, py = ay + t * vy, d = Math.hypot(q[0] - px, q[1] - py);
+      if (d < best[0]) { const lat = (-(vy) * (q[0] - px) + vx * (q[1] - py)) / Math.sqrt(L2); best = [d, cum[i - 1] + t * Math.sqrt(L2), lat]; }
+    }
+    return [best[1], best[2]];
+  }
+  // ---------- camera (CARLA, left-handed: right = heading + 90 deg)
+  function toImg(f, X, Y) {
+    const [cx, cy, yaw] = f.cam, Fx = Math.cos(yaw), Fy = Math.sin(yaw), Rx = -Math.sin(yaw), Ry = Math.cos(yaw);
+    const dx = X - cx, dy = Y - cy, xc = dx * Fx + dy * Fy, yc = dx * Rx + dy * Ry, zc = -M.cam_z;
+    if (xc < 0.5) return null;
+    return [(M.W / 2 + M.F * yc / xc) * SC, (M.H / 2 - M.F * zc / xc) * SC];
+  }
+  function toGround(f, u, v) {
+    u /= SC; v /= SC;
+    const dz = (v - M.H / 2) / M.F; if (dz <= 1e-4) return null;
+    const [cx, cy, yaw] = f.cam, a = (u - M.W / 2) / M.F, lam = M.cam_z / dz;
+    return [cx + lam * (Math.cos(yaw) - a * Math.sin(yaw)), cy + lam * (Math.sin(yaw) + a * Math.cos(yaw))];
+  }
+  function toBev(f, X, Y) {
+    const [cx, cy, h] = f.bev, rx = Math.cos(h), ry = Math.sin(h), ux = Math.sin(h), uy = -Math.cos(h);
+    const qx = X - cx, qy = Y - cy, k = M.bev.w / M.bev.W;
+    return [(M.bev.W / 2 + M.bev.scale * (qx * rx + qy * ry)) * k, (M.bev.H / 2 - M.bev.scale * (qx * ux + qy * uy) - M.bev.crop[1]) * k];
+  }
+  // ---------- colour scale (RdYlBu reversed)
+  const stops = [[69,117,180],[145,191,219],[224,243,248],[255,255,191],[254,224,144],[252,141,89],[215,48,39]];
+  function rdylbu(x) { x = Math.max(0, Math.min(1, x)) * (stops.length - 1); const i = Math.min(Math.floor(x), stops.length - 2), a = x - i;
+    return stops[i].map((c, j) => Math.round(c + a * (stops[i + 1][j] - c))); }
+  const bandMax = Math.max(0.5, ...FR.map(f => Math.max(...f.band)));
+  const phiMax = Math.max(0.3, quantile(FR.flatMap(f => f.phi.flat()), 0.98));
+  function quantile(a, q) { const b = a.slice().sort((x, y) => x - y); return b[Math.floor(q * (b.length - 1))] || 1; }
+  // ---------- images
+  // images on demand, plus a background prefetch with at most four requests in flight
+  const imgF = new Array(n), imgB = new Array(n);
+  function ensure(k) {
+    if (imgF[k]) return;
+    const pad = String(k).padStart(4, "0");
+    imgF[k] = new Image(); imgB[k] = new Image();
+    imgF[k].onload = () => { if (k === K) drawFpv(); }; imgB[k].onload = () => { if (k === K) drawBev(); };
+    imgF[k].src = `fpv/${pad}.jpg`; imgB[k].src = `bev/${pad}.jpg`;
+  }
+  let nextPre = 0, inFlight = 0;
+  function prefetch() {
+    while (inFlight < 4 && nextPre < n) {
+      const k = nextPre++; if (imgF[k]) continue;
+      ensure(k); inFlight++;
+      const done = () => { inFlight--; prefetch(); };
+      imgF[k].addEventListener("load", done, { once: true }); imgF[k].addEventListener("error", done, { once: true });
+    }
+  }
+  let K = 0, hover = null, hoverCand = -1, playing = false;
+  const slider = $("slider"); slider.max = n - 1;
+  // ---------- drawing
+  function drawFpv() {
+    const f = FR[K];
+    cf.clearRect(0, 0, fpv.width, fpv.height);
+    if (imgF[K].complete) cf.drawImage(imgF[K], 0, 0, fpv.width, fpv.height);
+    // conflict potential band on the road ahead
+    for (let i = 0; i < f.band.length - 1; i++) {
+      const s0 = f.se + i * M.band_ds, s1 = s0 + M.band_ds;
+      const [p0, h0] = point(s0), [p1, h1] = point(s1);
+      const c = [[p0, h0, -M.hw], [p1, h1, -M.hw], [p1, h1, M.hw], [p0, h0, M.hw]].map(([p, h, l]) =>
+        toImg(f, p[0] - l * Math.sin(h), p[1] + l * Math.cos(h)));
+      if (c.some(x => !x)) continue;
+      const col = rdylbu(f.band[i] / bandMax);
+      cf.fillStyle = `rgba(${col[0]},${col[1]},${col[2]},${0.18 + 0.42 * Math.min(1, f.band[i] / bandMax)})`;
+      cf.beginPath(); c.forEach((q, j) => j ? cf.lineTo(q[0], q[1]) : cf.moveTo(q[0], q[1])); cf.closePath(); cf.fill();
+    }
+    // candidate stopping reaches
+    const order = f.reach.map((r, c) => c).sort((a, b) => (f.ok[a] - f.ok[b]) || (b === f.best) - (a === f.best));
+    for (const c of order) {
+      const s = f.se + f.reach[c], [p, h] = point(s);
+      const a = toImg(f, p[0] + (M.hw + 0.3) * Math.sin(h), p[1] - (M.hw + 0.3) * Math.cos(h));
+      const b = toImg(f, p[0] - (M.hw + 0.3) * Math.sin(h), p[1] + (M.hw + 0.3) * Math.cos(h));
+      if (!a || !b) continue;
+      const chosen = c === f.best, hl = c === hoverCand;
+      cf.lineWidth = chosen ? 5 : hl ? 4 : 1.6;
+      cf.strokeStyle = chosen ? "#111" : hl ? "#f0a000" : f.ok[c] ? "rgba(70,85,95,.85)" : "rgba(215,48,39,.55)";
+      if (chosen) { cf.save(); cf.lineWidth = 8; cf.strokeStyle = "rgba(255,255,255,.85)"; cf.beginPath(); cf.moveTo(a[0], a[1]); cf.lineTo(b[0], b[1]); cf.stroke(); cf.restore(); }
+      cf.beginPath(); cf.moveTo(a[0], a[1]); cf.lineTo(b[0], b[1]); cf.stroke();
+      if (chosen || hl) {
+        const txt = `${M.speeds[c].toFixed(1)} m/s${chosen ? " · chosen" : ""}`;
+        cf.font = "600 12px system-ui"; const w = cf.measureText(txt).width + 10;
+        cf.fillStyle = chosen ? "rgba(17,17,17,.85)" : "rgba(240,160,0,.9)"; cf.fillRect(b[0] + 4, b[1] - 18, w, 17);
+        cf.fillStyle = "#fff"; cf.fillText(txt, b[0] + 9, b[1] - 5);
+      }
+    }
+    // road users of the precedence graph
+    for (const bx of f.boxes) {
+      const [x0, y0, x1, y1] = bx.b.map(v => v * SC);
+      const col = bx.forced ? [178, 24, 43] : rdylbu(bx.p).map(() => 0).map((_, j) => Math.round([33, 102, 172][j] + ([178, 24, 43][j] - [33, 102, 172][j]) * bx.p));
+      cf.lineWidth = bx.forced ? 4 : 2; cf.strokeStyle = `rgb(${col})`; cf.strokeRect(x0, y0, x1 - x0, y1 - y0);
+    }
+    // hovered ground point
+    if (hover && hover.img) {
+      cf.strokeStyle = "rgba(255,255,255,.95)"; cf.lineWidth = 2;
+      cf.beginPath(); cf.arc(hover.img[0], hover.img[1], 7, 0, 2 * Math.PI); cf.stroke();
+      cf.strokeStyle = "rgba(0,0,0,.8)"; cf.lineWidth = 1; cf.beginPath(); cf.arc(hover.img[0], hover.img[1], 9, 0, 2 * Math.PI); cf.stroke();
+    }
+  }
+  function drawBev() {
+    const f = FR[K];
+    cb.clearRect(0, 0, bev.width, bev.height);
+    if (imgB[K].complete) cb.drawImage(imgB[K], 0, 0, bev.width, bev.height);
+    // camera field of view
+    const [cx, cy, yaw] = f.cam, o = toBev(f, cx, cy);
+    cb.fillStyle = "rgba(244,109,67,.18)"; cb.beginPath(); cb.moveTo(o[0], o[1]);
+    for (let a = -Math.PI / 4; a <= Math.PI / 4 + 1e-6; a += Math.PI / 24) { const q = toBev(f, cx + 30 * Math.cos(yaw + a), cy + 30 * Math.sin(yaw + a)); cb.lineTo(q[0], q[1]); }
+    cb.closePath(); cb.fill();
+    if (hover && hover.g) {
+      const q = toBev(f, hover.g[0], hover.g[1]);
+      cb.strokeStyle = "#fff"; cb.lineWidth = 2.5; cb.beginPath(); cb.arc(q[0], q[1], 6, 0, 2 * Math.PI); cb.stroke();
+      cb.strokeStyle = "#111"; cb.lineWidth = 1; cb.beginPath(); cb.arc(q[0], q[1], 8, 0, 2 * Math.PI); cb.stroke();
+    }
+  }
+  const CH = { l: 44, r: 12, t: 10, b: 30 };
+  function drawChart() {
+    const f = FR[K], W = chart.width, H = chart.height, tk = M.tk, T = tk[tk.length - 1];
+    const top = Math.max(0.3, ...f.phi.flat()) * 1.08;
+    const X = (t) => CH.l + (W - CH.l - CH.r) * t / T, Y = (v) => H - CH.b - (H - CH.t - CH.b) * Math.min(v, top) / top;
+    cc.clearRect(0, 0, W, H); cc.font = "11px system-ui"; cc.fillStyle = css("--muted"); cc.strokeStyle = css("--rule"); cc.lineWidth = 1;
+    for (let g = 0; g <= 4; g++) { const v = top * g / 4, y = Y(v); cc.beginPath(); cc.moveTo(CH.l, y); cc.lineTo(W - CH.r, y); cc.stroke(); cc.fillText(v.toFixed(2), 6, y + 4); }
+    for (let g = 0; g <= T + 1e-6; g += 0.5) { const x = X(g); cc.fillText(g.toFixed(1), x - 8, H - 12); }
+    cc.fillText("imagined time (s)", W / 2 - 40, H - 1);
+    const okJ = f.J.filter((v, c) => v !== null && f.ok[c]); const jmin = Math.min(...okJ), jmax = Math.max(...okJ);
+    const draw = (c) => {
+      const chosen = c === f.best, hl = c === hoverCand;
+      let col;
+      if (chosen) col = css("--ink"); else if (hl) col = "#f0a000";
+      else if (!f.ok[c]) col = "rgba(215,48,39,.45)";
+      else { const a = (f.J[c] - jmin) / Math.max(jmax - jmin, 1e-9); col = `rgba(${Math.round(60 + 120 * a)},${Math.round(90 + 110 * a)},${Math.round(110 + 110 * a)},.9)`; }
+      cc.strokeStyle = col; cc.lineWidth = chosen ? 3 : hl ? 2.5 : 1.2; cc.setLineDash(f.ok[c] || chosen ? [] : [4, 3]);
+      cc.beginPath(); f.phi[c].forEach((v, i) => i ? cc.lineTo(X(tk[i]), Y(v)) : cc.moveTo(X(tk[i]), Y(v))); cc.stroke(); cc.setLineDash([]);
+    };
+    f.phi.forEach((_, c) => { if (c !== f.best && c !== hoverCand) draw(c); });
+    if (hoverCand >= 0 && hoverCand !== f.best) draw(hoverCand);
+    draw(f.best);
+    cc.fillStyle = css("--ink"); cc.font = "600 12px system-ui";
+    const lab = hoverCand >= 0 ? hoverCand : f.best;
+    cc.fillText(`${M.speeds[lab].toFixed(1)} m/s · ${f.ok[lab] ? "cost " + (f.J[lab] ?? 0).toFixed(2) : "inadmissible"}${lab === f.best ? " · chosen" : ""}`, CH.l + 6, CH.t + 12);
+  }
+  const TL = { l: 44, r: 12, t: 12, b: 26 };
+  function drawTimeline() {
+    const W = tl.width, H = tl.height, vmax = Math.max(...FR.map(f => Math.max(f.v, f.vs, f.vc))) * 1.1, T = FR[n - 1].t;
+    const X = (t) => TL.l + (W - TL.l - TL.r) * t / T, Y = (v) => H - TL.b - (H - TL.t - TL.b) * v / vmax;
+    ct.clearRect(0, 0, W, H); ct.font = "11px system-ui"; ct.fillStyle = css("--muted"); ct.strokeStyle = css("--rule"); ct.lineWidth = 1;
+    for (let g = 0; g <= vmax; g += 2) { const y = Y(g); ct.beginPath(); ct.moveTo(TL.l, y); ct.lineTo(W - TL.r, y); ct.stroke(); ct.fillText(g + " m/s", 2, y + 4); }
+    for (let g = 0; g <= T; g += 5) ct.fillText(g + " s", X(g) - 8, H - 8);
+    const line = (key, col, w, dash) => { ct.strokeStyle = col; ct.lineWidth = w; ct.setLineDash(dash || []); ct.beginPath();
+      FR.forEach((f, i) => i ? ct.lineTo(X(f.t), Y(f[key])) : ct.moveTo(X(f.t), Y(f[key]))); ct.stroke(); ct.setLineDash([]); };
+    line("vs", "#f0a000", 1.5); line("vc", "#2166ac", 1.5, [5, 3]); line("v", css("--ink"), 2);
+    const x = X(FR[K].t); ct.strokeStyle = "#b2182b"; ct.lineWidth = 1.5; ct.beginPath(); ct.moveTo(x, TL.t); ct.lineTo(x, H - TL.b); ct.stroke();
+    ct.font = "12px system-ui"; let lx = W - 360;
+    [["speed", css("--ink")], ["planner output v*", "#f0a000"], ["command after safety filter", "#2166ac"]].forEach(([s, c]) => {
+      ct.fillStyle = c; ct.fillRect(lx, 4, 18, 3); ct.fillStyle = css("--muted"); ct.fillText(s, lx + 22, 10); lx += ct.measureText(s).width + 40; });
+  }
+  function render() {
+    const f = FR[K];
+    for (let d = 0; d < 3; d++) if (K + d < n) ensure(K + d);
+    drawFpv(); drawBev(); drawChart(); drawTimeline();
+    $("clock").innerHTML = `<b>t = ${f.t.toFixed(1)} s</b> · progress <b>${f.s.toFixed(0)} m</b> · speed <b>${f.v.toFixed(1)} m/s</b> · planner <b>${f.vs.toFixed(1)}</b> → command <b>${f.vc.toFixed(1)} m/s</b> · hard brakes forced <b>${f.hard}</b>`;
+    slider.value = K;
+    if (hover) updateTip();
+  }
+  // ---------- interaction
+  function updateTip() {
+    const f = FR[K];
+    const box = f.boxes.find(b => hover.raw[0] / SC >= b.b[0] && hover.raw[0] / SC <= b.b[2] && hover.raw[1] / SC >= b.b[1] && hover.raw[1] / SC <= b.b[3]);
+    let html;
+    if (box) {
+      html = `<b>${M.classes[box.cls]}</b> in the precedence graph<br>P(ego passes first) = ${box.p.toFixed(2)}<br>` +
+             `crossing ${box.de.toFixed(1)} m ahead of the ego; road user ${box.dj.toFixed(1)} m from it<br>arrival gap ${box.dt > 0 ? "+" : ""}${box.dt.toFixed(1)} s (ego − road user)` +
+             (box.forced ? "<br><b>forced to brake hard</b>" : "");
+    } else if (hover.g) {
+      const [s, lat] = project(hover.g), ahead = s - f.se;
+      const i = Math.round(ahead / M.band_ds);
+      const onPath = Math.abs(lat) <= M.hw + 0.4 && i >= 0 && i < f.band.length;
+      html = `${ahead >= 0 ? ahead.toFixed(1) + " m ahead" : (-ahead).toFixed(1) + " m behind"}, ${Math.abs(lat).toFixed(1)} m ${lat >= 0 ? "right" : "left"} of the path<br>` +
+             (onPath ? `conflict potential <b>${f.band[i].toFixed(2)}</b> (${(100 * f.band[i] / bandMax).toFixed(0)}% of the episode maximum)` : "outside the ego's corridor: no conflict potential");
+    } else html = "above the horizon";
+    tip.innerHTML = html; tip.style.display = "block";
+    const r = fpv.getBoundingClientRect(), sx = r.width / fpv.width;
+    tip.style.left = Math.min(hover.raw[0] * sx + 14, r.width - 290) + "px"; tip.style.top = (hover.raw[1] * sx + 14) + "px";
+  }
+  fpv.addEventListener("mousemove", (e) => {
+    const r = fpv.getBoundingClientRect(), k = fpv.width / r.width, u = (e.clientX - r.left) * k, v = (e.clientY - r.top) * k;
+    const g = toGround(FR[K], u, v);
+    hover = { raw: [u, v], g, img: g ? toImg(FR[K], g[0], g[1]) : null };
+    drawFpv(); drawBev(); updateTip();
+  });
+  fpv.addEventListener("mouseleave", () => { hover = null; tip.style.display = "none"; drawFpv(); drawBev(); });
+  // touch: a tap or drag queries the field like a hover
+  const touchAs = (target) => (e) => { const t = e.touches[0]; if (t) target.dispatchEvent(new MouseEvent("mousemove", { clientX: t.clientX, clientY: t.clientY })); };
+  fpv.addEventListener("touchstart", touchAs(fpv), { passive: true }); fpv.addEventListener("touchmove", touchAs(fpv), { passive: true });
+  chart.addEventListener("mousemove", (e) => {
+    const f = FR[K], r = chart.getBoundingClientRect(), k = chart.width / r.width, x = (e.clientX - r.left) * k, y = (e.clientY - r.top) * k;
+    const tk = M.tk, T = tk[tk.length - 1], W = chart.width, H = chart.height, top = Math.max(0.3, ...f.phi.flat()) * 1.08;
+    const X = (t) => CH.l + (W - CH.l - CH.r) * t / T, Y = (v) => H - CH.b - (H - CH.t - CH.b) * Math.min(v, top) / top;
+    let best = -1, bd = 14;
+    f.phi.forEach((row, c) => row.forEach((v, i) => { const d = Math.hypot(X(tk[i]) - x, Y(v) - y); if (d < bd) { bd = d; best = c; } }));
+    if (best !== hoverCand) { hoverCand = best; drawFpv(); drawChart(); }
+  });
+  chart.addEventListener("mouseleave", () => { hoverCand = -1; drawFpv(); drawChart(); });
+  chart.addEventListener("touchstart", touchAs(chart), { passive: true }); chart.addEventListener("touchmove", touchAs(chart), { passive: true });
+  tl.addEventListener("click", (e) => { const r = tl.getBoundingClientRect(), k = tl.width / r.width, x = (e.clientX - r.left) * k;
+    const t = (x - TL.l) / (tl.width - TL.l - TL.r) * FR[n - 1].t; K = Math.max(0, Math.min(n - 1, Math.round(t / M.dt))); render(); });
+  slider.addEventListener("input", () => { K = +slider.value; render(); });
+  $("prev").onclick = () => { K = Math.max(0, K - 1); render(); };
+  $("next").onclick = () => { K = Math.min(n - 1, K + 1); render(); };
+  let last = 0;
+  function tick(ts) { if (!playing) return; if (ts - last >= 1000 * M.dt) { last = ts; K = (K + 1) % n; render(); } requestAnimationFrame(tick); }
+  $("play").onclick = () => { playing = !playing; $("play").textContent = playing ? "Pause" : "Play"; if (playing) requestAnimationFrame(tick); };
+  // start at the decision with the strongest conflict potential
+  const pk = FR.map(f => Math.max(...f.phi.flat()));
+  K = pk.reduce((b, v, i) => v > pk[b] ? i : b, 0);
+  render();
+  prefetch();
+  if (document.documentElement.classList.contains("embedded")) {
+    const mainEl = document.querySelector("main");
+    const post = () => window.parent.postMessage({ type: "precede-decision-height", h: Math.ceil(mainEl.getBoundingClientRect().height) + 4 }, "*");
+    new ResizeObserver(post).observe(mainEl); window.addEventListener("load", post);
+    window.addEventListener("resize", () => setTimeout(post, 50));
+    [0, 300, 1500].forEach((ms) => setTimeout(post, ms));
+  }
+  $("note").textContent = `Candidates are PRECEDE's target speeds; each tick on the road marks how far that speed carries the ego over the ` +
+    `${M.tk[M.tk.length - 1].toFixed(1)} s horizon, and its curve on the right is the conflict potential it would meet over imagined time. ` +
+    `The planner's internals are replayed from the logged episode; the replay reproduces the logged planner output in ` +
+    `${(100 * M.agreement.within_0p5).toFixed(0)}% of the ${n} decisions (within 0.5 m/s). Camera boxes are the logged 3-D extents projected with the camera's pose.`;
+})();
+</script>
+</body>
+</html>

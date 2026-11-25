@@ -20,6 +20,18 @@
   <script src="static/js/precede.js?v=20261125-v6" defer></script>
   <title>PRECEDE: Precedence-Aware Conflict Potentials with Decision Commitment for Mapless Navigation among Heterogeneous Road Users</title>
     <style>
+      .combined-table { min-width: 860px; }
+      .combined-table th[scope="col"] { font-size: 12px; line-height: 1.3; }
+      .combined-table td, .combined-table th[scope="row"] { font-size: 13px; }
+      .combined-table tr.ours th, .combined-table tr.ours td { background: #f3f6f8; }
+      .combined-table td.best { font-weight: 700; color: #182b36; }
+      .combined-table .grp { text-align: center; border-bottom: 1px solid #c9d3d8; }
+      .results-table td.best { font-weight: 700; }
+    </style>
+    <style>
+      .decision-embed iframe { display: block; width: 100%; min-height: 760px; border: 0; background: transparent; }
+    </style>
+    <style>
       .lead-media video.fourview { aspect-ratio: 1920 / 1144; }
       .parallel-plate video { aspect-ratio: 16 / 9; width: 100%; }
       .outcome-list { font-size: 13px; line-height: 1.7; color: #4d606a; margin: 10px 0 0; padding-left: 0; list-style: none; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 4px 18px; }
@@ -33,21 +45,12 @@
       .reference-list { font-size: 13px; line-height: 1.7; color: #4d606a; padding-left: 22px; }
       @media (max-width: 800px) { .results-table.baselines-table { min-width: 720px; } .outcome-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     </style>
-    <style>
-      .combined-table { min-width: 860px; }
-      .combined-table th[scope="col"] { font-size: 12px; line-height: 1.3; }
-      .combined-table td, .combined-table th[scope="row"] { font-size: 13px; }
-      .combined-table tr.ours th, .combined-table tr.ours td { background: #f3f6f8; }
-      .combined-table td.best { font-weight: 700; color: #182b36; }
-      .combined-table .grp { text-align: center; border-bottom: 1px solid #c9d3d8; }
-      .results-table td.best { font-weight: 700; }
-    </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="topbar" aria-label="Page navigation">
     <a class="wordmark" href="#">PRECEDE<span class="wordmark-dot" aria-hidden="true"></span></a>
-    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#baselines">Methods</a><a href="#mapless">Mapless CARLA</a><a href="#safety">Safety-critical</a><a href="#carla">Field baselines</a><a href="#evidence">CARLA results</a><a href="#hardware">LIMO</a></div>
+    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#baselines">Methods</a><a href="#mapless">Mapless CARLA</a><a href="#decision">Decision</a><a href="#safety">Safety-critical</a><a href="#carla">Field baselines</a><a href="#evidence">CARLA results</a><a href="#hardware">LIMO</a></div>
   </nav>
   <main id="main">
     <header class="hero project-hero">
@@ -114,11 +117,11 @@
 
       <h3 class="gallery-heading">Where execution helps: the single-file doorway</h3>
       <div class="table-scroll" role="region" aria-label="Planar doorway regime" tabindex="0"><table class="results-table compact-table" data-planar-table="doorway"><caption>Separate doorway regime · 30 trials per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Episodes with contact</th><th scope="col">Reported outcome</th></tr></thead><tbody>
-        <tr><th scope="row">Safe-VF</th><td>30 / 30</td><td>Contact in every trial</td></tr>
-        <tr><th scope="row">Geo+S+QP</th><td>30 / 30</td><td>Contact in every trial</td></tr>
-        <tr><th scope="row">AttnGraph-style adapter</th><td>30 / 30</td><td>Contact in every trial</td></tr>
+        <tr><th scope="row">Safe-VF</th><td class="best">30 / 30</td><td>Contact in every trial</td></tr>
+        <tr><th scope="row">Geo+S+QP</th><td class="best">30 / 30</td><td>Contact in every trial</td></tr>
+        <tr><th scope="row">AttnGraph-style adapter</th><td class="best">30 / 30</td><td>Contact in every trial</td></tr>
         <tr><th scope="row">HEIGHT-style adapter</th><td class="best">0 / 30</td><td>One timeout</td></tr>
-        <tr><th scope="row">PRECEDE (linear forecast)</th><td class="best">0 / 30</td><td>30 contact-free completions</td></tr>
+        <tr><th scope="row">PRECEDE (linear forecast)</th><td class="best">0 / 30</td><td class="best">30 contact-free completions</td></tr>
       </tbody></table></div>
       <p class="table-note">The ranking changes in the bottleneck. PRECEDE's wait/recommit stack completes all 30 trials, with a median 7.86 s below the deadlock-speed threshold before passing. This result identifies the constrained geometry where its execution strategy helps.</p>
 
@@ -210,6 +213,30 @@
       </div>
     </section>
 
+    <section class="section" id="decision" aria-labelledby="decision-heading">
+      <div class="wide-container">
+        <div class="section-heading"><p class="eyebrow">Inside the decision</p><h2 id="decision-heading">What PRECEDE weighs, seen from the driver's seat</h2><p>One recorded episode on a narrow Town02 street with ground-truth perception. The front camera shows the conflict potential PRECEDE assigns to the road ahead, the stopping reach of each candidate speed it scores and the road users in its precedence graph; the timeline links the planner's output to the command after the safety filter.</p></div>
+        <p class="pair-note">Hover over (or tap) the road to query the field at that point, which is mirrored on the bird's-eye view; over a road user for its precedence probability and arrival gap; or over a curve on the right to find that candidate speed on the road.</p>
+        <div class="decision-embed"><iframe src="decision/index.html" title="Interactive first-person view of PRECEDE's decision" loading="lazy" scrolling="no"></iframe></div>
+        <p class="table-note">The planner's internals are replayed from the logged episode and reproduce its decisions in 97% of the 320 planning steps (within 0.5 m/s). Camera boxes are the logged 3-D extents projected with the camera's pose. <a href="decision/index.html" target="_blank" rel="noopener">Open the viewer on its own page</a>.</p>
+      </div>
+    </section>
+    <script>
+      (function () {
+        var f = document.querySelector("#decision iframe");
+        if (!f) return;
+        function fit() {                              // same-origin viewer: size the frame to its content
+          try { var m = f.contentDocument && f.contentDocument.querySelector("main");
+                if (m && m.getBoundingClientRect().height > 0) f.style.height = Math.ceil(m.getBoundingClientRect().height + 10) + "px"; } catch (err) {}
+        }
+        window.addEventListener("message", function (e) {
+          if (e.origin === window.location.origin && e.data && e.data.type === "precede-decision-height") f.style.height = (e.data.h + 6) + "px";
+        });
+        f.addEventListener("load", function () { [200, 1200].forEach(function (ms) { setTimeout(fit, ms); }); });
+        window.addEventListener("resize", function () { [120, 600].forEach(function (ms) { setTimeout(fit, ms); }); });
+      })();
+    </script>
+
     <section class="section" id="safety" aria-labelledby="safety-heading">
       <div class="wide-container">
         <div class="section-heading"><p class="eyebrow">Safety-critical events in closed loop</p><h2 id="safety-heading">Occlusion, cut-ins, cyclists, emergency stops and reversals</h2><p>Six families of hazards adapted from SOTIF logical test cases start at a set time-to-arrival of the ego, among pedestrians and cyclists who give way to one another. Each hazard reacts once it sees the ego: it may brake, steer away, stop, step back or turn back. Vans, trucks and buses hide road users from the ego's line of sight.</p></div>
@@ -255,20 +282,20 @@
 
         <h3>Matched vehicle crossing</h3>
         <div class="table-scroll" role="region" aria-label="Key matched vehicle-crossing results" tabindex="0"><table class="results-table dense-key-results" data-evidence-table="dense-key"><caption>Four cars + two trucks · same traffic fixture, route and QP host · one episode per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Goal / contacts</th><th scope="col">Min. truck SAT<br>(m)</th><th scope="col">Raw jerk RMS<br>(m/s³)</th><th scope="col">Command p95<br>(ms)</th></tr></thead><tbody>
-          <tr><th scope="row">APF + common QP</th><td>No / 1</td><td>−0.30</td><td>21.26</td><td>24.10</td></tr>
+          <tr><th scope="row">APF + common QP</th><td>No / 1</td><td>−0.30</td><td class="best">21.26</td><td class="best">24.10</td></tr>
           <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td>0.25</td><td>26.42</td><td class="best">23.46</td></tr>
-          <tr><th scope="row">No field</th><td>Yes / 0</td><td class="best">0.40</td><td>20.97</td><td>25.76</td></tr>
-          <tr><th scope="row">PRECEDE</th><td>Yes / 0</td><td class="best">0.40</td><td class="best">19.47</td><td>24.68</td></tr>
+          <tr><th scope="row">No field</th><td>Yes / 0</td><td class="best">0.40</td><td class="best">20.97</td><td class="best">25.76</td></tr>
+          <tr><th scope="row">PRECEDE</th><td>Yes / 0</td><td class="best">0.40</td><td class="best">19.47</td><td class="best">24.68</td></tr>
         </tbody></table></div>
         <p class="table-note">In the <a href="#matched-videos">paired crossing replay</a>, APF records truck contact and PRECEDE reaches its goal. PRECEDE has a larger truck body-support margin and lower recorded jerk than Shared-class in this episode; No field also finishes with a similar truck margin. Body margins use the fixed 60 s state capture. Raw jerk includes launch and stopping over unequal active-command durations, with APF commands ending at contact. Command timing excludes upstream sensing/simulation; PRECEDE records 5/813 calls above 50 ms.</p>
 
         <details class="supporting-results" id="responsive40"><summary>Manuscript responsive cohort: 40 episodes</summary>
         <div class="table-scroll" role="region" aria-label="Forty-episode responsive CARLA cohort" tabindex="0"><table class="results-table responsive40-table" data-evidence-table="responsive40"><caption>Receiver-aligned integration · five controllers × eight matched cases · all native contact counts zero</caption><thead><tr><th scope="col">Controller</th><th scope="col">Contact-free goals / 8</th><th scope="col">Median support margin (m)</th><th scope="col">Proximity exposure (s)</th><th scope="col">Smoothed jerk RMS (m/s³)</th><th scope="col">Median episode p95 (ms)</th></tr></thead><tbody>
-          <tr><th scope="row">ORCA + common QP</th><td class="best">8 / 8</td><td>0.430</td><td>11.29</td><td>11.59</td><td>4.35</td></tr>
-          <tr><th scope="row">SFM + common QP</th><td class="best">8 / 8</td><td>0.517</td><td>3.94</td><td>6.95</td><td class="best">3.75</td></tr>
-          <tr><th scope="row">Reactive stack</th><td>6 / 8</td><td>0.533</td><td>9.13</td><td class="best">6.31</td><td>3.89</td></tr>
+          <tr><th scope="row">ORCA + common QP</th><td class="best">8 / 8</td><td>0.430</td><td class="best">11.29</td><td>11.59</td><td class="best">4.35</td></tr>
+          <tr><th scope="row">SFM + common QP</th><td class="best">8 / 8</td><td>0.517</td><td>3.94</td><td class="best">6.95</td><td class="best">3.75</td></tr>
+          <tr><th scope="row">Reactive stack</th><td class="best">6 / 8</td><td>0.533</td><td class="best">9.13</td><td class="best">6.31</td><td class="best">3.89</td></tr>
           <tr><th scope="row">Class-label collapse</th><td class="best">8 / 8</td><td>0.884</td><td>3.08</td><td>11.61</td><td>17.99</td></tr>
-          <tr><th scope="row">PRECEDE</th><td class="best">8 / 8</td><td class="best">1.525</td><td class="best">1.17</td><td>14.09</td><td>18.00</td></tr>
+          <tr><th scope="row">PRECEDE</th><td class="best">8 / 8</td><td class="best">1.525</td><td class="best">1.17</td><td class="best">14.09</td><td class="best">18.00</td></tr>
         </tbody></table></div>
         <p class="table-note">Town10HD and Town05, two actor loads and two traffic evolutions, retrospectively assembled from separately frozen cohorts without outcome-based filtering. This configuration uses oracle states, green-frozen signals and a learned forecast adapter. PRECEDE has larger support margins and lower proximity exposure than ORCA and SFM in all eight matched cases, with higher measured jerk and computation. Runtime includes prediction where used, cache, planning/QP and tracking; PRECEDE records 1/6224 calls above 50 ms, maximum 56.42 ms. All 40 navigation traces are complete; 16 abnormal cleanup/process exits remain documented. <a href="static/data/responsive40-summary.json">Protocol, definitions and reported values</a>.</p>
         </details>
