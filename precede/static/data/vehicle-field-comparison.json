@@ -11,7 +11,7 @@
   "interpretation": "single-fixture descriptive module comparison; complete planners require a separate policy-adapter benchmark",
   "rows": [
     {
-      "system": "PairField",
+      "system": "PRECEDE",
       "comparison_track": "nominal_field_module_shared_FULL_host",
       "actual_module": "pairfield",
       "episodes": 1,

@@ -96,7 +96,7 @@ document.querySelectorAll('main img, main video').forEach(media => {
   credit.className = 'media-credit';
   credit.textContent = media.matches('#hardware img[src$="limo-platform.png"]')
     ? 'AgileX LIMO · supplied platform image'
-    : 'PAIRFIELD · © Anonymous Authors';
+    : 'PRECEDE · © Anonymous Authors';
   credit.setAttribute('aria-hidden', 'true');
   media.before(frame);
   frame.append(media, credit);

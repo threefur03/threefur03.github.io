@@ -1,8 +1,8 @@
-# PairField anonymous project website
+# PRECEDE anonymous project website
 
-Static GitHub Pages project site for `https://threefur03.github.io/pairfield/`.
+Static GitHub Pages project site for `https://threefur03.github.io/precede/`.
 The account root remains a separate project index. Project HTML and assets live
-under `pairfield/`; the root `.nojekyll` keeps both pages buildless.
+under `precede/` (`pairfield/` redirects there); the root `.nojekyll` keeps both pages buildless.
 
 Publish the repository named `threefur03.github.io` under that account. In
 Settings > Pages select the `main` branch and `/ (root)`. No custom build or
@@ -15,7 +15,7 @@ author-profile links or manuscript PDF with identifying metadata. Research
 media are distinguished by controller generation and experimental scope.
 
 Preview locally with `python -m http.server 8765 --bind 127.0.0.1`, then open
-`http://127.0.0.1:8765/pairfield/`. All required resources are local files.
+`http://127.0.0.1:8765/precede/`. All required resources are local files.
 
 Videos are the primary player. CARLA GIF links contain the same ordered frames at
 20 fps, resized for GitHub's per-file size limit. No interpolation or synthetic
@@ -25,7 +25,7 @@ its last camera frame is one simulation tick before the native callback.
 The earlier source-body recordings use a fixed64×36m crop and16:9 panel ratio.
 Four v9.4 daylight pose replays use a fixed60×33.75m BEV with equal1280×720
 camera and BEV panels. Their H.264 MP4 files, JPEG posters and anonymous
-source/output hashes are documented in `pairfield/static/data/daytime-media.json`.
+source/output hashes are documented in `precede/static/data/daytime-media.json`.
 Neither set uses adaptive zoom. Display-cropped actors remain in the recorded
 controller inputs. Two separate historical
 V5.1 comparisons retain native20Hz video; their GIF downloads are explicitly

@@ -1,5 +1,5 @@
 {
-  "project_title": "PAIRFIELD: Edge-Attributed Class-Pair Potentials for Predictive Heterogeneous Navigation",
+  "project_title": "PRECEDE: Edge-Attributed Class-Pair Potentials for Predictive Heterogeneous Navigation",
   "source": "User-supplied Level-I LaTeX and accompanying controlled-test/runtime passage",
   "evidence_status": "Transcribed supplied aggregate measurements; raw paired episodes and statistical tests have not been rerun on this PC",
   "primary_suite": {
@@ -10,7 +10,7 @@
     "trucks_present": false,
     "row_count": 19,
     "collision_interval": "Descriptive exact 95% confidence interval as supplied",
-    "p_H_definition": "Holm-adjusted exact McNemar comparison against PAIRFIELD (linear forecast), five prespecified contrasts",
+    "p_H_definition": "Holm-adjusted exact McNemar comparison against PRECEDE (linear forecast), five prespecified contrasts",
     "continuous_summary": "Medians as supplied",
     "travel_time_premium_definition": "100 * (T * v_r / L - 1), percent",
     "rows": [
@@ -22,7 +22,7 @@
       {"id":"geo_social_qp","group":"Ablations","source_name":"Geo+S+QP","display_name":"Geo+S+QP","success":1.00,"contact_free_success":0.47,"collision_rate":0.527,"collision_rate_display":"0.527","collision_ci95":[0.44,0.61],"travel_time_premium_percent":19.2,"minimum_clearance_m":-0.018,"proximity_s":3.32,"p_H":null},
       {"id":"geo_prediction_qp","group":"Ablations","source_name":"Geo+P+QP","display_name":"Geo+P+QP","success":1.00,"contact_free_success":0.87,"collision_rate":0.133,"collision_rate_display":"0.133","collision_ci95":[0.08,0.20],"travel_time_premium_percent":29.7,"minimum_clearance_m":0.195,"proximity_s":1.83,"p_H":null},
       {"id":"shared_linear","group":"Ablations","source_name":"Shared-CV","display_name":"Shared potentials (linear forecast)","success":1.00,"contact_free_success":0.91,"collision_rate":0.093,"collision_rate_display":"0.093","collision_ci95":[0.05,0.15],"travel_time_premium_percent":30.6,"minimum_clearance_m":0.211,"proximity_s":2.00,"p_H":null},
-      {"id":"pairfield_graph","group":"Ablations","source_name":"pairfieldgnn","display_name":"PAIRFIELD (graph forecast)","success":1.00,"contact_free_success":0.83,"collision_rate":0.167,"collision_rate_display":"0.167","collision_ci95":[0.11,0.24],"travel_time_premium_percent":31.5,"minimum_clearance_m":0.179,"proximity_s":2.25,"p_H":null},
+      {"id":"pairfield_graph","group":"Ablations","source_name":"pairfieldgnn","display_name":"PRECEDE (graph forecast)","success":1.00,"contact_free_success":0.83,"collision_rate":0.167,"collision_rate_display":"0.167","collision_ci95":[0.11,0.24],"travel_time_premium_percent":31.5,"minimum_clearance_m":0.179,"proximity_s":2.25,"p_H":null},
       {"id":"safe_vf","group":"References","source_name":"Safe-VF","display_name":"Safe-VF","success":1.00,"contact_free_success":0.37,"collision_rate":0.627,"collision_rate_display":"0.627","collision_ci95":[0.54,0.70],"travel_time_premium_percent":14.7,"minimum_clearance_m":-0.028,"proximity_s":3.12,"p_H":null},
       {"id":"apf","group":"References","source_name":"APF","display_name":"APF","success":1.00,"contact_free_success":0.63,"collision_rate":0.373,"collision_rate_display":"0.373","collision_ci95":[0.30,0.46],"travel_time_premium_percent":44.0,"minimum_clearance_m":0.096,"proximity_s":1.85,"p_H":3e-7},
       {"id":"orca","group":"References","source_name":"ORCA","display_name":"ORCA","success":0.92,"contact_free_success":0.07,"collision_rate":0.847,"collision_rate_display":"0.847","collision_ci95":[0.78,0.90],"travel_time_premium_percent":53.2,"minimum_clearance_m":-0.060,"proximity_s":5.47,"p_H":2e-28},
@@ -31,8 +31,8 @@
       {"id":"adapt_cbf","group":"References","source_name":"Adapt-CBF","display_name":"Adapt-CBF","success":1.00,"contact_free_success":0.41,"collision_rate":0.587,"collision_rate_display":"0.587","collision_ci95":[0.50,0.67],"travel_time_premium_percent":43.1,"minimum_clearance_m":-0.079,"proximity_s":2.75,"p_H":null},
       {"id":"height_style","group":"References","source_name":"HEIGHT-style","display_name":"HEIGHT-style adapter","success":1.00,"contact_free_success":0.89,"collision_rate":0.113,"collision_rate_display":"0.113","collision_ci95":[0.07,0.18],"travel_time_premium_percent":45.2,"minimum_clearance_m":0.333,"proximity_s":0.60,"p_H":null},
       {"id":"attngraph_style","group":"References","source_name":"AttnGraph-style","display_name":"AttnGraph-style adapter","success":1.00,"contact_free_success":0.98,"collision_rate":0.020,"collision_rate_display":"0.020","collision_ci95":[0.00,0.06],"travel_time_premium_percent":21.4,"minimum_clearance_m":0.351,"proximity_s":1.15,"p_H":null},
-      {"id":"pairfield_linear","group":"Proposed and sensitivity setting","source_name":"pairfieldcv","display_name":"PAIRFIELD (linear forecast)","success":1.00,"contact_free_success":0.89,"collision_rate":0.113,"collision_rate_display":"0.113","collision_ci95":[0.07,0.18],"travel_time_premium_percent":30.2,"minimum_clearance_m":0.195,"proximity_s":2.15,"p_H":null},
-      {"id":"pairfield_linear_tuned","group":"Proposed and sensitivity setting","source_name":"pairfieldcv (tuned)","display_name":"PAIRFIELD (linear forecast; tuned)","success":1.00,"contact_free_success":0.87,"collision_rate":0.127,"collision_rate_display":"0.127","collision_ci95":[0.08,0.19],"travel_time_premium_percent":38.2,"minimum_clearance_m":0.181,"proximity_s":2.30,"p_H":null}
+      {"id":"pairfield_linear","group":"Proposed and sensitivity setting","source_name":"pairfieldcv","display_name":"PRECEDE (linear forecast)","success":1.00,"contact_free_success":0.89,"collision_rate":0.113,"collision_rate_display":"0.113","collision_ci95":[0.07,0.18],"travel_time_premium_percent":30.2,"minimum_clearance_m":0.195,"proximity_s":2.15,"p_H":null},
+      {"id":"pairfield_linear_tuned","group":"Proposed and sensitivity setting","source_name":"pairfieldcv (tuned)","display_name":"PRECEDE (linear forecast; tuned)","success":1.00,"contact_free_success":0.87,"collision_rate":0.127,"collision_rate_display":"0.127","collision_ci95":[0.08,0.19],"travel_time_premium_percent":38.2,"minimum_clearance_m":0.181,"proximity_s":2.30,"p_H":null}
     ],
     "pairfield_collision_rate_by_layout": {"junction":0.27,"funnel":0.00,"pillars":0.17,"maze":0.13,"two-room":0.00}
   },
@@ -45,7 +45,7 @@
       {"arm":"+ linear-forecast occupancy constraints","source_name":"+ CV ghosts","collision_rate":0.360,"contact_free_success":0.64,"travel_time_premium_percent":19.5,"minimum_clearance_m":0.113,"p_against_parent":1.6e-6},
       {"arm":"+ speed governor","collision_rate":0.193,"contact_free_success":0.81,"travel_time_premium_percent":40.9,"minimum_clearance_m":0.105,"p_against_parent":2.9e-9},
       {"arm":"+ commit gate","collision_rate":0.400,"contact_free_success":0.60,"travel_time_premium_percent":17.5,"minimum_clearance_m":0.079,"p_against_parent":2.1e-5},
-      {"arm":"PAIRFIELD (linear forecast)","collision_rate":0.113,"contact_free_success":0.89,"travel_time_premium_percent":30.2,"minimum_clearance_m":0.195,"p_against_parent":null}
+      {"arm":"PRECEDE (linear forecast)","collision_rate":0.113,"contact_free_success":0.89,"travel_time_premium_percent":30.2,"minimum_clearance_m":0.195,"p_against_parent":null}
     ],
     "full_vs_governor_only_unadjusted_p":0.023,
     "instantaneous_class_field_geo_qp_comparison":{"parent_collision_rate":0.480,"with_field_collision_rate":0.527,"unadjusted_p":0.30},
@@ -57,7 +57,7 @@
   "doorway_regime": {
     "paired_trials_per_arm":30,
     "rows":[
-      {"arm":"PAIRFIELD (linear forecast)","completed_without_contact":30,"contact_episodes":0,"goal_count_explicit_in_source":true},
+      {"arm":"PRECEDE (linear forecast)","completed_without_contact":30,"contact_episodes":0,"goal_count_explicit_in_source":true},
       {"arm":"Safe-VF","contact_episodes":30,"completed_without_contact":0},
       {"arm":"Geo+S+QP","contact_episodes":30,"completed_without_contact":0},
       {"arm":"AttnGraph-style adapter","contact_episodes":30,"completed_without_contact":0},
@@ -66,7 +66,7 @@
     "pairfield_median_below_deadlock_speed_s":7.86,
     "pairfield_vs_each_all_contact_arm_exploratory_exact_McNemar_p":1.9e-9,
     "optional_yield_mode":{"avoided_contact":true,"reentered":false,"counts_explicit_in_source":false},
-    "scope":"Single-file doorway; memoryless field adapters lack PAIRFIELD's explicit wait/recommit state"
+    "scope":"Single-file doorway; memoryless field adapters lack PRECEDE's explicit wait/recommit state"
   },
   "controlled_class_conditioning": {
     "geometry":"Two near-stationary agents straddle the goal line",
@@ -112,26 +112,26 @@
     "rows":[
       {"arm":"Geo+S+QP","nominal_median_ms":2.22,"nominal_p95_ms":5.37,"nominal_p95_budget_percent":10.7,"agents_40_median_ms":2.05,"agents_40_p95_ms":6.04},
       {"arm":"AttnGraph-style adapter","nominal_median_ms":2.94,"nominal_p95_ms":5.67,"nominal_p95_budget_percent":11.3,"agents_40_median_ms":6.37,"agents_40_p95_ms":12.64},
-      {"arm":"PAIRFIELD (graph forecast)","nominal_median_ms":5.04,"nominal_p95_ms":11.14,"nominal_p95_budget_percent":22.3,"agents_40_median_ms":null,"agents_40_p95_ms":null},
-      {"arm":"PAIRFIELD (linear forecast)","nominal_median_ms":5.54,"nominal_p95_ms":11.93,"nominal_p95_budget_percent":23.9,"agents_40_median_ms":16.65,"agents_40_p95_ms":24.71}
+      {"arm":"PRECEDE (graph forecast)","nominal_median_ms":5.04,"nominal_p95_ms":11.14,"nominal_p95_budget_percent":22.3,"agents_40_median_ms":null,"agents_40_p95_ms":null},
+      {"arm":"PRECEDE (linear forecast)","nominal_median_ms":5.54,"nominal_p95_ms":11.93,"nominal_p95_budget_percent":23.9,"agents_40_median_ms":16.65,"agents_40_p95_ms":24.71}
     ],
     "claim_boundary":"p95 below the budget does not establish that every cycle meets its deadline"
   },
   "terminology": {
-    "canonical_model_name":"PAIRFIELD",
-    "primary_planar_configuration":"PAIRFIELD (linear forecast)",
-    "optional_planar_configuration":"PAIRFIELD (graph forecast)",
+    "canonical_model_name":"PRECEDE",
+    "primary_planar_configuration":"PRECEDE (linear forecast)",
+    "optional_planar_configuration":"PRECEDE (graph forecast)",
     "shared_field_ablation":"Shared potentials (linear forecast)",
     "linear_forecast_definition":"Constant-velocity extrapolation",
     "CV_occurrences_have_distinct_meanings":["Constant velocity in forecast configuration names","Coefficient of variation in parameter-seed variability"],
-    "old_to_new":{"pairfieldcv":"PAIRFIELD (linear forecast)","pairfieldgnn":"PAIRFIELD (graph forecast)","Shared-CV":"Shared potentials (linear forecast)","CV ghosts":"Linear-forecast occupancy constraints"},
+    "old_to_new":{"pairfieldcv":"PRECEDE (linear forecast)","pairfieldgnn":"PRECEDE (graph forecast)","Shared-CV":"Shared potentials (linear forecast)","CV ghosts":"Linear-forecast occupancy constraints"},
     "modern_reference_scope":"HEIGHT-style and AttnGraph-style remain explicit adapters, not full original-method reproductions"
   },
   "claim_boundaries": [
-    "PAIRFIELD reduces collision relative to several classical references in the supplied primary suite",
+    "PRECEDE reduces collision relative to several classical references in the supplied primary suite",
     "AttnGraph-style has lower primary-suite collision and travel-time premium, and larger clearance",
-    "The primary-suite shared-potentials ablation has collision 0.093 versus PAIRFIELD 0.113; the supplied aggregate comparison is nonsignificant",
-    "The strongest supplied robustness result is the single-file doorway regime, with 30 contact-free PAIRFIELD completions",
+    "The primary-suite shared-potentials ablation has collision 0.093 versus PRECEDE 0.113; the supplied aggregate comparison is nonsignificant",
+    "The strongest supplied robustness result is the single-file doorway regime, with 30 contact-free PRECEDE completions",
     "The matched class probe isolates a signed passing-direction effect, separate from collision benefit",
     "The density sweep reports substantial degradation at higher density",
     "Planar controller timings exclude simulation; CARLA timing channels must retain their separate scopes and computational resources",

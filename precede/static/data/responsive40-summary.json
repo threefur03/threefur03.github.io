@@ -22,7 +22,7 @@
     {"arm": "sfm", "label": "SFM + common QP", "n": 8, "contact_free_goals": 8, "contact_episodes": 0, "support_margin_m": 0.517, "proximity_s": 3.94, "smoothed_jerk_rms_mps3": 6.95, "median_episode_p95_ms": 3.75},
     {"arm": "no_anticipation", "label": "Reactive stack", "n": 8, "contact_free_goals": 6, "contact_episodes": 0, "support_margin_m": 0.533, "proximity_s": 9.13, "smoothed_jerk_rms_mps3": 6.31, "median_episode_p95_ms": 3.89},
     {"arm": "class_blind", "label": "Class-label collapse", "n": 8, "contact_free_goals": 8, "contact_episodes": 0, "support_margin_m": 0.884, "proximity_s": 3.08, "smoothed_jerk_rms_mps3": 11.61, "median_episode_p95_ms": 17.99},
-    {"arm": "pairfield", "label": "PAIRFIELD", "n": 8, "contact_free_goals": 8, "contact_episodes": 0, "support_margin_m": 1.525, "proximity_s": 1.17, "smoothed_jerk_rms_mps3": 14.09, "median_episode_p95_ms": 18.00}
+    {"arm": "pairfield", "label": "PRECEDE", "n": 8, "contact_free_goals": 8, "contact_episodes": 0, "support_margin_m": 1.525, "proximity_s": 1.17, "smoothed_jerk_rms_mps3": 14.09, "median_episode_p95_ms": 18.00}
   ],
   "pairfield_timing": {"calls_above_50ms": 1, "timed_calls": 6224, "maximum_ms": 56.4247},
   "process_lifecycle": {"complete_navigation_traces": 40, "clean_exits": 24, "post_cleanup_native_faults": 15, "during_cleanup_after_navigation_termination": 1},
