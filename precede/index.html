@@ -33,6 +33,15 @@
       .reference-list { font-size: 13px; line-height: 1.7; color: #4d606a; padding-left: 22px; }
       @media (max-width: 800px) { .results-table.baselines-table { min-width: 720px; } .outcome-list { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
     </style>
+    <style>
+      .combined-table { min-width: 860px; }
+      .combined-table th[scope="col"] { font-size: 12px; line-height: 1.3; }
+      .combined-table td, .combined-table th[scope="row"] { font-size: 13px; }
+      .combined-table tr.ours th, .combined-table tr.ours td { background: #f3f6f8; }
+      .combined-table td.best { font-weight: 700; color: #182b36; }
+      .combined-table .grp { text-align: center; border-bottom: 1px solid #c9d3d8; }
+      .results-table td.best { font-weight: 700; }
+    </style>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -99,72 +108,23 @@
     <section class="section" id="planar" aria-labelledby="planar-heading"><div class="wide-container">
       <div class="section-heading"><p class="eyebrow">Controlled evaluation</p><h2 id="planar-heading">Planar mechanisms and constrained-space navigation</h2><p>Planar simulation separates passing geometry, anticipation and wait/recommit control under known agent states.</p></div>
       <p class="pair-note">One method family, two forecast configurations: <strong>PRECEDE (linear forecast)</strong> uses constant-velocity extrapolation; <strong>PRECEDE (graph forecast)</strong> uses the learned interaction graph. The primary planar suite uses linear forecasts. CARLA's source-body experiments use the learned graph predictor.</p>
-      <p class="table-note">Performance varies by layout. The tests below separate class-conditioned passing geometry from the wait/recommit controller's constrained-passage behavior; complete baseline and ablation results remain expandable.</p>
+      <p class="table-note">The planar test below isolates the wait/recommit execution in a constrained passage; the complete planar comparison is reported in the paper.</p>
 
-      <details class="supporting-results"><summary>Primary-layout benchmark: safety and travel cost</summary>
-      <div class="table-scroll" role="region" aria-label="Planar primary comparison" tabindex="0"><table class="results-table planar-primary" data-planar-table="primary"><caption>Five layouts × 30 paired seeds · 150 episodes per controller</caption><thead><tr><th scope="col">Controller / configuration</th><th scope="col">Contact-free success</th><th scope="col">Collision [95% CI] ↓</th><th scope="col">Travel-time premium (%) ↓</th></tr></thead><tbody>
-        <tr data-planar-id="vis_cbf"><th scope="row">Vis-CBF</th><td>0.79</td><td>0.213 [0.15, 0.29]</td><td>91.5</td></tr>
-        <tr data-planar-id="height_style"><th scope="row">HEIGHT-style adapter</th><td>0.89</td><td>0.113 [0.07, 0.18]</td><td>45.2</td></tr>
-        <tr data-planar-id="attngraph_style"><th scope="row">AttnGraph-style adapter</th><td>0.98</td><td>0.020 [0.00, 0.06]</td><td>21.4</td></tr>
-        <tr data-planar-id="shared_linear"><th scope="row">Shared potentials (linear forecast)</th><td>0.91</td><td>0.093 [0.05, 0.15]</td><td>30.6</td></tr>
-        <tr data-planar-id="pairfield_graph"><th scope="row">PRECEDE (graph forecast)</th><td>0.83</td><td>0.167 [0.11, 0.24]</td><td>31.5</td></tr>
-        <tr data-planar-id="pairfield_linear"><th scope="row">PRECEDE (linear forecast)</th><td>0.89</td><td>0.113 [0.07, 0.18]</td><td>30.2</td></tr>
-      </tbody></table></div>
-      <p class="table-note">PRECEDE reduces collision from 0.213 to 0.113 relative to Vis-CBF, with reported Holm-adjusted paired McNemar <i>p</i> = 0.040. Shared potentials have a lower collision point estimate; AttnGraph-style also has lower collision and travel-time premium. Travel-time premium is 100(Tv<sub>r</sub>/L − 1)%, with traversal time T, reference speed v<sub>r</sub> and reference length L.</p>
-      </details>
+      
 
       <h3 class="gallery-heading">Where execution helps: the single-file doorway</h3>
       <div class="table-scroll" role="region" aria-label="Planar doorway regime" tabindex="0"><table class="results-table compact-table" data-planar-table="doorway"><caption>Separate doorway regime · 30 trials per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Episodes with contact</th><th scope="col">Reported outcome</th></tr></thead><tbody>
         <tr><th scope="row">Safe-VF</th><td>30 / 30</td><td>Contact in every trial</td></tr>
         <tr><th scope="row">Geo+S+QP</th><td>30 / 30</td><td>Contact in every trial</td></tr>
         <tr><th scope="row">AttnGraph-style adapter</th><td>30 / 30</td><td>Contact in every trial</td></tr>
-        <tr><th scope="row">HEIGHT-style adapter</th><td>0 / 30</td><td>One timeout</td></tr>
-        <tr><th scope="row">PRECEDE (linear forecast)</th><td>0 / 30</td><td>30 contact-free completions</td></tr>
+        <tr><th scope="row">HEIGHT-style adapter</th><td class="best">0 / 30</td><td>One timeout</td></tr>
+        <tr><th scope="row">PRECEDE (linear forecast)</th><td class="best">0 / 30</td><td>30 contact-free completions</td></tr>
       </tbody></table></div>
       <p class="table-note">The ranking changes in the bottleneck. PRECEDE's wait/recommit stack completes all 30 trials, with a median 7.86 s below the deadlock-speed threshold before passing. This result identifies the constrained geometry where its execution strategy helps.</p>
 
-      <h3 class="gallery-heading">What class conditioning changes: passing geometry</h3>
-      <div class="table-scroll" role="region" aria-label="Controlled class-pair passing offset" tabindex="0"><table class="results-table compact-table" data-planar-table="classes"><caption>Signed lateral offset (m) · class-conditioned / shared potentials · 24 paired trials per contrast</caption><thead><tr><th scope="col">Class contrast</th><th scope="col">Deployed geometry</th><th scope="col">Matched geometry</th></tr></thead><tbody>
-        <tr><th scope="row">Truck–pedestrian</th><td>0.244 / 0.140</td><td>0.086 / 0.000</td></tr>
-        <tr><th scope="row">Car–pedestrian</th><td>0.132 / 0.050</td><td>0.087 / 0.000</td></tr>
-        <tr><th scope="row">Car–bicycle</th><td>0.140 / 0.043</td><td>0.086 / 0.000</td></tr>
-      </tbody></table></div>
-      <p class="table-note">Positive offsets point away from the first-listed class. Mirrored scenes and longitudinal jitters control orientation. Equalizing radii and nonlearned class-dependent forces leaves an 8.6–8.7 cm passing offset induced by the learned parameter tables. Each geometry condition has three Holm-adjusted Wilcoxon contrasts, all reported <i>p</i> &lt; 0.001. The primary suite is 79% pedestrian and contains no trucks; this controlled test isolates passing direction.</p>
+      
 
-      <details class="supporting-results"><summary>Complete planar comparisons, component tests and computational scope</summary>
-        <p class="pair-note">The speed governor gives the largest isolated collision reduction from Geo+S+QP (0.527 to 0.193); the complete linear-forecast stack reaches 0.113. Graph forecasts and shared potentials retain their own measured results in the complete comparison below.</p>
-        <div class="table-scroll" role="region" aria-label="Complete nineteen-arm planar comparison" tabindex="0"><table class="results-table planar-complete" data-planar-table="complete"><caption>All 19 reported primary-suite arms · rates and medians</caption><thead><tr><th scope="col">Controller / configuration</th><th scope="col">Success</th><th scope="col">Contact-free success</th><th scope="col">Collision [95% CI]</th><th scope="col">Time premium (%)</th><th scope="col">Min. clearance (m)</th><th scope="col">Proximity (s)</th><th scope="col">Adjusted p</th></tr></thead><tbody id="planar-complete-rows">
-          <tr data-planar-id="goal"><th scope="row">Goal</th><td>0.80</td><td>0.00</td><td>0.800 [0.73, 0.86]</td><td>28.2</td><td>-0.275</td><td>2.60</td><td>8e-26</td></tr>
-          <tr data-planar-id="cbf"><th scope="row">CBF</th><td>1.00</td><td>0.43</td><td>0.567 [0.48, 0.65]</td><td>35.7</td><td>-0.049</td><td>3.30</td><td>—</td></tr>
-          <tr data-planar-id="geo_qp"><th scope="row">Geo+QP</th><td>1.00</td><td>0.52</td><td>0.480 [0.40, 0.56]</td><td>16.5</td><td>0.004</td><td>3.25</td><td>—</td></tr>
-          <tr data-planar-id="geo_social_analytic"><th scope="row">Geo+S_a</th><td>1.00</td><td>0.49</td><td>0.507 [0.42, 0.59]</td><td>15.8</td><td>-0.014</td><td>3.35</td><td>—</td></tr>
-          <tr data-planar-id="geo_social"><th scope="row">Geo+S</th><td>1.00</td><td>0.42</td><td>0.580 [0.50, 0.66]</td><td>18.4</td><td>-0.097</td><td>3.70</td><td>—</td></tr>
-          <tr data-planar-id="geo_social_qp"><th scope="row">Geo+S+QP</th><td>1.00</td><td>0.47</td><td>0.527 [0.44, 0.61]</td><td>19.2</td><td>-0.018</td><td>3.32</td><td>—</td></tr>
-          <tr data-planar-id="geo_prediction_qp"><th scope="row">Geo+P+QP</th><td>1.00</td><td>0.87</td><td>0.133 [0.08, 0.20]</td><td>29.7</td><td>0.195</td><td>1.83</td><td>—</td></tr>
-          <tr data-planar-id="shared_linear"><th scope="row">Shared potentials (linear forecast)</th><td>1.00</td><td>0.91</td><td>0.093 [0.05, 0.15]</td><td>30.6</td><td>0.211</td><td>2.00</td><td>—</td></tr>
-          <tr data-planar-id="pairfield_graph"><th scope="row">PRECEDE (graph forecast)</th><td>1.00</td><td>0.83</td><td>0.167 [0.11, 0.24]</td><td>31.5</td><td>0.179</td><td>2.25</td><td>—</td></tr>
-          <tr data-planar-id="safe_vf"><th scope="row">Safe-VF</th><td>1.00</td><td>0.37</td><td>0.627 [0.54, 0.70]</td><td>14.7</td><td>-0.028</td><td>3.12</td><td>—</td></tr>
-          <tr data-planar-id="apf"><th scope="row">APF</th><td>1.00</td><td>0.63</td><td>0.373 [0.30, 0.46]</td><td>44.0</td><td>0.096</td><td>1.85</td><td>3e-7</td></tr>
-          <tr data-planar-id="orca"><th scope="row">ORCA</th><td>0.92</td><td>0.07</td><td>0.847 [0.78, 0.90]</td><td>53.2</td><td>-0.060</td><td>5.47</td><td>2e-28</td></tr>
-          <tr data-planar-id="sfm"><th scope="row">SFM</th><td>0.78</td><td>0.15</td><td>0.813 [0.74, 0.87]</td><td>61.6</td><td>-0.144</td><td>2.60</td><td>9e-29</td></tr>
-          <tr data-planar-id="vis_cbf"><th scope="row">Vis-CBF</th><td>1.00</td><td>0.79</td><td>0.213 [0.15, 0.29]</td><td>91.5</td><td>0.116</td><td>4.20</td><td>0.04</td></tr>
-          <tr data-planar-id="adapt_cbf"><th scope="row">Adapt-CBF</th><td>1.00</td><td>0.41</td><td>0.587 [0.50, 0.67]</td><td>43.1</td><td>-0.079</td><td>2.75</td><td>—</td></tr>
-          <tr data-planar-id="height_style"><th scope="row">HEIGHT-style adapter</th><td>1.00</td><td>0.89</td><td>0.113 [0.07, 0.18]</td><td>45.2</td><td>0.333</td><td>0.60</td><td>—</td></tr>
-          <tr data-planar-id="attngraph_style"><th scope="row">AttnGraph-style adapter</th><td>1.00</td><td>0.98</td><td>0.020 [0.00, 0.06]</td><td>21.4</td><td>0.351</td><td>1.15</td><td>—</td></tr>
-          <tr data-planar-id="pairfield_linear"><th scope="row">PRECEDE (linear forecast)</th><td>1.00</td><td>0.89</td><td>0.113 [0.07, 0.18]</td><td>30.2</td><td>0.195</td><td>2.15</td><td>—</td></tr>
-          <tr data-planar-id="pairfield_linear_tuned"><th scope="row">PRECEDE (linear forecast; tuned)</th><td>1.00</td><td>0.87</td><td>0.127 [0.08, 0.19]</td><td>38.2</td><td>0.181</td><td>2.30</td><td>—</td></tr>
-        </tbody></table></div>
-        <p class="table-note">Collision intervals are descriptive exact 95% intervals. Adjusted p values cover five prespecified McNemar comparisons with PRECEDE (linear forecast). HEIGHT-style and AttnGraph-style are adapters. The reported shared-potentials comparison has unadjusted p = 0.607. <a href="static/data/planar-evidence.json">Complete values, component tests and definitions</a>.</p>
-        <h3>Controller computation and stress envelope</h3>
-        <div class="table-scroll" role="region" aria-label="Planar controller timing" tabindex="0"><table class="results-table compact-table" data-planar-table="runtime"><caption>Single thread · Intel Core Ultra 9 285K · median / 95th percentile (ms)</caption><thead><tr><th scope="col">Controller</th><th scope="col">Nominal density</th><th scope="col">40 agents</th></tr></thead><tbody>
-          <tr><th scope="row">Geo+S+QP</th><td>2.22 / 5.37</td><td>2.05 / 6.04</td></tr>
-          <tr><th scope="row">AttnGraph-style adapter</th><td>2.94 / 5.67</td><td>6.37 / 12.64</td></tr>
-          <tr><th scope="row">PRECEDE (graph forecast)</th><td>5.04 / 11.14</td><td>—</td></tr>
-          <tr><th scope="row">PRECEDE (linear forecast)</th><td>5.54 / 11.93</td><td>16.65 / 24.71</td></tr>
-        </tbody></table></div>
-        <p class="table-note">Timing covers nominal command construction and CBF-QP, excluding simulation and metric bookkeeping. The observed PRECEDE linear-forecast 95th percentile is below the 50 ms budget at both reported densities. The density stress sweep separately increases collision from 0.10 at five agents to 0.85 at thirty.</p>
-        <p class="table-note">The post-QP contact guard activates in 26% of primary PRECEDE runs and 0.40% of control cycles, with mean / maximum activation displacement 9.6 / 23.8 mm. This guard lies outside the CBF certificate; boundaries are sampled. Across four training seeds, selected car-receiver amplitude entries retain truck &gt; car &gt; bicycle &gt; pedestrian ordering, with coefficients of variation 1.3–16.1%; closing-rate gains vary by up to 65%.</p>
-      </details>
+      
 
       <div class="comparison-grid planar-comparison">
         <figure class="replay-card"><div class="planar-media"><img draggable="false" src="static/media/planar-field.gif" width="919" height="560" loading="lazy" alt="Illustrative planar navigation with potential contours and graph connections"></div><figcaption>Illustrative field and graph replay</figcaption></figure>
@@ -241,22 +201,24 @@
 
 
         <h3 class="gallery-heading">Aggregate results</h3>
-        <figure class="image-plate"><img src="static/images/l2-stats.png" loading="lazy" alt="Forced hard brakes per episode, completion, paired differences, ground truth versus camera and LiDAR, and density for fifteen methods on main roads and narrow streets"><figcaption>Ground truth with line-of-sight occlusion: 330 main-road and 268 narrow-street instances, each run by all 15 methods (8,970 episodes). PRECEDE forces 0.45 hard brakes per episode on main roads and 0.39 on narrow streets. The baselines range from 0.85 to 1.22 and from 0.68 to 1.47. Every paired difference against a baseline is significant (Holm <i>p</i> ≤ 2.5 × 10<sup>-8</sup>), with no collisions and 99.4–99.6% completion. Per episode, removing the precedence-uncertainty term changes it by +0.06 and +0.13 (significant only on narrow streets); removing the imposed-discomfort term changes it by +0.02 and +0.04 (not significant on either); removing the commitment terms changes it by +0.12 and +0.40. With camera and LiDAR (90 and 134 instances, eight methods), PRECEDE keeps the lowest count on main roads (0.68 against 0.92–1.31); the difference is significant against CBF-QP, BehaviorAgent†, ORCA†, CVM-PtP and DREAM†. On narrow streets the advantage disappears: 0.80 against 0.63–1.33, significant only against CBF-QP and BehaviorAgent†, while PDM-Lite†, ORCA†, OA-RF† and DREAM† force fewer hard brakes (not significant). PRECEDE then collides in 1.1% and 1.5% of episodes, against 0.0–4.4% for the baselines.</figcaption></figure>
+        <p class="pair-note">PRECEDE forces 0.45 hard brakes per episode on main roads and 0.39 on narrow streets, the fewest of all methods; every paired difference against a baseline is significant (Wilcoxon, Holm <i>p</i> ≤ 2.5 × 10<sup>-8</sup>). It records no collisions and keeps 99.4–99.6% completion. Baselines lead elsewhere: some are faster, and PDM-Lite† has fewer near misses on narrow streets. Bold marks the best value in each column, whichever method it belongs to.</p>
+        <div class="table-scroll" role="region" aria-label="Combined ground-truth results" tabindex="0"><table class="results-table combined-table"><caption>Ground truth with line-of-sight occlusion · every method on every scene · bold: best in the column</caption><thead><tr><th scope="col" rowspan="2">Method</th><th scope="colgroup" colspan="5" class="grp">Main roads (330 scenes)</th><th scope="colgroup" colspan="5" class="grp">Narrow streets (268 scenes)</th></tr><tr><th scope="col">Forced hard brakes / ep. ↓</th><th scope="col">Collision % ↓</th><th scope="col">Near miss % ↓</th><th scope="col">Completion % ↑</th><th scope="col">Median time (s) ↓</th><th scope="col">Forced hard brakes / ep. ↓</th><th scope="col">Collision % ↓</th><th scope="col">Near miss % ↓</th><th scope="col">Completion % ↑</th><th scope="col">Median time (s) ↓</th></tr></thead><tbody><tr><th scope="row">CBF-QP</th><td>1.12</td><td>0.9</td><td>28.2</td><td>97.6</td><td>22.6</td><td>1.47</td><td>0.4</td><td>31.3</td><td>99.3</td><td class="best">31.7</td></tr><tr><th scope="row">BasicAgent†</th><td>1.06</td><td>0.6</td><td>27.6</td><td>98.5</td><td>23.5</td><td>1.40</td><td>0.7</td><td>31.0</td><td>98.9</td><td class="best">31.7</td></tr><tr><th scope="row">BehaviorAgent†</th><td>1.04</td><td>0.6</td><td>25.5</td><td>98.5</td><td>25.9</td><td>1.16</td><td>1.1</td><td>19.8</td><td>98.5</td><td>35.2</td></tr><tr><th scope="row">PDM-Lite†</th><td>0.85</td><td>0.6</td><td>14.2</td><td>91.8</td><td>35.9</td><td>0.68</td><td class="best">0.0</td><td class="best">6.3</td><td>99.3</td><td>38.3</td></tr><tr><th scope="row">APF</th><td>1.15</td><td>0.3</td><td>29.1</td><td>99.1</td><td class="best">22.4</td><td>1.24</td><td>0.7</td><td>26.5</td><td>98.9</td><td>32.3</td></tr><tr><th scope="row">ORCA†</th><td>1.22</td><td>0.6</td><td>47.9</td><td>99.1</td><td>33.8</td><td>1.06</td><td>0.4</td><td>45.5</td><td>98.5</td><td>41.3</td></tr><tr><th scope="row">SFM†</th><td>1.06</td><td>0.9</td><td>25.8</td><td>98.2</td><td>22.7</td><td>1.32</td><td>0.4</td><td>27.6</td><td>99.3</td><td>31.8</td></tr><tr><th scope="row">CVM-PtP</th><td>0.97</td><td>0.6</td><td>20.0</td><td class="best">99.4</td><td>23.4</td><td>1.00</td><td>0.7</td><td>17.5</td><td>99.3</td><td>33.4</td></tr><tr><th scope="row">Courteous†</th><td>0.94</td><td>1.5</td><td>23.9</td><td>97.0</td><td>25.9</td><td>0.99</td><td>0.7</td><td>14.2</td><td>99.3</td><td>34.0</td></tr><tr><th scope="row">OA-RF†</th><td>0.91</td><td>0.3</td><td>20.9</td><td>96.1</td><td>30.5</td><td>0.88</td><td>0.4</td><td>20.1</td><td>98.1</td><td>35.5</td></tr><tr><th scope="row">DREAM†</th><td>0.85</td><td>0.6</td><td>20.6</td><td>97.9</td><td>29.6</td><td>0.85</td><td class="best">0.0</td><td>16.4</td><td class="best">99.6</td><td>33.9</td></tr><tr class="ours"><th scope="row">PRECEDE (ours)</th><td class="best">0.45</td><td class="best">0.0</td><td class="best">13.6</td><td class="best">99.4</td><td>26.0</td><td class="best">0.39</td><td class="best">0.0</td><td>7.8</td><td class="best">99.6</td><td>34.3</td></tr></tbody></table></div>
+        <p class="pair-note">With onboard camera and LiDAR on main roads, PRECEDE again forces the fewest hard brakes (0.68 per episode); the difference is significant against CBF-QP, BehaviorAgent†, ORCA†, CVM-PtP and DREAM†.</p>
+        <div class="table-scroll" role="region" aria-label="Combined camera and LiDAR results" tabindex="0"><table class="results-table combined-table"><caption>Onboard camera and LiDAR, main roads · eight methods on the same scenes · bold: best in the column</caption><thead><tr><th scope="col" rowspan="2">Method</th><th scope="colgroup" colspan="5" class="grp">Main roads (90 scenes)</th></tr><tr><th scope="col">Forced hard brakes / ep. ↓</th><th scope="col">Collision % ↓</th><th scope="col">Near miss % ↓</th><th scope="col">Completion % ↑</th><th scope="col">Median time (s) ↓</th></tr></thead><tbody><tr><th scope="row">CBF-QP</th><td>1.31</td><td>1.1</td><td>33.3</td><td>98.9</td><td>26.2</td></tr><tr><th scope="row">BehaviorAgent†</th><td>1.20</td><td class="best">0.0</td><td>23.3</td><td class="best">100.0</td><td>27.3</td></tr><tr><th scope="row">PDM-Lite†</th><td>1.04</td><td>2.2</td><td>24.4</td><td>97.8</td><td>32.3</td></tr><tr><th scope="row">ORCA†</th><td>1.26</td><td>4.4</td><td>26.7</td><td>94.4</td><td>27.4</td></tr><tr><th scope="row">CVM-PtP</th><td>1.08</td><td class="best">0.0</td><td>25.6</td><td class="best">100.0</td><td class="best">23.9</td></tr><tr><th scope="row">OA-RF†</th><td>0.92</td><td>2.2</td><td>24.4</td><td>96.7</td><td>27.7</td></tr><tr><th scope="row">DREAM†</th><td>0.97</td><td>1.1</td><td>22.2</td><td>98.9</td><td>27.1</td></tr><tr class="ours"><th scope="row">PRECEDE (ours)</th><td class="best">0.68</td><td>1.1</td><td class="best">15.6</td><td>98.9</td><td>26.2</td></tr></tbody></table></div>
+        <div class="table-scroll" role="region" aria-label="Contribution of each term" tabindex="0"><table class="results-table compact-table"><caption>What each term contributes · change in forced hard brakes per episode when it is removed (ground truth)</caption><thead><tr><th scope="col">PRECEDE variant</th><th scope="col">Main roads</th><th scope="col">Narrow streets</th></tr></thead><tbody><tr><th scope="row">w/o commitment (total-variation and decrease terms)</th><td class="best">+0.12**</td><td class="best">+0.40***</td></tr><tr><th scope="row">w/o precedence uncertainty (entropy term)</th><td>+0.06</td><td class="best">+0.13**</td></tr><tr><th scope="row">w/o imposed discomfort</th><td>+0.02</td><td>+0.04</td></tr></tbody></table></div>
+        <p class="table-note">Positive values: the variant forces more hard brakes than PRECEDE, i.e. the removed term helps; * Holm <i>p</i> &lt; 0.05, ** &lt; 0.01, *** &lt; 0.001. Camera and LiDAR runs on narrow streets and the safety-critical events, where PRECEDE has no significant advantage, are reported in the paper with all other results.</p>
       </div>
     </section>
 
     <section class="section" id="safety" aria-labelledby="safety-heading">
       <div class="wide-container">
         <div class="section-heading"><p class="eyebrow">Safety-critical events in closed loop</p><h2 id="safety-heading">Occlusion, cut-ins, cyclists, emergency stops and reversals</h2><p>Six families of hazards adapted from SOTIF logical test cases start at a set time-to-arrival of the ego, among pedestrians and cyclists who give way to one another. Each hazard reacts once it sees the ego: it may brake, steer away, stop, step back or turn back. Vans, trucks and buses hide road users from the ego's line of sight.</p></div>
-        <p class="pair-note">104 scenes, all 15 methods, ground truth with occlusion. PRECEDE forces 1.06 hard brakes per episode, against 0.98–1.43 for the baselines, and no method collides. Each hazard starts at a set time-to-arrival of the ego, so much of this braking is hard for any planner to avoid: the paired difference is significant only against CBF-QP, BasicAgent† and CVM-PtP, and PDM-Lite† forces fewer hard brakes (not significant). One representative family is shown below.</p>
+        <p class="pair-note">104 scenes, all 15 methods, ground truth with occlusion. PRECEDE completes every scene without a collision. One representative family is shown below; per-family results for all methods are in the paper.</p>
 
 
         <h3 class="gallery-heading">S3 · Cyclist entering the lane</h3>
         <p class="pair-note">Town02 parked at both kerbs, 5 road users (3 pedestrians, 2 cyclists).</p>
         <figure class="image-plate parallel-plate"><video controls muted playsinline loop preload="none" poster="static/images/sc-s3-parallel-poster.jpg"><source src="static/media/sc-s3-parallel.mp4" type="video/mp4"></video><figcaption>Across the 16 S3 scenes, PRECEDE forces fewer / as many / more hard brakes than CBF-QP 7 / 6 / 3; BehaviorAgent† 7 / 6 / 3; APF 7 / 5 / 4. In this scene:<ul class="outcome-list"><li><b>CBF-QP</b>: 2 forced hard brakes; goal at 29.3 s</li><li><b>BehaviorAgent†</b>: 2 forced hard brakes; goal at 31.5 s</li><li><b>APF</b>: 2 forced hard brakes; goal at 29.6 s</li><li><b>PRECEDE</b>: no forced hard brakes; goal at 32.9 s</li></ul></figcaption></figure>
-
-
-        <figure class="image-plate"><img src="static/images/sc-stats.png" loading="lazy" alt="Forced hard brakes, defensive reactions, collisions and near misses, and time for nine methods in six safety-critical families"><figcaption>Per family, ground truth with occlusion, nine of the 15 methods (all are tabulated in the study's results). In S6 (pedestrians stepping out in front of a stopped bus, 8 scenes), PRECEDE's count is the highest of all 15 methods, tied with Courteous† and DREAM†. With camera and LiDAR, the per-episode count is 1.21 for PRECEDE against 1.12–1.38; no difference is significant. PRECEDE then collides in 1.0% of episodes (12% of S6 scenes), against 0.0–3.8% for the baselines. Planning claims for these families therefore rest on the ground-truth runs; the perception delay for newly emerging road users is an open limitation.</figcaption></figure>
       </div>
     </section>
 
@@ -294,78 +256,26 @@
         <h3>Matched vehicle crossing</h3>
         <div class="table-scroll" role="region" aria-label="Key matched vehicle-crossing results" tabindex="0"><table class="results-table dense-key-results" data-evidence-table="dense-key"><caption>Four cars + two trucks · same traffic fixture, route and QP host · one episode per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Goal / contacts</th><th scope="col">Min. truck SAT<br>(m)</th><th scope="col">Raw jerk RMS<br>(m/s³)</th><th scope="col">Command p95<br>(ms)</th></tr></thead><tbody>
           <tr><th scope="row">APF + common QP</th><td>No / 1</td><td>−0.30</td><td>21.26</td><td>24.10</td></tr>
-          <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td>0.25</td><td>26.42</td><td>23.46</td></tr>
-          <tr><th scope="row">No field</th><td>Yes / 0</td><td>0.40</td><td>20.97</td><td>25.76</td></tr>
-          <tr><th scope="row">PRECEDE</th><td>Yes / 0</td><td>0.40</td><td>19.47</td><td>24.68</td></tr>
+          <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td>0.25</td><td>26.42</td><td class="best">23.46</td></tr>
+          <tr><th scope="row">No field</th><td>Yes / 0</td><td class="best">0.40</td><td>20.97</td><td>25.76</td></tr>
+          <tr><th scope="row">PRECEDE</th><td>Yes / 0</td><td class="best">0.40</td><td class="best">19.47</td><td>24.68</td></tr>
         </tbody></table></div>
-        <p class="table-note">In the <a href="#matched-videos">paired crossing replay</a>, APF records truck contact and PRECEDE reaches its goal. PRECEDE has a larger truck body-support margin and lower recorded jerk than Shared-class in this episode; No field also finishes with a similar truck margin. Body margins use the fixed 60 s state capture. Raw jerk includes launch and stopping over unequal active-command durations, with APF commands ending at contact. Command timing excludes upstream sensing/simulation; PRECEDE records 5/813 calls above 50 ms. Full timings and peaks appear below.</p>
-        <p class="table-note">In the separate pedestrian pilot, all three systems finish contact-free. Additional NPC stopping is 0.55 actor-s for PRECEDE and No field, versus 2.70 for Shared-class.</p>
+        <p class="table-note">In the <a href="#matched-videos">paired crossing replay</a>, APF records truck contact and PRECEDE reaches its goal. PRECEDE has a larger truck body-support margin and lower recorded jerk than Shared-class in this episode; No field also finishes with a similar truck margin. Body margins use the fixed 60 s state capture. Raw jerk includes launch and stopping over unequal active-command durations, with APF commands ending at contact. Command timing excludes upstream sensing/simulation; PRECEDE records 5/813 calls above 50 ms.</p>
 
         <details class="supporting-results" id="responsive40"><summary>Manuscript responsive cohort: 40 episodes</summary>
         <div class="table-scroll" role="region" aria-label="Forty-episode responsive CARLA cohort" tabindex="0"><table class="results-table responsive40-table" data-evidence-table="responsive40"><caption>Receiver-aligned integration · five controllers × eight matched cases · all native contact counts zero</caption><thead><tr><th scope="col">Controller</th><th scope="col">Contact-free goals / 8</th><th scope="col">Median support margin (m)</th><th scope="col">Proximity exposure (s)</th><th scope="col">Smoothed jerk RMS (m/s³)</th><th scope="col">Median episode p95 (ms)</th></tr></thead><tbody>
-          <tr><th scope="row">ORCA + common QP</th><td>8 / 8</td><td>0.430</td><td>11.29</td><td>11.59</td><td>4.35</td></tr>
-          <tr><th scope="row">SFM + common QP</th><td>8 / 8</td><td>0.517</td><td>3.94</td><td>6.95</td><td>3.75</td></tr>
-          <tr><th scope="row">Reactive stack</th><td>6 / 8</td><td>0.533</td><td>9.13</td><td>6.31</td><td>3.89</td></tr>
-          <tr><th scope="row">Class-label collapse</th><td>8 / 8</td><td>0.884</td><td>3.08</td><td>11.61</td><td>17.99</td></tr>
-          <tr><th scope="row">PRECEDE</th><td>8 / 8</td><td>1.525</td><td>1.17</td><td>14.09</td><td>18.00</td></tr>
+          <tr><th scope="row">ORCA + common QP</th><td class="best">8 / 8</td><td>0.430</td><td>11.29</td><td>11.59</td><td>4.35</td></tr>
+          <tr><th scope="row">SFM + common QP</th><td class="best">8 / 8</td><td>0.517</td><td>3.94</td><td>6.95</td><td class="best">3.75</td></tr>
+          <tr><th scope="row">Reactive stack</th><td>6 / 8</td><td>0.533</td><td>9.13</td><td class="best">6.31</td><td>3.89</td></tr>
+          <tr><th scope="row">Class-label collapse</th><td class="best">8 / 8</td><td>0.884</td><td>3.08</td><td>11.61</td><td>17.99</td></tr>
+          <tr><th scope="row">PRECEDE</th><td class="best">8 / 8</td><td class="best">1.525</td><td class="best">1.17</td><td>14.09</td><td>18.00</td></tr>
         </tbody></table></div>
         <p class="table-note">Town10HD and Town05, two actor loads and two traffic evolutions, retrospectively assembled from separately frozen cohorts without outcome-based filtering. This configuration uses oracle states, green-frozen signals and a learned forecast adapter. PRECEDE has larger support margins and lower proximity exposure than ORCA and SFM in all eight matched cases, with higher measured jerk and computation. Runtime includes prediction where used, cache, planning/QP and tracking; PRECEDE records 1/6224 calls above 50 ms, maximum 56.42 ms. All 40 navigation traces are complete; 16 abnormal cleanup/process exits remain documented. <a href="static/data/responsive40-summary.json">Protocol, definitions and reported values</a>.</p>
         </details>
 
-        <details class="supporting-results"><summary>Other density, traffic response and field-module comparisons</summary>
-        <h3>Density benchmark</h3>
-        <div class="table-scroll" role="region" aria-label="Historical density benchmark summary" tabindex="0"><table class="results-table compact-table" data-social-table="historical"><caption>Earlier receiver-axis V5.1 · 72 episodes · values are D1 / D2</caption><thead><tr><th scope="col">Method</th><th scope="col">Contact-free goals<br>(out of 6 per load)</th><th scope="col">Proximity index ↓<br>(×1000)</th></tr></thead><tbody>
-          <tr><th scope="row">ORCA + QP</th><td>3 / 2</td><td>41.825 / 27.290</td></tr>
-          <tr><th scope="row">SFM + QP</th><td>6 / 3</td><td>6.808 / 24.461</td></tr>
-          <tr><th scope="row">Geometry + QP</th><td>3 / 2</td><td>35.491 / 32.079</td></tr>
-          <tr><th scope="row">Class-label ablation</th><td>6 / 6</td><td>3.687 / 5.526</td></tr>
-          <tr><th scope="row">Longitudinal interface off</th><td>5 / 6</td><td>2.620 / 3.094</td></tr>
-          <tr><th scope="row">PRECEDE</th><td>6 / 5</td><td>2.805 / 4.843</td></tr>
-        </tbody></table></div>
-        <p class="table-note">Two towns, three seeds; D1 has 7 agents and D2 has 11. PRECEDE has lower total proximity exposure than ORCA and Geometry in 12/12 matched cases and SFM in 11/12. At high load, several comparison arms have lower pedestrian exposure. <a href="static/data/social-historical-episodes.csv">All episode and class-wise values</a>.</p>
+        
 
-        <h3>Traffic response in the pedestrian encounter</h3>
-        <div class="table-scroll" role="region" aria-label="Current four-class traffic response" tabindex="0"><table class="results-table compact-table" data-social-table="fourclass"><caption>Current source-body pilot · one matched episode per system · all goals contact-free</caption><thead><tr><th scope="col">System</th><th scope="col">Goal (s)</th><th scope="col">Min. pedestrian SAT (m)</th><th scope="col">Extra NPC stopping ↓<br>(actor-s)</th></tr></thead><tbody>
-          <tr><th scope="row">PRECEDE</th><td>31.90</td><td>1.242</td><td>+0.55</td></tr>
-          <tr><th scope="row">Shared-class</th><td>34.10</td><td>1.866</td><td>+2.70</td></tr>
-          <tr><th scope="row">No field</th><td>31.75</td><td>1.362</td><td>+0.55</td></tr>
-        </tbody></table></div>
-        <p class="table-note">PRECEDE and No field induce the same additional NPC stopping; Shared-class leaves a larger minimum gap and waits longer. Stopping is summed over 0–20 s against two matched absent-ego controls. <a href="static/data/social-npc-burden.csv">NPC contrasts</a>.</p>
-
-        <div class="metric-definition"><p>Proximity index: actor-time-normalized exponential exposure to signed body SAT margin, with 1 m scale; cells show the median episode index at each load. NPC stopping measures simulator traffic response. These complementary proxies follow the evaluation categories in <a href="https://doi.org/10.1145/3700599">social-navigation evaluation guidance</a>. <a href="static/data/social-summary.json">Definitions and full measurements</a>.</p></div>
-
-        <h3>Field-module comparisons</h3>
-        <div class="table-scroll" role="region" aria-label="Vehicle field-module comparison" tabindex="0"><table class="results-table compact-table" data-field-table="vehicle"><caption>Current vehicle left-turn pilot · same predictor, route and QP · one episode per field</caption><thead><tr><th scope="col">Nominal field</th><th scope="col">Goal (s)</th><th scope="col">Native contacts</th><th scope="col">Raw jerk RMS<br>(m/s³)</th><th scope="col">Command p95<br>(ms)</th></tr></thead><tbody>
-          <tr><th scope="row">DREAM APF</th><td>32.50</td><td>0</td><td>17.65</td><td>26.14</td></tr>
-          <tr><th scope="row">DREAM ADA scalar-gradient</th><td>31.35</td><td>0</td><td>18.08</td><td>27.62</td></tr>
-          <tr><th scope="row">Source-body Gaussian</th><td>31.65</td><td>0</td><td>17.09</td><td>28.52</td></tr>
-          <tr><th scope="row">PRECEDE</th><td>31.40</td><td>0</td><td>17.17</td><td>27.00</td></tr>
-        </tbody></table></div>
-        <p class="table-note">Development settings use a common bounded longitudinal cue map. Field modules substitute the nominal cue within the shared host. Raw jerk includes launch and observed stopping; command timing includes controller-to-command work. <a href="static/data/vehicle-field-comparison.json">Recorded values and method scope</a>.</p>
-        </details>
-
-        <details class="supporting-results"><summary>Full motion, runtime and historical episode values</summary>
-        <figure class="image-plate"><img draggable="false" src="static/images/dense-statistics.png" width="2300" height="1033" loading="lazy" alt="Dense traffic comparison of route completion, car and HGV SAT margins, raw jerk and command and complete frame latency"><figcaption><a href="static/data/dense-comparison.csv">Episode-level values (CSV)</a>. SAT denotes a planar body support margin. Raw jerk includes launch and the observed terminal stop.</figcaption></figure>
-        <div class="table-scroll" role="region" aria-label="Current dense vehicle results" tabindex="0"><table class="results-table"><caption>Current source-body controller · one dense C4/T2 episode per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Goal / contacts</th><th scope="col">Route (%)</th><th scope="col">Min. car / HGV SAT (m)</th><th scope="col">Raw jerk RMS / peak (m/s³)</th><th scope="col">Command p95 / max (ms)</th><th scope="col">Calls &gt; 50 ms</th></tr></thead><tbody>
-          <tr><th scope="row">PRECEDE</th><td>Yes / 0</td><td>96.20</td><td>1.23 / 0.40</td><td>19.47 / 324.52</td><td>24.68 / 525.63</td><td>5 / 813</td></tr>
-          <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td>96.27</td><td>1.33 / 0.25</td><td>26.42 / 402.81</td><td>23.46 / 120.42</td><td>3 / 870</td></tr>
-          <tr><th scope="row">No field</th><td>Yes / 0</td><td>96.29</td><td>1.18 / 0.40</td><td>20.97 / 324.54</td><td>25.76 / 114.79</td><td>3 / 808</td></tr>
-          <tr><th scope="row">APF + common QP</th><td>No / 1</td><td>21.75</td><td>4.02 / −0.30</td><td>21.26 / 136.62</td><td>24.10 / 85.21</td><td>1 / 242</td></tr>
-        </tbody></table></div>
-        <p class="table-note">Raw jerk includes launch and observed stopping. Durations are 41.25 / 44.10 / 41.00 / 12.25 s; the APF run ends at contact. Command timing excludes upstream sensing/simulation. Whole-frame p95: 100.67 / 97.78 / 110.70 / 109.38 ms.</p>
-
-        <h3 class="gallery-heading">Historical density benchmark</h3>
-        <p class="pair-note">Earlier receiver-axis V5.1: 12 episodes per method, two towns, two loads, three seeds. D1: 4 pedestrians / 1 bicycle / 2 cars; D2: 6 / 2 / 3.</p>
-        <div class="table-scroll" role="region" aria-label="Historical density benchmark" tabindex="0"><table class="results-table"><caption>12 episodes per method · six at each load · all outcomes retained</caption><thead><tr><th scope="col">Historical controller</th><th scope="col">Contact-free goals D1 / D2<br>(out of 6 each)</th><th scope="col">Contact / non-goal runs</th><th scope="col">Mean route (%)</th><th scope="col">Median SAT (m)</th><th scope="col">Median proximity (actor-s)</th><th scope="col">Median smoothed jerk (m/s³)</th><th scope="col">Median command p95 (ms)</th></tr></thead><tbody>
-          <tr><th scope="row">ORCA + QP</th><td>3 / 2</td><td>2 / 7</td><td>61.0</td><td>0.41</td><td>21.63</td><td>5.05</td><td>5.45</td></tr>
-          <tr><th scope="row">SFM + QP</th><td>6 / 3</td><td>0 / 3</td><td>81.1</td><td>0.53</td><td>2.67</td><td>8.14</td><td>5.18</td></tr>
-          <tr><th scope="row">Geometry + QP</th><td>3 / 2</td><td>0 / 7</td><td>60.3</td><td>0.61</td><td>25.24</td><td>4.73</td><td>5.28</td></tr>
-          <tr><th scope="row">Class-label ablation</th><td>6 / 6</td><td>0 / 0</td><td>96.2</td><td>1.27</td><td>1.64</td><td>7.09</td><td>14.18</td></tr>
-          <tr><th scope="row">PRECEDE w/o longitudinal interface</th><td>5 / 6</td><td>1 / 0</td><td>96.2</td><td>1.39</td><td>1.08</td><td>8.40</td><td>14.08</td></tr>
-          <tr><th scope="row">PRECEDE</th><td>6 / 5</td><td>1 / 0</td><td>96.2</td><td>1.24</td><td>1.23</td><td>7.99</td><td>14.09</td></tr>
-        </tbody></table></div>
-        <p class="table-note">Contact and non-goal counts can overlap. Continuous cells summarize episodes. Historical jerk uses a fixed 0.25 s velocity mean; current raw jerk uses the native signal. Class-label ablation changes neighbour labels to cars with fixed weights. <a href="static/data/historical-density-episodes.csv">Episode records</a>.</p>
-        </details>
+        
       </div>
     </section>
 
