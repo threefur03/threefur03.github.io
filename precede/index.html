@@ -57,7 +57,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="topbar" aria-label="Page navigation">
     <a class="wordmark" href="#">PRECEDE<span class="wordmark-dot" aria-hidden="true"></span></a>
-    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#mapless">Mapless CARLA</a><a href="#decision">Decision</a><a href="#safety">Safety-critical</a><a href="#evidence">CARLA results</a><a href="#hardware">Deployment</a></div>
+    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#mapless">Mapless CARLA</a><a href="#decision">Decision</a><a href="#bottleneck">Bottlenecks</a><a href="#safety">Safety-critical</a><a href="#evidence">CARLA results</a><a href="#hardware">Deployment</a></div>
   </nav>
   <main id="main">
     <header class="hero project-hero">
@@ -198,6 +198,31 @@
         window.addEventListener("resize", function () { [120, 600].forEach(function (ms) { setTimeout(fit, ms); }); });
       })();
     </script>
+
+    <section class="section pale" id="bottleneck" aria-labelledby="bottleneck-heading">
+      <div class="wide-container">
+        <div class="section-heading"><p class="eyebrow">Built-up narrow streets</p><h2 id="bottleneck-heading">Bottlenecks with traffic from the other direction</h2><p>Two narrow roads with buildings, street furniture and lane markings, where vehicles from the two directions cannot pass each other everywhere. Oncoming vehicles and cyclists negotiate the narrow stretch with the ego, and pedestrians and cyclists cross in both directions; buildings, parked cars and the waiting vehicles hide them from the ego. The oncoming road users follow the usual narrow-road conduct: keep to their own side, pass a stationary vehicle through the other lane, and give way when the obstruction is on their side.</p></div>
+        <p class="pair-note">PRECEDE forces 0.50 hard brakes per episode, against PDM-Lite† 1.08, DREAM† 1.08, ORCA† 1.25 for the closest baselines; with 6 scenes per road, no paired difference survives Holm correction (smallest adjusted p = 0.055, against CBF-QP, BasicAgent† and BehaviorAgent†). No method collides. Its mean time to the goal is 35.9 s, 2.4 s more than the fastest baseline.</p>
+      <div class="table-scroll" role="region" aria-label="Bottleneck results" tabindex="0"><table class="results-table compact-table"><caption>Forced hard brakes per episode · 12 scenes (6 per road), ground truth with occlusion</caption><thead><tr><th scope="col">Method</th><th scope="col">Curving road</th><th scope="col">Village road</th><th scope="col">Both</th><th scope="col">Collisions</th><th scope="col">Near misses</th><th scope="col">Goal time (s)</th></tr></thead><tbody>
+        <tr><th scope="row">CBF-QP</th><td>2.00</td><td>1.50</td><td>1.75</td><td>0.00</td><td>0.25</td><td>33.8</td></tr>
+        <tr><th scope="row">BasicAgent†</th><td>1.83</td><td>1.67</td><td>1.75</td><td>0.00</td><td>0.08</td><td>35.4</td></tr>
+        <tr><th scope="row">BehaviorAgent†</th><td>1.33</td><td>1.83</td><td>1.58</td><td>0.00</td><td>0.17</td><td>39.3</td></tr>
+        <tr><th scope="row">PDM-Lite†</th><td>1.17</td><td>1.00</td><td>1.08</td><td>0.00</td><td>0.08</td><td>36.9</td></tr>
+        <tr><th scope="row">APF</th><td>1.83</td><td>1.67</td><td>1.75</td><td>0.00</td><td>0.33</td><td>35.3</td></tr>
+        <tr><th scope="row">ORCA†</th><td>1.17</td><td>1.33</td><td>1.25</td><td>0.00</td><td>0.25</td><td>50.8</td></tr>
+        <tr><th scope="row">SFM†</th><td>1.83</td><td>1.50</td><td>1.67</td><td>0.00</td><td>0.00</td><td>35.9</td></tr>
+        <tr><th scope="row">CVM-PtP</th><td>1.17</td><td>1.83</td><td>1.50</td><td>0.00</td><td>0.25</td><td>36.5</td></tr>
+        <tr><th scope="row">Courteous†</th><td>0.83</td><td>1.83</td><td>1.33</td><td>0.00</td><td>0.00</td><td>36.4</td></tr>
+        <tr><th scope="row">OA-RF†</th><td>1.00</td><td>1.67</td><td>1.33</td><td>0.00</td><td>0.33</td><td>33.9</td></tr>
+        <tr><th scope="row">DREAM†</th><td>1.17</td><td>1.00</td><td>1.08</td><td>0.00</td><td>0.33</td><td class="best">33.5</td></tr>
+        <tr><th scope="row">PRECEDE</th><td class="best">0.50</td><td class="best">0.50</td><td class="best">0.50</td><td>0.00</td><td class="best">0.00</td><td>35.9</td></tr>
+      </tbody></table></div>
+        <div class="section-heading gallery-heading"><h2>Curving single-track road · oncoming van, car and cyclist</h2><p>One lane of 2.0–2.7 m that bends through about 380°, lined with parked cars. The oncoming van, car and cyclist cannot pass the ego anywhere but in the one passing place, so they queue into it and wait there until the ego has gone by; pedestrians and cyclists step out from between the parked cars and the buildings, from both sides.</p></div>
+        <figure class="image-plate parallel-plate"><video controls muted playsinline loop preload="none" poster="static/images/bn-curve-parallel-poster.jpg"><source src="static/media/bn-curve-parallel.mp4" type="video/mp4"></video><figcaption>Across the 6 scenes on this road, PRECEDE forces fewer / as many / more hard brakes than CBF-QP 4 / 2 / 0; BehaviorAgent† 4 / 2 / 0; APF 4 / 2 / 0. In this scene:<ul class="outcome-list"><li><b>CBF-QP</b>: 3 forced hard brakes; goal at 36.5 s</li><li><b>BehaviorAgent†</b>: 2 forced hard brakes; goal at 46.6 s</li><li><b>APF</b>: 3 forced hard brakes; goal at 44.9 s</li><li><b>PRECEDE</b>: no forced hard brakes; goal at 38.0 s</li></ul></figcaption></figure>
+        <div class="section-heading gallery-heading"><h2>Two-way village road · loading van at the oncoming kerb</h2><p>Two 3.5 m lanes. A van loading at the oncoming kerb, with cars parked behind it, closes the oncoming lane, so the oncoming lorry and car must pass it through the ego&#x27;s lane. Keeping to the rule that the side with the obstruction gives way, they wait in their own lane short of the van while the ego is near, and a cyclist rides past it inside its lane; pedestrians cross both lanes, also from behind the van.</p></div>
+        <figure class="image-plate parallel-plate"><video controls muted playsinline loop preload="none" poster="static/images/bn-village-parallel-poster.jpg"><source src="static/media/bn-village-parallel.mp4" type="video/mp4"></video><figcaption>Across the 6 scenes on this road, PRECEDE forces fewer / as many / more hard brakes than CBF-QP 5 / 1 / 0; BehaviorAgent† 5 / 1 / 0; APF 4 / 2 / 0. In this scene:<ul class="outcome-list"><li><b>CBF-QP</b>: 2 forced hard brakes; goal at 26.6 s</li><li><b>BehaviorAgent†</b>: 1 forced hard brake; goal at 30.3 s</li><li><b>APF</b>: 2 forced hard brakes; goal at 27.9 s</li><li><b>PRECEDE</b>: no forced hard brakes; goal at 29.4 s</li></ul></figcaption></figure>
+      </div>
+    </section>
 
     <section class="section" id="safety" aria-labelledby="safety-heading">
       <div class="wide-container">
