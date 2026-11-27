@@ -57,7 +57,7 @@
   <a class="skip-link" href="#main">Skip to content</a>
   <nav class="topbar" aria-label="Page navigation">
     <a class="wordmark" href="#">PRECEDE<span class="wordmark-dot" aria-hidden="true"></span></a>
-    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#mapless">Mapless CARLA</a><a href="#decision">Decision</a><a href="#bottleneck">Bottlenecks</a><a href="#safety">Safety-critical</a><a href="#evidence">CARLA results</a><a href="#hardware">Deployment</a></div>
+    <div class="navlinks"><a href="#abstract">Contributions</a><a href="#method">Framework</a><a href="#planar">Planar</a><a href="#mapless">Mapless CARLA</a><a href="#decision">Decision</a><a href="#bottleneck">Bottlenecks</a><a href="#safety">Safety-critical</a><a href="#hardware">Deployment</a></div>
   </nav>
   <main id="main">
     <header class="hero project-hero">
@@ -177,10 +177,10 @@
 
     <section class="section" id="decision" aria-labelledby="decision-heading">
       <div class="wide-container">
-        <div class="section-heading"><p class="eyebrow">Inside the decision</p><h2 id="decision-heading">What PRECEDE weighs, seen from the driver's seat</h2><p>One recorded episode on a narrow Town02 street with ground-truth perception. The front camera shows the conflict potential PRECEDE assigns to the road ahead, the stopping reach of each candidate speed it scores and the road users in its precedence graph; the timeline links the planner's output to the command after the safety filter.</p></div>
-        <p class="pair-note">Hover over (or tap) the road to query the field at that point, which is mirrored on the bird's-eye view; over a road user for its precedence probability and arrival gap; or over a curve on the right to find that candidate speed on the road.</p>
+        <div class="section-heading"><p class="eyebrow">Inside the decision</p><h2 id="decision-heading">What PRECEDE weighs, seen from the driver's seat</h2><p>Three recorded PRECEDE episodes: a narrow Town02 street parked at both kerbs, with ground-truth perception, and the two built-up bottlenecks shown below, where buildings, parked cars and waiting vehicles hide road users from the ego. The front camera shows the conflict potential PRECEDE assigns to the road ahead, the stopping reach of each candidate speed it scores and the road users in its precedence graph; the timeline links the planner's output to the command after the safety filter.</p></div>
+        <p class="pair-note">Pick an episode above the camera. Hover over (or tap) the road to query the field at that point, which is mirrored on the bird's-eye view; over a road user for its precedence probability and arrival gap; or over a curve on the right to find that candidate speed on the road. In the built-up streets, dashed boxes mark road users whose path crosses the ego's but who are still out of its sight, so PRECEDE does not see them yet.</p>
         <div class="decision-embed"><iframe src="decision/index.html" title="Interactive first-person view of PRECEDE's decision" loading="lazy" scrolling="no"></iframe></div>
-        <p class="table-note">The planner's internals are replayed from the logged episode and reproduce its decisions in 97% of the 320 planning steps (within 0.5 m/s). Camera boxes are the logged 3-D extents projected with the camera's pose. <a href="decision/index.html" target="_blank" rel="noopener">Open the viewer on its own page</a>.</p>
+        <p class="table-note">The planner's internals are replayed from the logged episodes and reproduce the logged decisions in 99.7%, 98.4% and 98.3% of the 320, 380 and 293 planning steps of the Town02, curving-road and village-road episodes (within 0.5 m/s). Camera boxes are the logged 3-D extents projected with the camera's pose. <a href="decision/index.html" target="_blank" rel="noopener">Open the viewer on its own page</a>.</p>
       </div>
     </section>
     <script>
@@ -236,37 +236,7 @@
       </div>
     </section>
 
-    <section class="section pale" id="evidence" aria-labelledby="evidence-heading">
-      <div class="wide-container">
-        <div class="section-heading"><p class="eyebrow">Results</p><h2 id="evidence-heading">From interaction modeling to closed-loop behavior</h2><p>The planar tests isolate passing geometry and bottleneck execution. The CARLA comparisons examine contact, body spacing, motion and surrounding traffic response under sensing feedback.</p></div>
-
-        <h3>Matched vehicle crossing</h3>
-        <div class="table-scroll" role="region" aria-label="Key matched vehicle-crossing results" tabindex="0"><table class="results-table dense-key-results" data-evidence-table="dense-key"><caption>Four cars + two trucks · same traffic fixture, route and QP host · one episode per arm</caption><thead><tr><th scope="col">Controller</th><th scope="col">Goal / contacts</th><th scope="col">Min. truck SAT<br>(m)</th><th scope="col">Raw jerk RMS<br>(m/s³)</th><th scope="col">Command p95<br>(ms)</th></tr></thead><tbody>
-          <tr><th scope="row">APF + common QP</th><td>No / 1</td><td class="best">−0.30</td><td class="best">21.26</td><td class="best">24.10</td></tr>
-          <tr><th scope="row">Shared-class</th><td>Yes / 0</td><td class="best">0.25</td><td class="best">26.42</td><td class="best">23.46</td></tr>
-          <tr><th scope="row">No field</th><td>Yes / 0</td><td class="best">0.40</td><td class="best">20.97</td><td class="best">25.76</td></tr>
-          <tr><th scope="row">PRECEDE</th><td>Yes / 0</td><td class="best">0.40</td><td class="best">19.47</td><td class="best">24.68</td></tr>
-        </tbody></table></div>
-        <p class="table-note">In the <a href="#matched-videos">paired crossing replay</a>, APF records truck contact and PRECEDE reaches its goal. PRECEDE has a larger truck body-support margin and lower recorded jerk than Shared-class in this episode; No field also finishes with a similar truck margin. Body margins use the fixed 60 s state capture. Raw jerk includes launch and stopping over unequal active-command durations, with APF commands ending at contact. Command timing excludes upstream sensing/simulation; PRECEDE records 5/813 calls above 50 ms.</p>
-
-        <details class="supporting-results" id="responsive40"><summary>Manuscript responsive cohort: 40 episodes</summary>
-        <div class="table-scroll" role="region" aria-label="Forty-episode responsive CARLA cohort" tabindex="0"><table class="results-table responsive40-table" data-evidence-table="responsive40"><caption>Receiver-aligned integration · five controllers × eight matched cases · all native contact counts zero</caption><thead><tr><th scope="col">Controller</th><th scope="col">Contact-free goals / 8</th><th scope="col">Median support margin (m)</th><th scope="col">Proximity exposure (s)</th><th scope="col">Smoothed jerk RMS (m/s³)</th><th scope="col">Median episode p95 (ms)</th></tr></thead><tbody>
-          <tr><th scope="row">ORCA + common QP</th><td class="best">8 / 8</td><td class="best">0.430</td><td class="best">11.29</td><td class="best">11.59</td><td class="best">4.35</td></tr>
-          <tr><th scope="row">SFM + common QP</th><td class="best">8 / 8</td><td class="best">0.517</td><td class="best">3.94</td><td class="best">6.95</td><td class="best">3.75</td></tr>
-          <tr><th scope="row">Reactive stack</th><td class="best">6 / 8</td><td class="best">0.533</td><td class="best">9.13</td><td class="best">6.31</td><td class="best">3.89</td></tr>
-          <tr><th scope="row">Class-label collapse</th><td class="best">8 / 8</td><td class="best">0.884</td><td class="best">3.08</td><td class="best">11.61</td><td class="best">17.99</td></tr>
-          <tr><th scope="row">PRECEDE</th><td class="best">8 / 8</td><td class="best">1.525</td><td class="best">1.17</td><td class="best">14.09</td><td class="best">18.00</td></tr>
-        </tbody></table></div>
-        <p class="table-note">Town10HD and Town05, two actor loads and two traffic evolutions, retrospectively assembled from separately frozen cohorts without outcome-based filtering. This configuration uses oracle states, green-frozen signals and a learned forecast adapter. PRECEDE has larger support margins and lower proximity exposure than ORCA and SFM in all eight matched cases, with higher measured jerk and computation. Runtime includes prediction where used, cache, planning/QP and tracking; PRECEDE records 1/6224 calls above 50 ms, maximum 56.42 ms. All 40 navigation traces are complete; 16 abnormal cleanup/process exits remain documented. <a href="static/data/responsive40-summary.json">Protocol, definitions and reported values</a>.</p>
-        </details>
-
-        
-
-        
-      </div>
-    </section>
-
-    <section class="section" id="hardware" aria-labelledby="hardware-heading"><div class="wide-container">
+    <section class="section pale" id="hardware" aria-labelledby="hardware-heading"><div class="wide-container">
       <div class="section-heading"><p class="eyebrow">Real-world deployment</p><h2 id="hardware-heading">Mapless ROS 2 wheeled-platform deployment in real-world scenarios</h2><p>The controller runs on a small differential-drive wheeled robot under ROS 2, indoors and outdoors among people, with onboard sensing and without a prior map.</p></div>
       <div class="hardware-layout"><figure><img draggable="false" src="static/images/limo-platform.png" width="554" height="554" loading="lazy" alt="Differential-drive wheeled robot used for the deployment"><figcaption>Differential-drive wheeled platform.</figcaption></figure><div class="hardware-text"><h3>From onboard sensing to velocity commands</h3><p>Odometry, laser-scan geometry and tracked pedestrians in the robot's local frame feed the planar form of the controller: the interaction field with optional linear forecasts, a speed governor, and a QP with soft constraints for moving people and hard constraints for static obstacles, which outputs bounded velocity commands for the differential drive.</p></div></div>
       <div class="comparison-grid hardware-replays" aria-label="Indoor and outdoor ROS 2 recordings">
