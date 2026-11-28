@@ -44,6 +44,9 @@
       .combined-table td.best { font-weight: 700; color: #182b36; }
       .combined-table .grp { text-align: center; border-bottom: 1px solid #c9d3d8; }
       .results-table td.best { font-weight: 700; }
+      .teaser-figure { margin: 20px 0 6px; padding: 18px 18px 4px; }
+      .teaser-figure figcaption { max-width: 1060px; }
+      .teaser-figure .media-credit { top: auto; bottom: 5px; font-size: 11px; }
       .contrib-lead { font-size: 18px; line-height: 1.6; color: #182b36; max-width: 960px; }
       .contrib-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 18px; margin: 18px 0 26px; }
       .contrib-card { background: #fff; border: 1px solid #dbe3e7; border-radius: 10px; padding: 16px 18px; }
@@ -81,6 +84,10 @@
       <div class="wide-container">
         <h2 id="abstract-heading">Core contributions</h2>
         <div class="abstract-content"><p class="contrib-lead">Every crossing path is a small negotiation over who passes first. PRECEDE makes that decision explicit, and keeps it.</p></div>
+        <figure class="diagram teaser-figure">
+          <img draggable="false" src="static/images/precede-teaser.jpg?v=20261128" width="2400" height="1343" alt="Figure 1: (a) schematic of two conflict points with precedence edges and the asymmetric hard-braking rates; (b) a CARLA chase-camera view on a curving single-track road with the precedence graph overlaid; (c) the wheeled robot among pedestrians with its path overlaid; (d) the scale of the CARLA evaluation">
+          <figcaption><strong>Figure 1. Who passes first.</strong> (a) At each conflict point the ego and a road user settle who passes first; <i>p<sub>j</sub></i> is the probability that the ego does. In 2,432 recorded crossings, a vehicle going first made the yielding pedestrian or cyclist brake hard in 14.0% of conflicts; the reverse happened in 1.0%. (b) A logged closed-loop CARLA episode on a curving single-track road: the ego waits for pedestrians and a cyclist (blue), while the oncoming van, hidden by the building, waits for the ego (red, dashed). (c) Mapless deployment on a wheeled robot running the planar form of the controller; the overlay is drawn on the photograph. (d) Scale of the CARLA evaluation.</figcaption>
+        </figure>
         <div class="contrib-grid">
           <div class="contrib-card"><p class="contrib-tag">1 · Graph</p><h3>Precedence graph</h3><p>One edge per road user whose path crosses the ego's route, with a calibrated probability that the ego passes first. In recorded traffic, a vehicle going first makes the pedestrian or cyclist brake hard in 14.0% of conflicts; the reverse happens in 1.0%.</p></div>
           <div class="contrib-card"><p class="contrib-tag">2 · Field</p><h3>Conflict potential</h3><p>Each edge scores the ego's candidate speeds by how uncertain the order is, how hard the road user would have to brake and how hard the ego would. No HD map is needed.</p></div>
@@ -115,7 +122,7 @@
         <div class="method-intro"><p>Every 0.1 s, PRECEDE reads a reference path, the ego state, the perceived road users and an embodiment profile. It (a) links the ego to each road user whose path crosses the route and estimates who passes first, (b) scores the rollout of every candidate speed with the conflict potential, (c) picks the speed with the lowest cost, commitment terms included, and (d) hands it to the safety filter that every compared method uses.</p></div>
         <figure class="diagram figure-one">
           <img draggable="false" src="static/images/precede-framework.png?v=20261128" width="2904" height="1120" loading="lazy" alt="PRECEDE framework: mapless inputs, precedence graph, conflict potential over the candidate speeds, commitment and selection, shared safety filter and execution">
-          <figcaption><strong>Figure 1. PRECEDE.</strong> Panels (b) and (c) show one logged decision on the Town02 street parked at both kerbs: faster candidates would raise the potential before the crossing, so the ego creeps at 1 m/s.</figcaption>
+          <figcaption><strong>Figure 2. PRECEDE.</strong> Panels (b) and (c) show one logged decision on the Town02 street parked at both kerbs: faster candidates would raise the potential before the crossing, so the ego creeps at 1 m/s.</figcaption>
         </figure>
       </div>
     </section>
